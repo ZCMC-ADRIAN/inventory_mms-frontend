@@ -590,16 +590,6 @@ const Equipment = ({ setTab }) => {
 
         <GridItem colSpan={2}>
           <FormControl>
-            <FormLabel>Location</FormLabel>
-            <Input
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-            />
-          </FormControl>
-        </GridItem>
-
-        <GridItem colSpan={2}>
-          <FormControl>
             <FormLabel>Supplier/Donor</FormLabel>
             <Input value={donor} onChange={(e) => setDonor(e.target.value)} />
           </FormControl>

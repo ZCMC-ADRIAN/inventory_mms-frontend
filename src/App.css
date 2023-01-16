@@ -507,6 +507,36 @@ button.gray:hover {
   background: #000;
 }
 
+.dropdown {
+  background-color: #02bf7a;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgb(214, 214, 214);
+  border-radius: 5px;
+  margin-top: 5px;
+  list-style: none;
+  font-size: 14.5px;
+  color: #fff;
+}
+
+.dropdown:empty {
+  border: none;
+}
+
+.dropdown-row {
+  cursor: pointer;
+  text-align: start;
+  padding-top: 2px;
+  padding-left: 10px;
+}
+.dropdown-row li :not(:last-of-type){
+  border-bottom: 1px solid #999;
+}
+.dropdown-row:hover{
+  background-color: #03af70;
+  transition: 0.18s ease-in-out;
+}
+
 @keyframes refresh {
   from {
     transform: rotate(0deg);

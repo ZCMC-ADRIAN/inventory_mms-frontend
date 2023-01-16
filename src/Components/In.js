@@ -71,6 +71,17 @@ const In = ({ setTab }) => {
   const [condition, setCondition] = useState("");
   const [fundSource, setFundSource] = useState("");
   const [acquisitionCost, setAcquisitionCost] = useState("");
+  
+  // const [getLocation, setGetLocation] = useState([]);
+
+  const getLocation = [
+    { location: "MMS"},
+    { location: "OMCC"},
+  ];
+
+  const onLocation = (searchLocation) => {
+    setLocation(searchLocation);
+  };
 
   const donors = [
     "doh",
@@ -355,7 +366,8 @@ const In = ({ setTab }) => {
                         ) {
                           return val;
                         }
-                      }).filter(e => e.desc !== '#N/A')
+                      })
+                      .filter((e) => e.desc !== "#N/A")
                       .map((item, index) => {
                         return (
                           <p
@@ -386,10 +398,11 @@ const In = ({ setTab }) => {
                         );
                       })}
 
-                    {item?.filter((f) =>
-                      f.desc.toLowerCase().includes(term.toLocaleLowerCase())
-                    ).filter(e => e.desc !== '#N/A')
-                    .length === 0 && (
+                    {item
+                      ?.filter((f) =>
+                        f.desc.toLowerCase().includes(term.toLocaleLowerCase())
+                      )
+                      .filter((e) => e.desc !== "#N/A").length === 0 && (
                       <p
                         onClick={() => {
                           setDesc("");
@@ -525,22 +538,34 @@ const In = ({ setTab }) => {
             <FormControl>
               <FormLabel>Location</FormLabel>
 
-              <Select
+              <Input
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                placeholder="- Select Location -"
-              >
-                <option value="MMS Main Storage Level 1">
-                  MMS Main Storage Level 1
-                </option>
-                <option value="MMS Main Storage Level 2">
-                  MMS Main Storage Level 2
-                </option>
-                <option value="Tent 1">Tent 1</option>
-                <option value="Tent 2">Tent 2</option>
-                <option value="Tower 1">Tower 1</option>
-              </Select>
+              />
             </FormControl>
+            <div className="dropdown">
+              {getLocation
+                .filter((item) => {
+                  const searchLocation = location.toLowerCase();
+                  const locationName = item.location.toLowerCase();
+
+                  return (
+                    searchLocation &&
+                    locationName.startsWith(searchLocation) &&
+                    locationName !== searchLocation
+                  );
+                })
+                .slice(0, 10)
+                .map((item) => (
+                  <div
+                    onClick={() => onLocation(item.location)}
+                    className="dropdown-row"
+                    key={item.location}
+                  >
+                    <li>{item.location}</li>
+                  </div>
+                ))}
+            </div>
           </GridItem>
 
           <GridItem colSpan={3}>
@@ -549,6 +574,7 @@ const In = ({ setTab }) => {
               <Input
                 value={supplier}
                 onChange={(e) => setSupplier(e.target.value)}
+                disabled
               />
             </FormControl>
           </GridItem>
@@ -559,6 +585,7 @@ const In = ({ setTab }) => {
               <Input
                 value={manufacturer}
                 onChange={(e) => setManufacturer(e.target.value)}
+                disabled
               />
             </FormControl>
           </GridItem>
@@ -579,6 +606,7 @@ const In = ({ setTab }) => {
               <Input
                 value={condition}
                 onChange={(e) => setCondition(e.target.value)}
+                disabled
               />
             </FormControl>
           </GridItem>

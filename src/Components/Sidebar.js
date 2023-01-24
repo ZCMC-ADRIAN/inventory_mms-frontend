@@ -32,7 +32,7 @@ const Sidebar = ({ setTab, tab }) => {
         <div className="avatar">
           <img src={Nouser} alt="Avatar Profile" />
         </div>
-        <h1>{user?.firstname + " " + user?.lastname}</h1>
+        <h1>Adrian Agcaoili</h1>
         <h2>
           MMS | <span onClick={() => submitLogout()}>Logout</span>
         </h2>

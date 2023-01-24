@@ -13,9 +13,8 @@ import {
   InputLeftAddon,
   InputGroup,
 } from "@chakra-ui/react";
-import { listItems } from "../ListItems";
 import useAuth from "../../Hooks/useAuth";
-import uniqid from "uniqid";
+import localApi from "../../API/Api";
 
 const Equipment = ({ setTab }) => {
   const donors = [
@@ -43,7 +42,7 @@ const Equipment = ({ setTab }) => {
   const [origin, setOrigin] = useState("");
   const [serialNum, setSerialNum] = useState("");
   const [warranty, setWarranty] = useState("");
-  const [acquisitation, setAcquisition] = useState("");
+  const [acquisition, setAcquisition] = useState("");
   const [propertyNum, setPropertyNum] = useState("");
   const [unit, setUnit] = useState("");
   const [location, setLocation] = useState("");
@@ -58,27 +57,37 @@ const Equipment = ({ setTab }) => {
   const todate = new Date();
   const toast = useToast();
   const [isClick, setIsClick] = useState(false);
-  const [todayTime, setTodayTime] = useState(
-    todate.getHours() + ":" + todate.getMinutes() + ":" + todate.getSeconds()
-  );
-  const [todayDate, setTodayDate] = useState(
-    todate.getMonth() + 1 + "/" + todate.getDate() + "/" + todate.getFullYear()
-  );
-
-  const inItemAPI =
-    "https://script.google.com/macros/s/AKfycbzD3yhqneDKW_UvKgr-H6AGA1J3o3Jei_Ql3_t2MMQW7_XrdJ1vF3Th2kZyU7Mv2M5J9Q/exec?action=inItem";
 
   //In state
   const [lot, setLot] = useState("");
-  const [expiration, setExpiration] = useState("NOT INDICATED");
+  const [expiration, setExpiration] = useState("");
   const [iar, setIar] = useState("");
   const [iarDate, setIarDate] = useState("");
   const [delivery, setDelivery] = useState("");
-  const [total, setTotal] = useState(1);
-  const [condition, setCondition] = useState("");
-  const [fundSource, setFundSource] = useState("");
   const [itemStatus, setItemStatus] = useState("");
   const [itemStatusOther, setItemStatusOther] = useState("");
+
+  //Fields
+  const [getArticle, setGetArticle] = useState([]);
+  const [getTypes, setGetTypes] = useState([]);
+  const [getStatus, setGetStatus] = useState([]);
+
+  const fetchData = async () => {
+    let responseArticle = await localApi.get("article");
+    setGetArticle(responseArticle.data);
+
+    let responseTypes = await localApi.get("types", {
+      params: { article: article },
+    });
+    setGetTypes(responseTypes.data);
+
+    let responseStatus = await localApi.get("status");
+    setGetStatus(responseStatus.data);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [type, article]);
 
   const clearForm = () => {
     setArticle("");
@@ -86,7 +95,6 @@ const Equipment = ({ setTab }) => {
     setType("");
     setTypeOther("");
     setDescOrig("");
-    setDesc("");
     setModel("");
     setVariant("");
     setDetails("");
@@ -108,131 +116,12 @@ const Equipment = ({ setTab }) => {
     setIar("");
     setIarDate("");
     setDelivery("");
-    setCondition("");
-    setFundSource("");
     setAccessories("");
     setItemStatus("");
     setItemStatusOther("");
   };
 
   const { setAppState } = useAuth();
-
-  const createItemAPI =
-    "https://script.google.com/macros/s/AKfycbzXd94zGJsT3QoIxdq5S7WfLU_pMOveu72MqQnU-_ELxpExfG-ef60INLjEmf1iwC6wzg/exec?action=createEquipment";
-
-  const handleCreate = async () => {
-    setIsClick(true);
-
-    if (
-      !descOrig ||
-      (!article &&
-        !articleOther &&
-        !type &&
-        !typeOther &&
-        !model &&
-        !variant &&
-        !details &&
-        !other)
-    ) {
-      setIsClick(false);
-      toast({
-        title: "Error",
-        description: "Enter Item Description",
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
-      return;
-    }
-
-    if (total <= 0) {
-      setIsClick(false);
-      toast({
-        title: "Error",
-        description: "Please enter quantity",
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
-      return;
-    }
-
-    if (!desc) {
-      setIsClick(false);
-      toast({
-        title: "Error",
-        description: "Enter Item Description",
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
-      return;
-    }
-
-    fetch(createItemAPI, {
-      method: "POST",
-      body: JSON.stringify({
-        uniqueId: uniqid() + uniqid(),
-        descOrig,
-        desc,
-        article: article === "Other" ? articleOther : article,
-        type: type === "Other" ? typeOther : type,
-        itemStatus: itemStatus === "Other" ? itemStatusOther : itemStatus,
-        model,
-        variant,
-        details,
-        other,
-        brand,
-        manufacturer,
-        origin,
-        serialNum,
-        warranty,
-        acquisitation,
-        propertyNum,
-        unit,
-        location,
-        acquisitionMode: donors.includes(donor.toLocaleLowerCase())
-          ? "Donation"
-          : "Purchase",
-        donor,
-        remarks,
-        assigned: user?.firstname + " " + user?.lastname,
-        cost,
-        category,
-        accessories,
-      }),
-    })
-      .then(async (response) => {
-        const isJson = response.headers
-          .get("content-type")
-          ?.includes("application/json");
-        const data = isJson && (await response.json());
-
-        if (response.ok) {
-          handleInItem();
-        }
-
-        // check for error response
-        if (!response.ok) {
-          setIsClick(false);
-          // get error message from body or default to response status
-          const error = (data && data.message) || response.status;
-
-          return Promise.reject(error);
-        }
-      })
-      .catch((error) => {
-        setIsClick(false);
-        console.log(error);
-        toast({
-          title: "Error",
-          description: "An error occured",
-          status: "error",
-          duration: 9000,
-          isClosable: true,
-        });
-      });
-  };
 
   useEffect(() => {
     setDesc(
@@ -250,72 +139,43 @@ const Equipment = ({ setTab }) => {
     );
   }, [article, articleOther, type, typeOther, model, variant, details, other]);
 
-  const handleInItem = async () => {
+  const handleCreate = (e) => {
+    e.preventDefault();
     setIsClick(true);
-
-    fetch(inItemAPI, {
-      method: "POST",
-      body: JSON.stringify({
-        timestamp: todayTime + " " + todayDate,
-        desc,
-        brand,
-        lot,
-        expiration:
-          expiration !== "NOT INDICATED"
-            ? new Date(expiration).getMonth() +
-              1 +
-              "/" +
-              new Date(expiration).getDate() +
-              "/" +
-              new Date(expiration).getFullYear()
-            : "NOT INDICATED",
-        iar,
-        iarDate:
-          iarDate !== ""
-            ? new Date(iarDate).getMonth() +
-              1 +
-              "/" +
-              new Date(iarDate).getDate() +
-              "/" +
-              new Date(iarDate).getFullYear()
-            : null,
-
-        delivery:
-          delivery !== ""
-            ? new Date(delivery).getMonth() +
-              1 +
-              "/" +
-              new Date(delivery).getDate() +
-              "/" +
-              new Date(delivery).getFullYear()
-            : null,
-
-        quantity: "",
-        pack: "",
-        loose: "",
-        unit,
-        total,
-        location,
-        supplier: donor,
-        manufacturer,
-        origin,
-        acquisition: donors.includes(donor.toLocaleLowerCase())
+    localApi
+      .post("create", {
+        descOrig: descOrig,
+        article: article === "Other" ? articleOther : article,
+        type: type === "Other" ? typeOther : type,
+        status: itemStatus === "Other" ? itemStatusOther : itemStatus,
+        model: model,
+        variant: variant,
+        details: details,
+        other: other,
+        brand: brand,
+        manufacturer: manufacturer,
+        countries: origin,
+        serialNum: serialNum,
+        warranty: warranty,
+        acquisition: acquisition,
+        propertyNum: propertyNum,
+        unit: unit,
+        location: location,
+        acquisitionMode: donors.includes(donor.toLocaleLowerCase())
           ? "Donation"
           : "Purchase",
-        remarks,
-        condition,
-        fundSource,
-        acquisitionCost: cost,
-        user: user?.firstname + " " + user?.lastname,
-      }),
-    })
-      .then(async (response) => {
-        const isJson = response.headers
-          .get("content-type")
-          ?.includes("application/json");
-        const data = isJson && (await response.json());
-
-        if (response.ok) {
+        supplier: donor,
+        remarks: remarks,
+        expiration: expiration,
+        IAR: iar,
+        IAR_Date: iarDate,
+        delivery: delivery,
+        cost: cost,
+        category: category,
+        accessories: accessories,
+      })
+      .then(function (response) {
+        if (response.data.status === 1) {
           setIsClick(false);
           clearForm();
           setAppState("Item Created");
@@ -328,318 +188,348 @@ const Equipment = ({ setTab }) => {
             isClosable: true,
           });
         }
-
-        // check for error response
-        if (!response.ok) {
-          setIsClick(false);
-          // get error message from body or default to response status
-          const error = (data && data.message) || response.status;
-
-          return Promise.reject(error);
-        }
-      })
-      .catch((error) => {
-        setIsClick(false);
-        toast({
-          title: "Error",
-          description: "An error occured",
-          status: "error",
-          duration: 9000,
-          isClosable: true,
-        });
       });
   };
 
   return (
     <>
-      <SimpleGrid
-        columns={6}
-        columnGap={4}
-        rowGap={6}
-        w="full"
-        h={"full"}
-        p={6}
-      >
-        <GridItem colSpan={3}>
-          <FormControl isRequired>
-            <FormLabel>Item Description (Original)</FormLabel>
-            <Textarea
-              value={descOrig}
-              onChange={(e) => setDescOrig(e.target.value)}
-              placeholder="Original Description"
-            />
-          </FormControl>
-        </GridItem>
-
-        <GridItem colSpan={3}>
-          <FormControl isRequired>
-            <FormLabel>Item Description</FormLabel>
-            <Textarea isReadOnly background="#eee" disabled value={desc} />
-          </FormControl>
-        </GridItem>
-        <GridItem colSpan={2}>
-          <FormControl>
-            <FormLabel>Article</FormLabel>
-
-            <Select
-              value={article}
-              onChange={(e) => {
-                setArticle(e.target.value);
-                setTypeOther("");
-                setType("");
-              }}
-              placeholder="- Select Article -"
-            >
-              {listItems.map((item, index) => {
-                return (
-                  <option value={item.article} key={index}>
-                    {item.article}
-                  </option>
-                );
-              })}
-            </Select>
-            {article === "Other" && (
-              <Input
-                value={articleOther}
-                onChange={(e) => setArticleOther(e.target.value)}
-                marginTop={4}
-                variant="filled"
-                placeholder="If other, please specify"
-              />
-            )}
-          </FormControl>
-        </GridItem>
-        <GridItem colSpan={2}>
-          <FormControl>
-            <FormLabel>Type/Form</FormLabel>
-
-            <Select
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-              placeholder="- Select Type/Form -"
-            >
-              {listItems
-                .filter((e) => e.article === article)
-                .map((f) => {
-                  return f.type.map((item, index) => {
-                    return (
-                      <option key={index} selected value={item}>
-                        {item}
-                      </option>
-                    );
-                  });
-                })}
-            </Select>
-
-            {type === "Other" && (
-              <Input
-                value={typeOther}
-                onChange={(e) => setTypeOther(e.target.value)}
-                marginTop={4}
-                variant="filled"
-                placeholder="If other, please specify"
-              />
-            )}
-          </FormControl>
-        </GridItem>
-
-        <GridItem colSpan={1}>
-          <FormControl>
-            <FormLabel>Model</FormLabel>
-            <Input value={model} onChange={(e) => setModel(e.target.value)} />
-          </FormControl>
-        </GridItem>
-
-        <GridItem colSpan={1}>
-          <FormControl>
-            <FormLabel>Variety/Color</FormLabel>
-            <Input
-              value={variant}
-              onChange={(e) => setVariant(e.target.value)}
-            />
-          </FormControl>
-        </GridItem>
-
-        <GridItem colSpan={3}>
-          <FormControl>
-            <FormLabel>Details2</FormLabel>
-            <Textarea
-              value={details}
-              onChange={(e) => setDetails(e.target.value)}
-            />
-          </FormControl>
-        </GridItem>
-
-        <GridItem colSpan={3}>
-          <FormControl>
-            <FormLabel>Accessories</FormLabel>
-            <Textarea
-              value={accessories}
-              onChange={(e) => setAccessories(e.target.value)}
-            />
-          </FormControl>
-        </GridItem>
-
-        <GridItem colSpan={2}>
-          <FormControl>
-            <FormLabel>Status</FormLabel>
-
-            <Select
-              value={itemStatus}
-              onChange={(e) => {
-                setItemStatus(e.target.value);
-              }}
-              placeholder="- Select Status -"
-            >
-              <option value="Functioning">Functioning</option>
-              <option value="Deffective">Deffective</option>
-              <option value="Disposal">Disposal</option>
-              <option value="Other">Other</option>
-            </Select>
-            {itemStatus === "Other" && (
-              <Input
-                value={itemStatusOther}
-                onChange={(e) => setItemStatusOther(e.target.value)}
-                marginTop={4}
-                variant="filled"
-                placeholder="If other, please specify"
-              />
-            )}
-          </FormControl>
-        </GridItem>
-
-        <GridItem colSpan={1}>
-          <FormControl>
-            <FormLabel>Other</FormLabel>
-            <Input value={other} onChange={(e) => setOther(e.target.value)} />
-          </FormControl>
-        </GridItem>
-
-        <GridItem colSpan={1}>
-          <FormControl>
-            <FormLabel>Brand</FormLabel>
-            <Input value={brand} onChange={(e) => setBrand(e.target.value)} />
-          </FormControl>
-        </GridItem>
-
-        <GridItem colSpan={2}>
-          <FormControl>
-            <FormLabel>Manufacturer</FormLabel>
-            <Input
-              value={manufacturer}
-              onChange={(e) => setManufacturer(e.target.value)}
-            />
-          </FormControl>
-        </GridItem>
-
-        <GridItem colSpan={2}>
-          <FormControl>
-            <FormLabel>Country of Origin</FormLabel>
-            <Input value={origin} onChange={(e) => setOrigin(e.target.value)} />
-          </FormControl>
-        </GridItem>
-
-        <GridItem colSpan={2}>
-          <FormControl>
-            <FormLabel>Serial Number</FormLabel>
-            <Input
-              value={serialNum}
-              onChange={(e) => setSerialNum(e.target.value)}
-            />
-          </FormControl>
-        </GridItem>
-
-        <GridItem colSpan={2}>
-          <FormControl>
-            <FormLabel>Warranty</FormLabel>
-            <Input
-              value={warranty}
-              onChange={(e) => setWarranty(e.target.value)}
-              type="date"
-            />
-          </FormControl>
-        </GridItem>
-
-        <GridItem colSpan={2}>
-          <FormControl>
-            <FormLabel>Acquisition Date</FormLabel>
-            <Input
-              value={acquisitation}
-              onChange={(e) => setAcquisition(e.target.value)}
-              type="date"
-            />
-          </FormControl>
-        </GridItem>
-
-        <GridItem colSpan={2}>
-          <FormControl>
-            <FormLabel>Property Number</FormLabel>
-            <Input
-              value={propertyNum}
-              onChange={(e) => setPropertyNum(e.target.value)}
-            />
-          </FormControl>
-        </GridItem>
-
-        <GridItem colSpan={2}>
-          <FormControl>
-            <FormLabel>Unit</FormLabel>
-            <Input value={unit} onChange={(e) => setUnit(e.target.value)} />
-          </FormControl>
-        </GridItem>
-
-        <GridItem colSpan={2}>
-          <FormControl>
-            <FormLabel>Supplier/Donor</FormLabel>
-            <Input value={donor} onChange={(e) => setDonor(e.target.value)} />
-          </FormControl>
-        </GridItem>
-
-        <GridItem colSpan={2}>
-          <FormControl>
-            <FormLabel>Cost</FormLabel>
-            <InputGroup>
-              <InputLeftAddon children="₱" />
-              <Input
-                type="number"
-                value={cost}
-                onChange={(e) => setCost(e.target.value)}
-                placeholder="Pesos (php)"
-              />
-            </InputGroup>
-          </FormControl>
-        </GridItem>
-
-        <GridItem colSpan={2}>
-          <FormControl>
-            <FormLabel>Lot/Serial #</FormLabel>
-            <Input value={lot} onChange={(e) => setLot(e.target.value)} />
-          </FormControl>
-        </GridItem>
-
-        <GridItem colSpan={6}>
-          <FormControl>
-            <FormLabel>Remarks</FormLabel>
-            <Textarea
-              value={remarks}
-              onChange={(e) => setRemarks(e.target.value)}
-            />
-          </FormControl>
-        </GridItem>
-      </SimpleGrid>
-
-      <HStack marginTop={5} justifyContent="flex-end">
-        <Button onClick={() => setTab("inItem")}>Cancel</Button>
-        <Button
-          color="#fff"
-          isLoading={isClick ? true : false}
-          colorScheme="teal"
-          loadingText="Creating Item"
-          onClick={() => handleCreate()}
+      <form onSubmit={handleCreate}>
+        <SimpleGrid
+          columns={6}
+          columnGap={4}
+          rowGap={6}
+          w="full"
+          h={"full"}
+          p={6}
         >
-          Create Item
-        </Button>
-      </HStack>
+          <GridItem colSpan={3}>
+            <FormControl isRequired>
+              <FormLabel>Item Description (Original)</FormLabel>
+              <Textarea
+                value={descOrig}
+                onChange={(e) => setDescOrig(e.target.value)}
+                placeholder="Original Description"
+              />
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={3}>
+            <FormControl isRequired>
+              <FormLabel>Item Description</FormLabel>
+              <Textarea isReadOnly background="#eee" disabled value={desc} />
+            </FormControl>
+          </GridItem>
+          <GridItem colSpan={2}>
+            <FormControl>
+              <FormLabel>Article</FormLabel>
+
+              <Select
+                value={article}
+                onChange={(e) => {
+                  setArticle(e.target.value);
+                  setTypeOther("");
+                  setType("");
+                }}
+                placeholder="- Select Article -"
+              >
+                {getArticle.map((item, index) => {
+                  return (
+                    <option value={item.article_name} key={index}>
+                      {item.article_name}
+                    </option>
+                  );
+                })}
+                <option value="Other">Other</option>
+              </Select>
+              {article === "Other" && (
+                <Input
+                  value={articleOther}
+                  onChange={(e) => setArticleOther(e.target.value)}
+                  marginTop={4}
+                  variant="filled"
+                  placeholder="If other, please specify"
+                />
+              )}
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={2}>
+            <FormControl>
+              <FormLabel>Type/Form</FormLabel>
+              <Select
+                value={type}
+                onChange={(e) => setType(e.target.value)}
+                placeholder="- Select Type/Form -"
+              >
+                {getTypes.map((item, index) => {
+                  return (
+                    <option value={item.type_name} key={index}>
+                      {item.type_name}
+                    </option>
+                  );
+                })}
+                <option value="Other">Other</option>
+              </Select>
+
+              {type === "Other" && (
+                <Input
+                  value={typeOther}
+                  onChange={(e) => setTypeOther(e.target.value)}
+                  marginTop={4}
+                  variant="filled"
+                  placeholder="If other, please specify"
+                />
+              )}
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={1}>
+            <FormControl>
+              <FormLabel>Model</FormLabel>
+              <Input value={model} onChange={(e) => setModel(e.target.value)} />
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={1}>
+            <FormControl>
+              <FormLabel>Variety/Color</FormLabel>
+              <Input
+                value={variant}
+                onChange={(e) => setVariant(e.target.value)}
+              />
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={3}>
+            <FormControl>
+              <FormLabel>Details2</FormLabel>
+              <Textarea
+                value={details}
+                onChange={(e) => setDetails(e.target.value)}
+              />
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={3}>
+            <FormControl>
+              <FormLabel>Accessories</FormLabel>
+              <Textarea
+                value={accessories}
+                onChange={(e) => setAccessories(e.target.value)}
+              />
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={2}>
+            <FormControl>
+              <FormLabel>Status</FormLabel>
+
+              <Select
+                value={itemStatus}
+                onChange={(e) => {
+                  setItemStatus(e.target.value);
+                }}
+                placeholder="- Select Status -"
+              >
+                {getStatus.map((item, index) => {
+                  return (
+                    <option value={item.status_name} key={index}>
+                      {item.status_name}
+                    </option>
+                  );
+                })}
+                <option value="Other">Other</option>
+              </Select>
+              {itemStatus === "Other" && (
+                <Input
+                  value={itemStatusOther}
+                  onChange={(e) => setItemStatusOther(e.target.value)}
+                  marginTop={4}
+                  variant="filled"
+                  placeholder="If other, please specify"
+                />
+              )}
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={1}>
+            <FormControl>
+              <FormLabel>Other</FormLabel>
+              <Input value={other} onChange={(e) => setOther(e.target.value)} />
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={1}>
+            <FormControl>
+              <FormLabel>Brand</FormLabel>
+              <Input value={brand} onChange={(e) => setBrand(e.target.value)} />
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={2}>
+            <FormControl>
+              <FormLabel>Manufacturer</FormLabel>
+              <Input
+                value={manufacturer}
+                onChange={(e) => setManufacturer(e.target.value)}
+              />
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={2}>
+            <FormControl>
+              <FormLabel>Country of Origin</FormLabel>
+              <Input
+                value={origin}
+                onChange={(e) => setOrigin(e.target.value)}
+              />
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={2}>
+            <FormControl>
+              <FormLabel>Serial Number</FormLabel>
+              <Input
+                value={serialNum}
+                onChange={(e) => setSerialNum(e.target.value)}
+              />
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={2}>
+            <FormControl>
+              <FormLabel>Warranty</FormLabel>
+              <Input
+                value={warranty}
+                onChange={(e) => setWarranty(e.target.value)}
+                type="date"
+              />
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={2}>
+            <FormControl>
+              <FormLabel>Acquisition Date</FormLabel>
+              <Input
+                value={acquisition}
+                onChange={(e) => setAcquisition(e.target.value)}
+                type="date"
+              />
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={2}>
+            <FormControl>
+              <FormLabel>Property Number</FormLabel>
+              <Input
+                value={propertyNum}
+                onChange={(e) => setPropertyNum(e.target.value)}
+              />
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={2}>
+            <FormControl>
+              <FormLabel>Unit</FormLabel>
+              <Input value={unit} onChange={(e) => setUnit(e.target.value)} />
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={2}>
+            <FormControl>
+              <FormLabel>Supplier/Donor</FormLabel>
+              <Input value={donor} onChange={(e) => setDonor(e.target.value)} />
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={2}>
+            <FormControl>
+              <FormLabel>Cost</FormLabel>
+              <InputGroup>
+                <InputLeftAddon children="₱" />
+                <Input
+                  type="number"
+                  value={cost}
+                  onChange={(e) => setCost(e.target.value)}
+                  placeholder="Pesos (php)"
+                />
+              </InputGroup>
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={2}>
+            <FormControl>
+              <FormLabel>Lot/Serial #</FormLabel>
+              <Input value={lot} onChange={(e) => setLot(e.target.value)} />
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={2}>
+            <FormControl>
+              <FormLabel>Expiration</FormLabel>
+              <Input
+                value={expiration}
+                onChange={(e) => {
+                  setExpiration(e.target.value);
+                }}
+                type="date"
+              />
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={2} width="100%">
+            <FormControl>
+              <FormLabel>IAR #</FormLabel>
+              <Input value={iar} onChange={(e) => setIar(e.target.value)} />
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={2}>
+            <FormControl>
+              <FormLabel>IAR Date</FormLabel>
+              <Input
+                value={iarDate}
+                onChange={(e) => setIarDate(e.target.value)}
+                type="date"
+              />
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={2}>
+            <FormControl>
+              <FormLabel>Delivery Date</FormLabel>
+              <Input
+                value={delivery}
+                onChange={(e) => setDelivery(e.target.value)}
+                type="date"
+              />
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={6}>
+            <FormControl>
+              <FormLabel>Remarks</FormLabel>
+              <Textarea
+                value={remarks}
+                onChange={(e) => setRemarks(e.target.value)}
+              />
+            </FormControl>
+          </GridItem>
+        </SimpleGrid>
+
+        <HStack marginTop={5} justifyContent="flex-end">
+          <Button onClick={() => setTab("inItem")}>Cancel</Button>
+          <Button
+            color="#fff"
+            isLoading={isClick ? true : false}
+            colorScheme="teal"
+            loadingText="Creating Item"
+            type="submit"
+          >
+            Create Item
+          </Button>
+        </HStack>
+      </form>
     </>
   );
 };

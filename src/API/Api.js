@@ -1,12 +1,14 @@
 import axios from "axios";
 
-axios.defaults.withCredentials = true;
-
-let serverUrl = "http://localhost:3000";
-
-const api = axios.create({
+const serverUrl = "http://127.0.0.1:8000/api/";
+const localApi = axios.create({
   baseURL: serverUrl,
-  withCredentials: true,
 });
 
-export default api;
+// localApi.interceptors.request.use(function (config) {
+//   const token = sessionStorage.getItem('Authorization');
+//   config.headers.Authorization = 'Bearer ' + token;
+//   return config;
+// });
+
+export default localApi;

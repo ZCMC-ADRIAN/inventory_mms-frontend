@@ -44,16 +44,10 @@ const In = ({ setTab }) => {
 
   const todate = new Date();
 
-  const [todayTime, setTodayTime] = useState(
-    todate.getHours() + ":" + todate.getMinutes() + ":" + todate.getSeconds()
-  );
-  const [todayDate, setTodayDate] = useState(
-    todate.getMonth() + 1 + "/" + todate.getDate() + "/" + todate.getFullYear()
-  );
   const [desc, setDesc] = useState("");
   const [brand, setBrand] = useState("");
   const [lot, setLot] = useState("");
-  const [expiration, setExpiration] = useState("NOT INDICATED");
+  const [expiration, setExpiration] = useState("");
   const [iar, setIar] = useState("");
   const [iarDate, setIarDate] = useState("");
   const [delivery, setDelivery] = useState("");
@@ -66,7 +60,7 @@ const In = ({ setTab }) => {
   const [supplier, setSupplier] = useState("");
   const [manufacturer, setManufacturer] = useState("");
   const [origin, setOrigin] = useState("");
-  const [expirationMonths, setExpirationMonths] = useState("NOT INDICATED");
+  const [expirationMonths, setExpirationMonths] = useState("");
   const [remarks, setRemarks] = useState("");
   const [condition, setCondition] = useState("");
   const [fundSource, setFundSource] = useState("");
@@ -100,7 +94,7 @@ const In = ({ setTab }) => {
     setDesc("");
     setBrand("");
     setLot("");
-    setExpiration("NOT INDICATED");
+    setExpiration("");
     setIar("");
     setIarDate("");
     setDelivery("");
@@ -113,7 +107,7 @@ const In = ({ setTab }) => {
     setSupplier("");
     setManufacturer("");
     setOrigin("");
-    setExpirationMonths("NOT INDICATED");
+    setExpirationMonths("");
     setRemarks("");
     setCondition("");
     setFundSource("");

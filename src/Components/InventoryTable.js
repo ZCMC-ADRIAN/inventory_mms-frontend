@@ -1,5 +1,6 @@
 import { useTable, usePagination } from "react-table";
 import { IoAddCircleOutline } from "react-icons/io5";
+import InventoryModal from "./InventoryModal";
 import {
   Table,
   Thead,
@@ -17,6 +18,7 @@ import {
   Button,
   TableContainer,
   Heading,
+  useDisclosure
 } from "@chakra-ui/react";
 import Search from "./Search";
 
@@ -28,29 +30,10 @@ import {
   ChevronRightIcon,
   ChevronLeftIcon,
 } from "@chakra-ui/icons";
-import { BsFillCloudDownloadFill } from "react-icons/bs";
 
-import { AiOutlineFolderView, AiFillEdit } from "react-icons/ai";
-import { HiTrash } from "react-icons/hi";
+import { AiOutlineFolderView } from "react-icons/ai";
 
 import moment from "moment/moment";
-
-const ActionsBtn = () => {
-  return (
-    <Flex columnGap={1}>
-      <Button
-        _hover={{
-          bg: "#FCD299",
-          boxShadow: "lg",
-          transform: "scale(1.2,1.2)",
-          transition: "0.3s",
-        }}
-      >
-        <AiOutlineFolderView color="orange" />
-      </Button>
-    </Flex>
-  );
-};
 
 const InventoryTable = ({
   title,
@@ -90,6 +73,25 @@ const InventoryTable = ({
     backgroundColor: "#2583CF",
     borderRadius: "52px",
     fontSize: "20px",
+  };
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const ActionsBtn = () => {
+    return (
+      <Flex columnGap={1}>
+        <Button
+          _hover={{
+            bg: "#FCD299",
+            boxShadow: "lg",
+            transform: "scale(1.2,1.2)",
+            transition: "0.3s",
+          }}
+          onClick={()=>{onOpen()}}
+        >
+          <AiOutlineFolderView color="orange" />
+        </Button>
+      </Flex>
+    );
   };
 
   return (
@@ -217,6 +219,9 @@ const InventoryTable = ({
           </Tbody>
         </Table>
       </TableContainer>
+
+      <InventoryModal isOpen={isOpen} onClose={onClose} onOpen={onOpen}/>
+      
       {page.length >= 1 ? (
         <Flex justifyContent={"end"} mt={5}>
           <div id="btnleft">

@@ -95,71 +95,7 @@ const Homepage = () => {
       issued: 0,
       returned: 0,
       category: "Equipment"
-    },
-    {
-      id: 6,
-      desc: 'Speaker System Stereo Megaoke',
-      available: 20,
-      issued: 0,
-      returned: 0,
-      category: "Equipment"
-    },
-    {
-      id: 7,
-      desc: 'Speaker System Stereo Megaoke',
-      available: 20,
-      issued: 0,
-      returned: 0,
-      category: "Equipment"
-    },
-    {
-      id: 8,
-      desc: 'Speaker System Stereo Megaoke',
-      available: 20,
-      issued: 0,
-      returned: 0,
-      category: "Equipment"
-    },
-    {
-      id: 9,
-      desc: 'Speaker System Stereo Megaoke',
-      available: 20,
-      issued: 0,
-      returned: 0,
-      category: "Equipment"
-    },
-    {
-      id: 10,
-      desc: 'Speaker System Stereo Megaoke',
-      available: 20,
-      issued: 0,
-      returned: 0,
-      category: "Equipment"
-    },
-    {
-      id: 11,
-      desc: 'Speaker System Stereo Megaoke',
-      available: 20,
-      issued: 0,
-      returned: 0,
-      category: "Equipment"
-    },
-    {
-      id: 12,
-      desc: 'Speaker System Stereo Megaoke',
-      available: 20,
-      issued: 0,
-      returned: 0,
-      category: "Equipment"
-    },
-    {
-      id: 13,
-      desc: 'Speaker System Stereo Megaoke',
-      available: 20,
-      issued: 0,
-      returned: 0,
-      category: "Equipment"
-    },
+    }
   ];
 
   return (

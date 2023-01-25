@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import CreateItem from "../Components/CreateItem";
 import {
   Tabs,
@@ -18,18 +18,160 @@ import InTable from "../Components/InTable";
 
 const Homepage = () => {
   const [tab, setTab] = useState("inItem");
+  const title = "Inventory";
+  const [fetch, setFetch] = useState(false);
 
+  const column = useMemo(
+    () => [
+      {
+        Header: "No",
+        accessor: "id",
+      },
+      {
+        Header: "Item Description",
+        accessor: "desc",
+      },
+      {
+        Header: "Available",
+        accessor: "available",
+      },
+      {
+        Header: "Issued",
+        accessor: "issued",
+      },
+      {
+        Header: "Returned",
+        accessor: "returned",
+      },
+      {
+        Header: "Category",
+        accessor: "category",
+      },
+      {
+        Header: "ACTION",
+        accessor: "action",
+      },
+    ],
+    []
+  );
+
+  const Department_Dataset = [
+    {
+      id: 1,
+      desc: 'Speaker System Stereo Megaoke',
+      available: 20,
+      issued: 0,
+      returned: 0,
+      category: "Equipment"
+    },
+    {
+      id: 2,
+      desc: 'Speaker System Stereo Megaoke',
+      available: 20,
+      issued: 0,
+      returned: 0,
+      category: "Equipment"
+    },
+    {
+      id: 3,
+      desc: 'Speaker System Stereo Megaoke',
+      available: 20,
+      issued: 0,
+      returned: 0,
+      category: "Equipment"
+    },
+    {
+      id: 4,
+      desc: 'Speaker System Stereo Megaoke',
+      available: 20,
+      issued: 0,
+      returned: 0,
+      category: "Equipment"
+    },
+    {
+      id: 5,
+      desc: 'Speaker System Stereo Megaoke',
+      available: 20,
+      issued: 0,
+      returned: 0,
+      category: "Equipment"
+    },
+    {
+      id: 6,
+      desc: 'Speaker System Stereo Megaoke',
+      available: 20,
+      issued: 0,
+      returned: 0,
+      category: "Equipment"
+    },
+    {
+      id: 7,
+      desc: 'Speaker System Stereo Megaoke',
+      available: 20,
+      issued: 0,
+      returned: 0,
+      category: "Equipment"
+    },
+    {
+      id: 8,
+      desc: 'Speaker System Stereo Megaoke',
+      available: 20,
+      issued: 0,
+      returned: 0,
+      category: "Equipment"
+    },
+    {
+      id: 9,
+      desc: 'Speaker System Stereo Megaoke',
+      available: 20,
+      issued: 0,
+      returned: 0,
+      category: "Equipment"
+    },
+    {
+      id: 10,
+      desc: 'Speaker System Stereo Megaoke',
+      available: 20,
+      issued: 0,
+      returned: 0,
+      category: "Equipment"
+    },
+    {
+      id: 11,
+      desc: 'Speaker System Stereo Megaoke',
+      available: 20,
+      issued: 0,
+      returned: 0,
+      category: "Equipment"
+    },
+    {
+      id: 12,
+      desc: 'Speaker System Stereo Megaoke',
+      available: 20,
+      issued: 0,
+      returned: 0,
+      category: "Equipment"
+    },
+    {
+      id: 13,
+      desc: 'Speaker System Stereo Megaoke',
+      available: 20,
+      issued: 0,
+      returned: 0,
+      category: "Equipment"
+    },
+  ];
 
   return (
     <>
-
       <div className="container">
         <Sidebar setTab={setTab} tab={tab} />
         <div className="component-wrapper">
-          {tab === "create" && <CreateItem setTab={setTab}/>}
+          {tab === "create" && <CreateItem setTab={setTab} />}
           {tab === "inItem" && <In setTab={setTab} />}
-
-          {tab === "inventory" && <InventoryTable />}
+          {tab === "inventory" && (
+            <InventoryTable title={title} fetch={fetch} columns={column} data={Department_Dataset}/>
+          )}
           {tab === "listIn" && <InTable />}
         </div>
       </div>

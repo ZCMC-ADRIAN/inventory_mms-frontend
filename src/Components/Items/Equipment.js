@@ -47,10 +47,12 @@ const Equipment = ({ setTab }) => {
   const [unit, setUnit] = useState("");
   const [location, setLocation] = useState("");
   const [donor, setDonor] = useState("");
+  const [donorOther, setDonorOther] = useState("");
   const [remarks, setRemarks] = useState("");
   const [category, setCategory] = useState("Equipment");
   const [cost, setCost] = useState(0);
   const [accessories, setAccessories] = useState("");
+  const [acquiMode, setAcquiMode] = useState("");
   const { user } = useAuth();
 
   //Utilities State
@@ -61,9 +63,6 @@ const Equipment = ({ setTab }) => {
   //In state
   const [lot, setLot] = useState("");
   const [expiration, setExpiration] = useState("");
-  const [iar, setIar] = useState("");
-  const [iarDate, setIarDate] = useState("");
-  const [delivery, setDelivery] = useState("");
   const [itemStatus, setItemStatus] = useState("");
   const [itemStatusOther, setItemStatusOther] = useState("");
 
@@ -71,6 +70,7 @@ const Equipment = ({ setTab }) => {
   const [getArticle, setGetArticle] = useState([]);
   const [getTypes, setGetTypes] = useState([]);
   const [getStatus, setGetStatus] = useState([]);
+  const [getSupplier, setGetSupplier] = useState([]);
 
   const fetchData = async () => {
     let responseArticle = await localApi.get("article");
@@ -83,11 +83,16 @@ const Equipment = ({ setTab }) => {
 
     let responseStatus = await localApi.get("status");
     setGetStatus(responseStatus.data);
+
+    let responseSupplier = await localApi.get("supplier",{
+      params: {acquiMode : acquiMode}
+    });
+    setGetSupplier(responseSupplier.data);
   };
 
   useEffect(() => {
     fetchData();
-  }, [type, article]);
+  }, [type, article, acquiMode]);
 
   const clearForm = () => {
     setArticle("");
@@ -112,13 +117,11 @@ const Equipment = ({ setTab }) => {
     setRemarks("");
     setCost("");
     setLot("");
-    setExpiration("NOT INDICATED");
-    setIar("");
-    setIarDate("");
-    setDelivery("");
+    setExpiration("");
     setAccessories("");
     setItemStatus("");
     setItemStatusOther("");
+    setAcquiMode("");
   };
 
   const { setAppState } = useAuth();
@@ -161,15 +164,10 @@ const Equipment = ({ setTab }) => {
         propertyNum: propertyNum,
         unit: unit,
         location: location,
-        acquisitionMode: donors.includes(donor.toLocaleLowerCase())
-          ? "Donation"
-          : "Purchase",
-        supplier: donor,
+        acquisitionMode: acquiMode,
+        supplier: donor === 'Other' ? donorOther : donor,
         remarks: remarks,
         expiration: expiration,
-        IAR: iar,
-        IAR_Date: iarDate,
-        delivery: delivery,
         cost: cost,
         category: category,
         accessories: accessories,
@@ -437,8 +435,44 @@ const Equipment = ({ setTab }) => {
 
           <GridItem colSpan={2}>
             <FormControl>
+              <FormLabel>Acquisition Mode</FormLabel>
+              <Select
+                value={acquiMode}
+                onChange={(e) => setAcquiMode(e.target.value)}
+                placeholder="- Select Acquisition Mode -"
+              >
+                <option>Purchase</option>
+                <option>Donation</option>
+              </Select>
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={2}>
+            <FormControl>
               <FormLabel>Supplier/Donor</FormLabel>
-              <Input value={donor} onChange={(e) => setDonor(e.target.value)} />
+              <Select
+                value={donor}
+                onChange={(e) => setDonor(e.target.value)}
+                placeholder="- Select Supplier/Donor -"
+              >
+                {getSupplier.map((item, index)=>{
+                  return (
+                    <option value={item.supplier} key={index}>
+                    {item.supplier}
+                  </option>
+                  )
+                })}
+                <option value="Other">Other</option>
+              </Select>
+              {donor === "Other" && (
+                <Input
+                  value={donorOther}
+                  onChange={(e) => setDonorOther(e.target.value)}
+                  marginTop={4}
+                  variant="filled"
+                  placeholder="If other, please specify"
+                />
+              )}
             </FormControl>
           </GridItem>
 
@@ -472,35 +506,6 @@ const Equipment = ({ setTab }) => {
                 onChange={(e) => {
                   setExpiration(e.target.value);
                 }}
-                type="date"
-              />
-            </FormControl>
-          </GridItem>
-
-          <GridItem colSpan={2} width="100%">
-            <FormControl>
-              <FormLabel>IAR #</FormLabel>
-              <Input value={iar} onChange={(e) => setIar(e.target.value)} />
-            </FormControl>
-          </GridItem>
-
-          <GridItem colSpan={2}>
-            <FormControl>
-              <FormLabel>IAR Date</FormLabel>
-              <Input
-                value={iarDate}
-                onChange={(e) => setIarDate(e.target.value)}
-                type="date"
-              />
-            </FormControl>
-          </GridItem>
-
-          <GridItem colSpan={2}>
-            <FormControl>
-              <FormLabel>Delivery Date</FormLabel>
-              <Input
-                value={delivery}
-                onChange={(e) => setDelivery(e.target.value)}
                 type="date"
               />
             </FormControl>

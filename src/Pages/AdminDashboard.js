@@ -3,7 +3,7 @@ import InventoryTable from "../Components/InventoryTable";
 import InTable from "../Components/InTable";
 import AdminSidebar from "../Components/AdminSidebar";
 import Accounts from "../Components/Accounts";
-import DeleteModal from "../Components/DeleteModal";
+// import DeleteModal from "../Components/DeleteModal";
 import { useToast } from "@chakra-ui/react";
 import VerifyModal from "../Components/VerifyModal";
 
@@ -16,9 +16,9 @@ const AdminDashboard = () => {
 
   return (
     <>
-      {deleteModal && (
+      {/* {deleteModal && (
         <DeleteModal id={id} toast={toast} setDeleteModal={setDeleteModal} />
-      )}
+      )} */}
 
       {verifyModal && (
         <VerifyModal id={id} toast={toast} setVerifyModal={setVerifyModal} />
@@ -29,7 +29,7 @@ const AdminDashboard = () => {
           {tab === "accounts" && (
             <Accounts
               setId={setId}
-              setDeleteModal={setDeleteModal}
+              // setDeleteModal={setDeleteModal}
               setVerifyModal={setVerifyModal}
             />
           )}

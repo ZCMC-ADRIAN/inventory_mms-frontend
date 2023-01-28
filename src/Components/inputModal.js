@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
-
+import { useContext, useEffect, useRef } from "react";
+import DataContext from "../Context/Context";
 import {
   Modal,
   ModalOverlay,
@@ -30,7 +30,10 @@ export const VerticallyCenter = ({
   isOpen,
   onClose,
   postSubmit,
+  id,
 }) => {
+  const { fetchItem } = useContext(DataContext);
+
   const CardDet = ({ property, detail }) => {
     return (
       <Box fontSize={15} color={"blackAlpha.600"} w={"100%"} h={"auto"}>
@@ -89,14 +92,23 @@ export const VerticallyCenter = ({
                       ></Image>
                     </Flex>
                   </Box>
-
-                  <CardDet
+                  {fetchItem(id).forEach((element) => {
+                    Object.entries(element).forEach(([property, value]) => {
+                      <CardDet property={property} detail={value} />;
+                    });
+                  })}
+                  {/* <CardDet
                     property={"Item name"}
                     detail={
                       "description about the details sample sample sample sample sample"
                     }
+                    data.forEach(obj => {
+    Object.entries(obj).forEach(([property, value]) => {
+        console.log(value, "is property of", property);
+    });
+});
                   />
-                  <CardDet property={"Type"} detail={"sample sample sample"} />
+                  <CardDet property={"Type"} detail={"sample sample sample"} /> */}
                 </Stack>
               </Box>
             </Flex>

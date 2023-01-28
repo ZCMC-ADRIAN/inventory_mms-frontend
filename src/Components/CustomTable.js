@@ -81,17 +81,7 @@ const ActionsBtn = () => {
   );
 };
 
-const CustomTable = ({
-  title,
-  columns,
-  data,
-  fetch,
-  search,
-  setSearch,
-  handleClick,
-  child,
-  children,
-}) => {
+const CustomTable = ({ title, columns, data, child, children }) => {
   const {
     locDatas,
     locValue,

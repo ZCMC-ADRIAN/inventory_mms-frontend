@@ -28,6 +28,15 @@ export const Context = ({ children }) => {
     name: "dennis",
   };
 
+  const fetchItem = async (value) => {
+    try {
+      const response = await api.get("/itemdetail/" + value);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const [locDatas, setLocDatas] = useState([]);
   const [locValue, setLocValue] = useState([]);
   const [selectedLoc, setSelectedLoc] = useState();
@@ -53,99 +62,6 @@ export const Context = ({ children }) => {
   const [loose, setLoose] = useState("");
   const [remarks, setRemarks] = useState("");
 
-  //   const fetchOutItem = async () => {
-  //     try {
-  //       const response = await fetch(outItemAPI, { method: "get" });
-  //       const outItem = await response.json();
-
-  //       if (outItem) {
-  //         setOutItem(outItem.filter((e) => e.desc !== ""));
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-
-  //   const fetchInventory = async () => {
-  //     try {
-  //       const response = await fetch(inventoryAPI, { method: "get" });
-  //       const outItem = await response.json();
-
-  //       if (outItem) {
-  //         setInventory(outItem.filter((e) => e.desc !== ""));
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-
-  //   const fetchPeople = async () => {
-  //     try {
-  //       const response = await fetch("http://localhost:3001/api/auth/users", {
-  //         method: "get",
-  //         mode: "no-cors",
-  //       });
-  //       const listPeople = await response.json();
-
-  //       if (listPeople) {
-  //         setPeople(listPeople.filter((e) => e.userType !== "admin"));
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-
-  //   const fetchReturn = async () => {
-  //     try {
-  //       const response = await fetch(getReturnAPI, { method: "get" });
-  //       const returnItems = await response.json();
-
-  //       if (returnItems) {
-  //         setReturnItem(returnItems.filter((e) => e.desc !== ""));
-  //       }
-  //     } catch (error) {
-  //       throw error;
-  //     }
-  //   };
-
-  //   const fetchEquipment = async () => {
-  //     try {
-  //       const response = await fetch(equipmentAPI, { method: "get" });
-  //       const outItem = await response.json();
-
-  //       if (outItem) {
-  //         setEquipment(outItem.filter((e) => e.desc !== ""));
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-
-  //   const fetchInItem = async () => {
-  //     try {
-  //       const response = await fetch(getInAPI, { method: "get" });
-  //       const inItem = await response.json();
-
-  //       if (inItem) {
-  //         setInItem(inItem.filter((e) => e.desc !== "" || e.total !== ""));
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-
-  //   const fetchVerification = async () => {
-  //     try {
-  //       const response = await api.get(`/api/auth/user/${user?._id}`);
-
-  //       if (response) {
-  //         setVerified(response.data.verified);
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-
   return (
     <DataContext.Provider
       value={{
@@ -153,6 +69,9 @@ export const Context = ({ children }) => {
         // locDatas,
         // locItem,
         // selectedLocIndex,
+
+        //items
+        fetchItem,
 
         /*location*/
         locDatas,

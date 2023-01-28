@@ -29,244 +29,139 @@ import CustomTable from "./CustomTable";
 
 const In = ({ setTab }) => {
   const toast = useToast();
-  const [item, setItem] = useState([]);
-  const { appState, setAppState, inventory, user } = useAuth();
-  const [isClick, setIsClick] = useState(false);
-  const getUniqueAPI =
-    "https://script.google.com/macros/s/AKfycby9YK1q3CQDA_vESrSQpylqOCIvAirNfkifar2-79o-8enMFT6E-b3Gt8a_qrVnFlmEfg/exec?action=getUnique";
 
-  useEffect(() => {
-    fetch(getUniqueAPI, { method: "get" })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) {
-          setItem(data.filter((e) => e.desc !== ""));
-        }
-      })
-      .catch((error) => console.log(error));
-  }, [appState]);
-
-  const todate = new Date();
-
-  const [todayTime, setTodayTime] = useState(
-    todate.getHours() + ":" + todate.getMinutes() + ":" + todate.getSeconds()
-  );
-  const [todayDate, setTodayDate] = useState(
-    todate.getMonth() + 1 + "/" + todate.getDate() + "/" + todate.getFullYear()
-  );
   const [desc, setDesc] = useState("");
   const [itemDesc, setItemDesc] = useState("");
+  const [searchTerm, setSearchterm] = useState([]);
+  const [term, setTerm] = useState("");
+  // const handleInItem = async () => {
+  //   setIsClick(true);
 
-  const [lot, setLot] = useState("");
-  const [expiration, setExpiration] = useState("NOT INDICATED");
-  const [iar, setIar] = useState("");
-  const [iarDate, setIarDate] = useState("");
-  const [delivery, setDelivery] = useState("");
-  const [quantity, setQuantity] = useState(0);
-  const [pack, setPack] = useState(0);
-  const [loose, setLoose] = useState(0);
-  const [unit, setUnit] = useState("");
-  const [total, setTotal] = useState("");
-  const [location, setLocation] = useState("");
-  const [supplier, setSupplier] = useState("");
-  const [manufacturer, setManufacturer] = useState("");
-  const [origin, setOrigin] = useState("");
-  const [expirationMonths, setExpirationMonths] = useState("NOT INDICATED");
-  const [remarks, setRemarks] = useState("");
-  const [condition, setCondition] = useState("");
-  const [fundSource, setFundSource] = useState("");
-  const [acquisitionCost, setAcquisitionCost] = useState("");
-  const [term, setTerm] = useState(null);
+  //   if (total === 0) {
+  //     setIsClick(false);
+  //     toast({
+  //       title: "Error",
+  //       description: "Please enter quantity",
+  //       status: "error",
+  //       duration: 9000,
+  //       isClosable: true,
+  //     });
+  //     return;
+  //   }
 
-  const [brand, setBrand] = useState(""); //Value in Select input
-  const [brandData, setBrandData] = useState(""); //all the fetched data from db
-  const [isSelectBrand, setSelectBrand] = useState(); //Selected state
-  const [selectedIndex, setSelectedIndex] = useState(0); //index for arrow down
+  //   if (!desc) {
+  //     setIsClick(false);
+  //     toast({
+  //       title: "Error",
+  //       description: "Enter Item Description",
+  //       status: "error",
+  //       duration: 9000,
+  //       isClosable: true,
+  //     });
+  //     return;
+  //   }
 
-  const donors = [
-    "doh",
-    "department of health",
-    "icrc",
-    "international committee of the red cross",
-    "biatf",
-    "who",
-    "world health organization",
-  ];
+  //   fetch(inItemAPI, {
+  //     method: "POST",
+  //     body: JSON.stringify({
+  //       timestamp: todayTime + " " + todayDate,
+  //       desc,
+  //       brand,
+  //       lot,
+  //       expiration:
+  //         expiration !== "NOT INDICATED"
+  //           ? new Date(expiration).getMonth() +
+  //             1 +
+  //             "/" +
+  //             new Date(expiration).getDate() +
+  //             "/" +
+  //             new Date(expiration).getFullYear()
+  //           : "NOT INDICATED",
+  //       iar,
+  //       iarDate:
+  //         iarDate !== ""
+  //           ? new Date(iarDate).getMonth() +
+  //             1 +
+  //             "/" +
+  //             new Date(iarDate).getDate() +
+  //             "/" +
+  //             new Date(iarDate).getFullYear()
+  //           : null,
 
-  const inItemAPI =
-    "https://script.google.com/macros/s/AKfycbzD3yhqneDKW_UvKgr-H6AGA1J3o3Jei_Ql3_t2MMQW7_XrdJ1vF3Th2kZyU7Mv2M5J9Q/exec?action=inItem";
+  //       delivery:
+  //         delivery !== ""
+  //           ? new Date(delivery).getMonth() +
+  //             1 +
+  //             "/" +
+  //             new Date(delivery).getDate() +
+  //             "/" +
+  //             new Date(delivery).getFullYear()
+  //           : null,
 
-  const clearForm = () => {
-    setDesc("");
-    setBrand("");
-    setLot("");
-    setExpiration("NOT INDICATED");
-    setIar("");
-    setIarDate("");
-    setDelivery("");
-    setQuantity("");
-    setPack("");
-    setLoose("");
-    setUnit("");
-    setTotal("");
-    setLocation("");
-    setSupplier("");
-    setManufacturer("");
-    setOrigin("");
-    setExpirationMonths("NOT INDICATED");
-    setRemarks("");
-    setCondition("");
-    setFundSource("");
-    setAcquisitionCost("");
-  };
+  //       quantity,
+  //       pack,
+  //       loose,
+  //       unit,
+  //       total,
+  //       location,
+  //       supplier,
+  //       manufacturer,
+  //       origin,
+  //       acquisition: donors.includes(supplier.toLocaleLowerCase())
+  //         ? "Donation"
+  //         : "Purchase",
+  //       expirationMonths,
+  //       remarks,
+  //       condition,
+  //       fundSource,
+  //       acquisitionCost,
+  //       user: user?.firstname + " " + user?.lastname,
+  //     }),
+  //   })
+  //     .then(async (response) => {
+  //       const isJson = response.headers
+  //         .get("content-type")
+  //         ?.includes("application/json");
+  //       const data = isJson && (await response.json());
 
-  const handleInItem = async () => {
-    setIsClick(true);
+  //       if (response.ok) {
+  //         setIsClick(false);
+  //         clearForm();
+  //         setAppState("Item Created");
+  //         setTimeout(() => setAppState(""), 500);
+  //         toast({
+  //           title: "Item Created",
+  //           description: "Added one (1) item to the database",
+  //           status: "success",
+  //           duration: 9000,
+  //           isClosable: true,
+  //         });
+  //       }
 
-    if (total === 0) {
-      setIsClick(false);
-      toast({
-        title: "Error",
-        description: "Please enter quantity",
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
-      return;
-    }
+  //       // check for error response
+  //       if (!response.ok) {
+  //         setIsClick(false);
+  //         // get error message from body or default to response status
+  //         const error = (data && data.message) || response.status;
 
-    if (!desc) {
-      setIsClick(false);
-      toast({
-        title: "Error",
-        description: "Enter Item Description",
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
-      return;
-    }
-
-    fetch(inItemAPI, {
-      method: "POST",
-      body: JSON.stringify({
-        timestamp: todayTime + " " + todayDate,
-        desc,
-        brand,
-        lot,
-        expiration:
-          expiration !== "NOT INDICATED"
-            ? new Date(expiration).getMonth() +
-              1 +
-              "/" +
-              new Date(expiration).getDate() +
-              "/" +
-              new Date(expiration).getFullYear()
-            : "NOT INDICATED",
-        iar,
-        iarDate:
-          iarDate !== ""
-            ? new Date(iarDate).getMonth() +
-              1 +
-              "/" +
-              new Date(iarDate).getDate() +
-              "/" +
-              new Date(iarDate).getFullYear()
-            : null,
-
-        delivery:
-          delivery !== ""
-            ? new Date(delivery).getMonth() +
-              1 +
-              "/" +
-              new Date(delivery).getDate() +
-              "/" +
-              new Date(delivery).getFullYear()
-            : null,
-
-        quantity,
-        pack,
-        loose,
-        unit,
-        total,
-        location,
-        supplier,
-        manufacturer,
-        origin,
-        acquisition: donors.includes(supplier.toLocaleLowerCase())
-          ? "Donation"
-          : "Purchase",
-        expirationMonths,
-        remarks,
-        condition,
-        fundSource,
-        acquisitionCost,
-        user: user?.firstname + " " + user?.lastname,
-      }),
-    })
-      .then(async (response) => {
-        const isJson = response.headers
-          .get("content-type")
-          ?.includes("application/json");
-        const data = isJson && (await response.json());
-
-        if (response.ok) {
-          setIsClick(false);
-          clearForm();
-          setAppState("Item Created");
-          setTimeout(() => setAppState(""), 500);
-          toast({
-            title: "Item Created",
-            description: "Added one (1) item to the database",
-            status: "success",
-            duration: 9000,
-            isClosable: true,
-          });
-        }
-
-        // check for error response
-        if (!response.ok) {
-          setIsClick(false);
-          // get error message from body or default to response status
-          const error = (data && data.message) || response.status;
-
-          return Promise.reject(error);
-        }
-      })
-      .catch((error) => {
-        setIsClick(false);
-        toast({
-          title: "Error",
-          description: "An error occured",
-          status: "error",
-          duration: 9000,
-          isClosable: true,
-        });
-      });
-  };
+  //         return Promise.reject(error);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       setIsClick(false);
+  //       toast({
+  //         title: "Error",
+  //         description: "An error occured",
+  //         status: "error",
+  //         duration: 9000,
+  //         isClosable: true,
+  //       });
+  //     });
+  // };
 
   useEffect(() => {
-    const fetchTotal = () => {
-      if (!quantity && !pack && !loose) {
-        return setTotal(0);
-      } else if (quantity && pack && loose) {
-        return setTotal(parseInt(quantity * pack) + parseInt(loose));
-      } else if (quantity && !pack && !loose) {
-        return setTotal(0);
-      } else if (!quantity && pack && loose) {
-        return setTotal(parseInt(pack) + parseInt(loose));
-      } else if (!pack && loose) {
-        return setTotal(loose);
-      } else if (quantity && pack && !loose) {
-        return setTotal(parseInt(quantity * pack));
-      } else {
-        return setTotal(pack);
-      }
-    };
-
-    fetchTotal();
-    console.log(isSelectBrand);
-  }, [quantity, pack, loose, isSelectBrand]);
+    fetchTableData();
+  }, [searchTerm]);
 
   const [tableData, setTableData] = useState([]);
 
@@ -279,10 +174,6 @@ const In = ({ setTab }) => {
     setTableData(result.data);
   };
 
-  const [searchTerm, setSearchterm] = useState([]);
-  useEffect(() => {
-    fetchTableData();
-  }, [searchTerm]);
   const fetchitem = async (value) => {
     const result = await api.get(`/item`, {
       params: {
@@ -290,30 +181,6 @@ const In = ({ setTab }) => {
       },
     });
     setSearchterm(result.data);
-  };
-
-  const fetchbrand = async (value) => {
-    const result = await api.get(`/brand`, {
-      params: {
-        q: value,
-      },
-    });
-    setBrandData(result.data);
-  };
-
-  const getExpirationMonth = (date1, date2) => {
-    let months;
-    months = (date2.getFullYear() - date1.getFullYear()) * 12;
-    months -= date1.getMonth();
-    months += date2.getMonth();
-
-    if (months < 0) {
-      return setExpirationMonths("EXPIRED");
-    } else {
-      return setExpirationMonths(
-        months > 1 ? `${months} MONTHS` : `${months} MONTH`
-      );
-    }
   };
 
   const [dropdown, setDropdown] = useState(false);
@@ -413,6 +280,15 @@ const In = ({ setTab }) => {
                             placeholder="Search"
                           />
                         </InputGroup>
+                        <Button
+                          onClick={() => {
+                            setTab("create");
+                          }}
+                          fontSize="14px"
+                          ml={2}
+                        >
+                          New
+                        </Button>
                       </div>
 
                       {searchTerm?.map((item, index) => {

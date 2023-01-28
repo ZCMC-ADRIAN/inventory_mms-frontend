@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import {
   SimpleGrid,
   GridItem,
@@ -17,11 +17,15 @@ import {
   Icon,
   Container,
   InputLeftAddon,
+  Box,
 } from "@chakra-ui/react";
 import useAuth from "../Hooks/useAuth";
 import { HiSearch } from "react-icons/hi";
 import { useClickOutside } from "../Components/useClickOutside";
 import InItemModal from "./InItemModal";
+import api from "../API/Api";
+import SearchSel from "./searchableSelect/searchSel";
+import CustomTable from "./CustomTable";
 
 const In = ({ setTab }) => {
   const toast = useToast();
@@ -44,10 +48,17 @@ const In = ({ setTab }) => {
 
   const todate = new Date();
 
+  const [todayTime, setTodayTime] = useState(
+    todate.getHours() + ":" + todate.getMinutes() + ":" + todate.getSeconds()
+  );
+  const [todayDate, setTodayDate] = useState(
+    todate.getMonth() + 1 + "/" + todate.getDate() + "/" + todate.getFullYear()
+  );
   const [desc, setDesc] = useState("");
-  const [brand, setBrand] = useState("");
+  const [itemDesc, setItemDesc] = useState("");
+
   const [lot, setLot] = useState("");
-  const [expiration, setExpiration] = useState("");
+  const [expiration, setExpiration] = useState("NOT INDICATED");
   const [iar, setIar] = useState("");
   const [iarDate, setIarDate] = useState("");
   const [delivery, setDelivery] = useState("");
@@ -60,22 +71,17 @@ const In = ({ setTab }) => {
   const [supplier, setSupplier] = useState("");
   const [manufacturer, setManufacturer] = useState("");
   const [origin, setOrigin] = useState("");
-  const [expirationMonths, setExpirationMonths] = useState("");
+  const [expirationMonths, setExpirationMonths] = useState("NOT INDICATED");
   const [remarks, setRemarks] = useState("");
   const [condition, setCondition] = useState("");
   const [fundSource, setFundSource] = useState("");
   const [acquisitionCost, setAcquisitionCost] = useState("");
-  
-  // const [getLocation, setGetLocation] = useState([]);
+  const [term, setTerm] = useState(null);
 
-  const getLocation = [
-    { location: "MMS"},
-    { location: "OMCC"},
-  ];
-
-  const onLocation = (searchLocation) => {
-    setLocation(searchLocation);
-  };
+  const [brand, setBrand] = useState(""); //Value in Select input
+  const [brandData, setBrandData] = useState(""); //all the fetched data from db
+  const [isSelectBrand, setSelectBrand] = useState(); //Selected state
+  const [selectedIndex, setSelectedIndex] = useState(0); //index for arrow down
 
   const donors = [
     "doh",
@@ -87,14 +93,14 @@ const In = ({ setTab }) => {
     "world health organization",
   ];
 
-  // const inItemAPI =
-  //   "https://script.google.com/macros/s/AKfycbzD3yhqneDKW_UvKgr-H6AGA1J3o3Jei_Ql3_t2MMQW7_XrdJ1vF3Th2kZyU7Mv2M5J9Q/exec?action=inItem";
+  const inItemAPI =
+    "https://script.google.com/macros/s/AKfycbzD3yhqneDKW_UvKgr-H6AGA1J3o3Jei_Ql3_t2MMQW7_XrdJ1vF3Th2kZyU7Mv2M5J9Q/exec?action=inItem";
 
   const clearForm = () => {
     setDesc("");
     setBrand("");
     setLot("");
-    setExpiration("");
+    setExpiration("NOT INDICATED");
     setIar("");
     setIarDate("");
     setDelivery("");
@@ -107,7 +113,7 @@ const In = ({ setTab }) => {
     setSupplier("");
     setManufacturer("");
     setOrigin("");
-    setExpirationMonths("");
+    setExpirationMonths("NOT INDICATED");
     setRemarks("");
     setCondition("");
     setFundSource("");
@@ -141,102 +147,102 @@ const In = ({ setTab }) => {
       return;
     }
 
-    // fetch(inItemAPI, {
-    //   method: "POST",
-    //   body: JSON.stringify({
-    //     timestamp: todayTime + " " + todayDate,
-    //     desc,
-    //     brand,
-    //     lot,
-    //     expiration:
-    //       expiration !== "NOT INDICATED"
-    //         ? new Date(expiration).getMonth() +
-    //           1 +
-    //           "/" +
-    //           new Date(expiration).getDate() +
-    //           "/" +
-    //           new Date(expiration).getFullYear()
-    //         : "NOT INDICATED",
-    //     iar,
-    //     iarDate:
-    //       iarDate !== ""
-    //         ? new Date(iarDate).getMonth() +
-    //           1 +
-    //           "/" +
-    //           new Date(iarDate).getDate() +
-    //           "/" +
-    //           new Date(iarDate).getFullYear()
-    //         : null,
+    fetch(inItemAPI, {
+      method: "POST",
+      body: JSON.stringify({
+        timestamp: todayTime + " " + todayDate,
+        desc,
+        brand,
+        lot,
+        expiration:
+          expiration !== "NOT INDICATED"
+            ? new Date(expiration).getMonth() +
+              1 +
+              "/" +
+              new Date(expiration).getDate() +
+              "/" +
+              new Date(expiration).getFullYear()
+            : "NOT INDICATED",
+        iar,
+        iarDate:
+          iarDate !== ""
+            ? new Date(iarDate).getMonth() +
+              1 +
+              "/" +
+              new Date(iarDate).getDate() +
+              "/" +
+              new Date(iarDate).getFullYear()
+            : null,
 
-    //     delivery:
-    //       delivery !== ""
-    //         ? new Date(delivery).getMonth() +
-    //           1 +
-    //           "/" +
-    //           new Date(delivery).getDate() +
-    //           "/" +
-    //           new Date(delivery).getFullYear()
-    //         : null,
+        delivery:
+          delivery !== ""
+            ? new Date(delivery).getMonth() +
+              1 +
+              "/" +
+              new Date(delivery).getDate() +
+              "/" +
+              new Date(delivery).getFullYear()
+            : null,
 
-    //     quantity,
-    //     pack,
-    //     loose,
-    //     unit,
-    //     total,
-    //     location,
-    //     supplier,
-    //     manufacturer,
-    //     origin,
-    //     acquisition: donors.includes(supplier.toLocaleLowerCase())
-    //       ? "Donation"
-    //       : "Purchase",
-    //     expirationMonths,
-    //     remarks,
-    //     condition,
-    //     fundSource,
-    //     acquisitionCost,
-    //     user: user?.firstname + " " + user?.lastname,
-    //   }),
-    // })
-    //   .then(async (response) => {
-    //     const isJson = response.headers
-    //       .get("content-type")
-    //       ?.includes("application/json");
-    //     const data = isJson && (await response.json());
+        quantity,
+        pack,
+        loose,
+        unit,
+        total,
+        location,
+        supplier,
+        manufacturer,
+        origin,
+        acquisition: donors.includes(supplier.toLocaleLowerCase())
+          ? "Donation"
+          : "Purchase",
+        expirationMonths,
+        remarks,
+        condition,
+        fundSource,
+        acquisitionCost,
+        user: user?.firstname + " " + user?.lastname,
+      }),
+    })
+      .then(async (response) => {
+        const isJson = response.headers
+          .get("content-type")
+          ?.includes("application/json");
+        const data = isJson && (await response.json());
 
-    //     if (response.ok) {
-    //       setIsClick(false);
-    //       clearForm();
-    //       setAppState("Item Created");
-    //       setTimeout(() => setAppState(""), 500);
-    //       toast({
-    //         title: "Item Created",
-    //         description: "Added one (1) item to the database",
-    //         status: "success",
-    //         duration: 9000,
-    //         isClosable: true,
-    //       });
-    //     }
+        if (response.ok) {
+          setIsClick(false);
+          clearForm();
+          setAppState("Item Created");
+          setTimeout(() => setAppState(""), 500);
+          toast({
+            title: "Item Created",
+            description: "Added one (1) item to the database",
+            status: "success",
+            duration: 9000,
+            isClosable: true,
+          });
+        }
 
-    //     // check for error response
-    //     if (!response.ok) {
-    //       setIsClick(false);
-    //       // get error message from body or default to response status
-    //       const error = (data && data.message) || response.status;
+        // check for error response
+        if (!response.ok) {
+          setIsClick(false);
+          // get error message from body or default to response status
+          const error = (data && data.message) || response.status;
 
-    //       return Promise.reject(error);
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     setIsClick(false);
-    //     toast({
-    //       title: "Error",
-    //       description: "An error occured",
-    //       status: "error",
-    //       duration: 9000,
-    //       isClosable: true,
-    //     });
-    //   });
+          return Promise.reject(error);
+        }
+      })
+      .catch((error) => {
+        setIsClick(false);
+        toast({
+          title: "Error",
+          description: "An error occured",
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+        });
+      });
   };
 
   useEffect(() => {
@@ -259,7 +265,41 @@ const In = ({ setTab }) => {
     };
 
     fetchTotal();
-  }, [quantity, pack, loose]);
+    console.log(isSelectBrand);
+  }, [quantity, pack, loose, isSelectBrand]);
+
+  const [tableData, setTableData] = useState([]);
+
+  const fetchTableData = async (value) => {
+    const result = await api.get(`/itemtable`, {
+      params: {
+        q: value ? value : "",
+      },
+    });
+    setTableData(result.data);
+  };
+
+  const [searchTerm, setSearchterm] = useState([]);
+  useEffect(() => {
+    fetchTableData();
+  }, [searchTerm]);
+  const fetchitem = async (value) => {
+    const result = await api.get(`/item`, {
+      params: {
+        q: value,
+      },
+    });
+    setSearchterm(result.data);
+  };
+
+  const fetchbrand = async (value) => {
+    const result = await api.get(`/brand`, {
+      params: {
+        q: value,
+      },
+    });
+    setBrandData(result.data);
+  };
 
   const getExpirationMonth = (date1, date2) => {
     let months;
@@ -277,35 +317,152 @@ const In = ({ setTab }) => {
   };
 
   const [dropdown, setDropdown] = useState(false);
-  const [term, setTerm] = useState("");
 
   const domNod = useClickOutside(() => {
     setDropdown(false);
   });
 
+  const [typeData, setTypeData] = useState();
+  const [typeSelect, setTypeSelect] = useState();
+  const [typeValue, setTypeValue] = useState();
+  const fetchtypes = async (value) => {
+    const result = await api.get(`/type`, {
+      params: {
+        q: value,
+      },
+    });
+    setTypeData(result.data);
+  };
+
+  const columns = useMemo(
+    () => [
+      {
+        Header: "Item desc",
+        accessor: "item_name",
+      },
+      {
+        Header: "Brand",
+        accessor: "brand_name",
+      },
+      {
+        Header: "manufacturer",
+        accessor: "manu_name",
+      },
+      {
+        Header: "Type",
+        accessor: "type_name",
+      },
+      {
+        Header: "Article",
+        accessor: "article_name",
+      },
+      {
+        Header: "Remarks",
+        accessor: "remarks",
+      },
+    ],
+    []
+  );
+
   return (
     <>
-      <Container
-        boxShadow="rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;"
-        bg="#fff"
-        padding={5}
-        borderRadius={8}
-        maxW="container.lg"
-        w="full"
-        h="full"
-      >
-        <SimpleGrid
-          columns={6}
-          columnGap={3}
-          rowGap={6}
-          w="full"
-          h={"full"}
-          p={6}
-          flexDirection="column"
-        >
-          <GridItem colSpan={4}>
+      <div className="table-container">
+        <CustomTable title={"ITEMS"} columns={columns} data={tableData}>
+          <SimpleGrid
+            columns={6}
+            columnGap={3}
+            rowGap={6}
+            w="full"
+            h={"full"}
+            p={6}
+            flexDirection="column"
+          >
+            <GridItem colSpan={2}>
+              <FormControl>
+                <FormLabel>Item description</FormLabel>
+                <div
+                  ref={domNod}
+                  onClick={() => {
+                    setDropdown(!dropdown);
+                    fetchitem();
+                  }}
+                  className="custom-select"
+                >
+                  <p>{itemDesc === "" ? "- Select Item -" : itemDesc}</p>
+                  {dropdown && (
+                    <div
+                      onClick={(e) => e.stopPropagation()}
+                      className="select-dropdown"
+                    >
+                      <div className="select-input-container">
+                        <InputGroup>
+                          <InputLeftElement
+                            pointerEvents="none"
+                            color="gray.300"
+                            fontSize="1.2em"
+                            children={<Icon as={HiSearch} />}
+                          />
+                          <Input
+                            background="#fff"
+                            value={term}
+                            onChange={(e) => {
+                              setTerm(e.target.value);
+                              fetchitem(e.target.value);
+                            }}
+                            fontSize="14px"
+                            placeholder="Search"
+                          />
+                        </InputGroup>
+                      </div>
+
+                      {searchTerm?.map((item, index) => {
+                        return (
+                          <>
+                            <p
+                              onClick={() => {
+                                setDesc(item.item_name);
+                                setDropdown(false);
+                                setItemDesc(item.item_name);
+                                fetchTableData(item.item_name);
+                              }}
+                              key={index}
+                            >
+                              {item.item_name}
+                            </p>
+                          </>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              </FormControl>
+            </GridItem>
+            <GridItem colSpan={4}>
+              <SearchSel
+                name={"Article"} // form label
+                data={typeData} // data fetched from db
+                propertyName={"type_name"} //property name to display to the select
+                fetchdat={fetchtypes} //async function for fetch the data
+                setSelect={setTypeSelect} //Select
+                isSelect={typeSelect} //is Selected
+                setValue={setTypeValue} //set value for viewing in select input
+                valueD={typeValue} //value
+              />
+            </GridItem>
+            <>
+              {/* <GridItem colSpan={4}>
             <FormControl isRequired>
-              <FormLabel>Item Description</FormLabel>
+              <SearchSel
+                name={"name select"} // form label
+                data={typeData} // data fetched from db
+                propertyName={"type_name"} //property name to display to the select
+                fetchdat={fetchtypes} //async function for fetch the data
+                setSelect={setTypeSelect} //Select
+                isSelect={typeSelect} //is Selected
+                setValue={setTypeValue} //set value for viewing in select input
+                valueD={typeValue} //value
+              />
+              <FormLabel>Item Description:{desc && desc}</FormLabel>
               <div
                 ref={domNod}
                 onClick={() => setDropdown(!dropdown)}
@@ -330,6 +487,7 @@ const In = ({ setTab }) => {
                           value={term}
                           onChange={(e) => {
                             setTerm(e.target.value);
+                            fetchitem(e.target.value);
                           }}
                           fontSize="14px"
                           placeholder="Search"
@@ -349,66 +507,26 @@ const In = ({ setTab }) => {
                       </Button>
                     </div>
 
-                    {item
-                      ?.filter((val) => {
-                        if (term === "") {
-                          return val;
-                        } else if (
-                          val.desc
-                            .toLowerCase()
-                            .includes(term.toLocaleLowerCase())
-                        ) {
-                          return val;
-                        }
-                      })
-                      .filter((e) => e.desc !== "#N/A")
-                      .map((item, index) => {
-                        return (
+                    {searchTerm?.map((item, index) => {
+                      return (
+                        <>
                           <p
-                            className={desc === item.desc ? "active" : ""}
+                            // className={desc === item.desc ? "active" : ""}
+                            // onClick={() => {
+                            //   // setDesc(item.desc);
+                            //   setDropdown(false);
+                            // }}
                             onClick={() => {
-                              setDesc(item.desc);
+                              setDesc(item.Pk_itemId);
                               setDropdown(false);
                             }}
                             key={index}
                           >
-                            {item.desc}{" "}
-                            {/* <span
-                              className={
-                                inventory?.filter(
-                                  (e) => e.desc === item.desc
-                                )[0]?.available === 0
-                                  ? "empty"
-                                  : ""
-                              }
-                            >
-                              {
-                                inventory?.filter(
-                                  (e) => e.desc === item.desc
-                                )[0]?.available
-                              }
-                            </span> */}
+                            {item.item_name}
                           </p>
-                        );
-                      })}
-
-                    {item
-                      ?.filter((f) =>
-                        f.desc.toLowerCase().includes(term.toLocaleLowerCase())
-                      )
-                      .filter((e) => e.desc !== "#N/A").length === 0 && (
-                      <p
-                        onClick={() => {
-                          setDesc("");
-                          setTerm("");
-                          setDropdown(false);
-                          setTab("create");
-                        }}
-                        className="no-data"
-                      >
-                        No data found. Create new.
-                      </p>
-                    )}
+                        </>
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -418,7 +536,50 @@ const In = ({ setTab }) => {
           <GridItem colSpan={2}>
             <FormControl>
               <FormLabel>Brand</FormLabel>
-              <Input value={brand} onChange={(e) => setBrand(e.target.value)} />
+              <Input
+                onClick={() => setbrandRecommendDiv(!brandRecommendDiv)}
+                tabIndex={0}
+                onKeyDown={handleKeyDown}
+                value={brand}
+                onChange={(e) => {
+                  setBrand(e.target.value);
+                  fetchbrand(e.target.value);
+                  setSelectBrand(null);
+                }}
+              />
+              {
+                //if input tempsearchSTATE here has a brand and !isSELECTEDbrandID it will display the drop down
+                brandRecommendDiv && brandData && !isSelectBrand && (
+                  <div
+                    ref={brandRD}
+                    className="select-dropdown"
+                    style={{ top: "75px" }}
+                  >
+                    {brandData.map((e, index) => {
+                      return (
+                        <p
+                          onMouseEnter={() => {
+                            setBrand(e.brand_name);
+                          }}
+                          onClick={() => {
+                            setSelectBrand(e);
+                            setBrand(e.brand_name);
+                          }}
+                          key={index}
+                          style={{
+                            backgroundColor:
+                              index === selectedIndex && `rgb(238, 240, 241)`,
+                          }}
+                        >
+                          {e.brand_name}
+                        </p>
+                      );
+                    })}
+                  </div>
+                )
+                //if user click on brand it will close the dropdown and SETisSELECTEDbrandID
+                //
+              }
             </FormControl>
           </GridItem>
 
@@ -531,35 +692,22 @@ const In = ({ setTab }) => {
           <GridItem colSpan={3}>
             <FormControl>
               <FormLabel>Location</FormLabel>
-
-              <Input
+              <Select
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-              />
+                placeholder="- Select Location -"
+              >
+                <option value="MMS Main Storage Level 1">
+                  MMS Main Storage Level 1
+                </option>
+                <option value="MMS Main Storage Level 2">
+                  MMS Main Storage Level 2
+                </option>
+                <option value="Tent 1">Tent 1</option>
+                <option value="Tent 2">Tent 2</option>
+                <option value="Tower 1">Tower 1</option>
+              </Select>
             </FormControl>
-            <div className="dropdown">
-              {getLocation
-                .filter((item) => {
-                  const searchLocation = location.toLowerCase();
-                  const locationName = item.location.toLowerCase();
-
-                  return (
-                    searchLocation &&
-                    locationName.startsWith(searchLocation) &&
-                    locationName !== searchLocation
-                  );
-                })
-                .slice(0, 10)
-                .map((item) => (
-                  <div
-                    onClick={() => onLocation(item.location)}
-                    className="dropdown-row"
-                    key={item.location}
-                  >
-                    <li>{item.location}</li>
-                  </div>
-                ))}
-            </div>
           </GridItem>
 
           <GridItem colSpan={3}>
@@ -568,7 +716,6 @@ const In = ({ setTab }) => {
               <Input
                 value={supplier}
                 onChange={(e) => setSupplier(e.target.value)}
-                disabled
               />
             </FormControl>
           </GridItem>
@@ -579,7 +726,6 @@ const In = ({ setTab }) => {
               <Input
                 value={manufacturer}
                 onChange={(e) => setManufacturer(e.target.value)}
-                disabled
               />
             </FormControl>
           </GridItem>
@@ -600,7 +746,6 @@ const In = ({ setTab }) => {
               <Input
                 value={condition}
                 onChange={(e) => setCondition(e.target.value)}
-                disabled
               />
             </FormControl>
           </GridItem>
@@ -638,10 +783,11 @@ const In = ({ setTab }) => {
                 onChange={(e) => setRemarks(e.target.value)}
               />
             </FormControl>
-          </GridItem>
-        </SimpleGrid>
-
-        <HStack marginTop={5} justifyContent="flex-end">
+          </GridItem> */}
+            </>
+          </SimpleGrid>
+        </CustomTable>
+        {/* <HStack marginTop={5} justifyContent="flex-end">
           <Button
             color="#fff"
             isLoading={isClick ? true : false}
@@ -652,8 +798,8 @@ const In = ({ setTab }) => {
           >
             IN
           </Button>
-        </HStack>
-      </Container>
+        </HStack> */}
+      </div>
     </>
   );
 };

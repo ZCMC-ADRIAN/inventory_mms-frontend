@@ -234,7 +234,7 @@ const In = ({ setTab }) => {
   return (
     <>
       <div className="table-container">
-        <CustomTable title={"ITEMS"} columns={columns} data={tableData}>
+        <CustomTable title={"ITEMS"} columns={columns} data={tableData} >
           <SimpleGrid
             columns={6}
             columnGap={3}

@@ -24,13 +24,11 @@ export const Context = ({ children }) => {
   //////////////////
   //Loc
 
-  const sample = {
-    name: "dennis",
-  };
 
   const fetchItem = async (value) => {
     try {
       const response = await api.get("/itemdetail/" + value);
+      setItemDetails(response.data);
       return response.data;
     } catch (error) {
       console.error(error);
@@ -49,6 +47,12 @@ export const Context = ({ children }) => {
     });
     setLocDatas(result.data);
   };
+
+
+  //modaldetails 
+  const [itemdetails, setItemDetails] = useState(null)
+
+
 
   //Cond
   const [condId, setCondId] = useState("");
@@ -72,8 +76,8 @@ export const Context = ({ children }) => {
 
         //items
         fetchItem,
-
         /*location*/
+        itemdetails,
         locDatas,
         locValue,
         selectedLoc,
@@ -91,7 +95,6 @@ export const Context = ({ children }) => {
         packZ,
         loose,
         remarks,
-        sample,
         //setters
         setCondId,
         setCondDatas,

@@ -38,7 +38,7 @@ import { AiOutlineFolderView, AiFillEdit } from "react-icons/ai";
 import { HiTrash } from "react-icons/hi";
 
 import moment from "moment/moment";
-import { Children, useContext, useEffect } from "react";
+import { Children, useContext, useEffect, useState } from "react";
 import VerificationModal from "./VerificationModal";
 import { VerticallyCenter } from "./inputModal";
 import SearchSel from "./searchableSelect/searchSel";
@@ -90,6 +90,7 @@ const CustomTable = ({ title, columns, data, child, children }) => {
     setLocValue,
     setSelectedLoc,
     fetchLoc,
+    fetchItem
   } = useContext(DataContext);
   const {
     getTableProps,
@@ -115,7 +116,9 @@ const CustomTable = ({ title, columns, data, child, children }) => {
     usePagination
   );
 
+
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [id, setid] = useState(null);
 
   const CustomBtnTheme = {
     backgroundColor: "#9AE6B4",
@@ -126,7 +129,7 @@ const CustomTable = ({ title, columns, data, child, children }) => {
   return (
     <Box bg={"white"} padding={"20px"}>
       {children}
-      <VerticallyCenter isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
+      <VerticallyCenter isOpen={isOpen} onOpen={onOpen} onClose={onClose} id={id}>
         <SimpleGrid columns={4} columnGap={3} rowGap={6} w={"full"} h={"full"}>
           <GridItem colSpan={4}>
             <SearchSel
@@ -210,16 +213,18 @@ const CustomTable = ({ title, columns, data, child, children }) => {
               page.map((row, i) => {
                 prepareRow(row);
                 return (
-                  <Tr className="td" {...row.getRowProps()}>
+                  <Tr
+                    onClick={() => {
+                      onOpen();
+                      // console.log(fetchItem(row.original.Pk_itemId));
+                      fetchItem(row.original.Pk_itemId);
+                    }} className="td" {...row.getRowProps()}>
                     {row.cells.map((cell) => {
                       return (
                         <Td
-                          onClick={() => {
-                            onOpen();
-                          }}
                           {...cell.getCellProps()}
                         >
-                          {cell.column.id === "action" ? (
+                          {/* {cell.column.id === "action" ? (
                             <ActionsBtn />
                           ) : cell.column.id === "created_at" ? (
                             moment(cell.row.values.created_at).format(
@@ -249,7 +254,8 @@ const CustomTable = ({ title, columns, data, child, children }) => {
                             </Text>
                           ) : (
                             cell.render("Cell")
-                          )}
+                          )} */}
+                          {cell.render("Cell")}
                         </Td>
                       );
                     })}

@@ -57,7 +57,7 @@ const SearchSel = ({
   return (
     <>
       <FormControl>
-        <FormLabel>{name}</FormLabel>
+        <FormLabel color={"blackAlpha.600"}>{name}</FormLabel>
         <Input
           onClick={() => {
             fetchdat(null);

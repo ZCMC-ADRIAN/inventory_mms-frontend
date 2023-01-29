@@ -22,7 +22,11 @@ import {
   Box,
   Heading,
   Image,
+  FormControl,
+  FormLabel,
+  Input,
 } from "@chakra-ui/react";
+import SearchSel from "./searchableSelect/searchSel";
 
 export const VerticallyCenter = ({
   title,
@@ -30,19 +34,18 @@ export const VerticallyCenter = ({
   isOpen,
   onClose,
   postSubmit,
-  id,
 }) => {
-  const { fetchItem } = useContext(DataContext);
+  const { itemdetails } = useContext(DataContext);
 
-  const CardDet = ({ property, detail }) => {
+  const CardDet = ({ property, detail, bg }) => {
     return (
-      <Box fontSize={15} color={"blackAlpha.600"} w={"100%"} h={"auto"}>
+      <Box bg={bg} fontSize={15} color={"blackAlpha.600"} w={"100%"} h={"2em"}>
         <Divider orientation="horizontal" />
-        <Flex flexDirection={"row"} gap={5}>
+        <Flex flexDirection={"row"} gap={0}>
           <Text flex={1} fontWeight={"500"}>
             {property}
           </Text>
-          <Text flex={1} textAlign={"left"}>
+          <Text flex={1} textAlign={"right"}>
             {detail}
           </Text>
         </Flex>
@@ -50,21 +53,133 @@ export const VerticallyCenter = ({
     );
   };
 
+
+
+  ////Delivery_date	Quantity	pack_size	loose	Remarks	
+
   return (
     <>
       <Modal onClose={onClose} size={"full"} isOpen={isOpen} isCentered>
-        <ModalContent w={"70%"} minW={"70%"} margin={"100px"}>
+        <ModalContent w={"60%"} minW={"60%"} margin={"100px"}>
           <ModalHeader>{title}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             {/* {children} */}
-            <Flex color="white" h={"70vh"} gap={6}>
-              <Box flex="8">
-                <Text>Box 3</Text>
+            <Flex color={"blackAlpha.600"} h={"70vh"}>
+              <Box flex={8} alignSelf={"center"}>
+                <Grid alignItems={'center'} templateColumns='repeat(6, 1fr)' gap={6} paddingEnd={5}>
+                  <GridItem colSpan={6} w='100%' >
+                    <Box >
+                      <SearchSel name={"Location"} />
+                    </Box>
+                  </GridItem>
+                  <GridItem colSpan={3} w='100%' >
+                    <Box >
+                      <SearchSel name={"Condition"} />
+                    </Box>
+                  </GridItem>
+                  <GridItem colSpan={3} w='100%' >
+                    <FormControl>
+                      <FormLabel >IAR No</FormLabel>
+                      <Input
+                        onClick={() => {
+                          //fetchdat(null);
+                          //setVisible(!isVisible);
+                        }}
+                        //value={ }
+                        onChange={(e) => {
+                          //setValue(e.target.value);
+                        }}
+                      />
+                    </FormControl>
+                  </GridItem>
+                  <GridItem colSpan={2}>
+                    <FormControl>
+                      <FormLabel>IAR Date</FormLabel>
+                      <Input
+                        // value={acquisition}
+                        // onChange={(e) => setAcquisition(e.target.value)}
+                        type="date"
+                      />
+                    </FormControl>
+                  </GridItem>
+                  <GridItem colSpan={2}>
+                    <FormControl>
+                      <FormLabel>Delivery Date</FormLabel>
+                      <Input
+                        // value={acquisition}
+                        // onChange={(e) => setAcquisition(e.target.value)}
+                        type="date"
+                      />
+                    </FormControl>
+                  </GridItem>
+                  <GridItem colSpan={3} w='100%' >
+                    <FormControl>
+                      <FormLabel >Quantity</FormLabel>
+                      <Input
+                        onClick={() => {
+                          //fetchdat(null);
+                          //setVisible(!isVisible);
+                        }}
+                        //value={ }
+                        onChange={(e) => {
+                          //setValue(e.target.value);
+                        }}
+                      />
+                    </FormControl>
+                  </GridItem>
+                  <GridItem colSpan={3} w='100%' >
+                    <FormControl>
+                      <FormLabel >Pack Size</FormLabel>
+                      <Input
+                        onClick={() => {
+                          //fetchdat(null);
+                          //setVisible(!isVisible);
+                        }}
+                        //value={ }
+                        onChange={(e) => {
+                          //setValue(e.target.value);
+                        }}
+                      />
+                    </FormControl>
+                  </GridItem>
+                  <GridItem colSpan={3} w='100%' >
+                    <FormControl>
+                      <FormLabel >Loose</FormLabel>
+                      <Input
+                        onClick={() => {
+                          //fetchdat(null);
+                          //setVisible(!isVisible);
+                        }}
+                        //value={ }
+                        onChange={(e) => {
+                          //setValue(e.target.value);
+                        }}
+                      />
+                    </FormControl>
+                  </GridItem>
+                  <GridItem colSpan={3} w='100%' >
+                    <FormControl>
+                      <FormLabel >Remarks</FormLabel>
+                      <Input
+                        variant='flushed'
+                        onClick={() => {
+                          //fetchdat(null);
+                          //setVisible(!isVisible);
+                        }}
+                        //value={ }
+                        onChange={(e) => {
+                          //setValue(e.target.value);
+                        }}
+                      />
+                    </FormControl>
+                  </GridItem>
+                </Grid>
               </Box>
+
               <Divider orientation="vertical"></Divider>
               <Box flex="6" overflowY={"auto"} paddingRight={2}>
-                <Stack gap={3}>
+                <Stack gap={0} style={{ padding: "15px 15px" }}>
                   <Heading
                     color={"blackAlpha.600"}
                     style={{ fontFamily: "poppins" }}
@@ -92,23 +207,11 @@ export const VerticallyCenter = ({
                       ></Image>
                     </Flex>
                   </Box>
-                  {fetchItem(id).forEach((element) => {
-                    Object.entries(element).forEach(([property, value]) => {
-                      <CardDet property={property} detail={value} />;
-                    });
-                  })}
-                  {/* <CardDet
-                    property={"Item name"}
-                    detail={
-                      "description about the details sample sample sample sample sample"
-                    }
-                    data.forEach(obj => {
-    Object.entries(obj).forEach(([property, value]) => {
-        console.log(value, "is property of", property);
-    });
-});
-                  />
-                  <CardDet property={"Type"} detail={"sample sample sample"} /> */}
+
+                  {
+                    itemdetails != null && Object.keys(itemdetails[0]).map((e, i) => <CardDet key={i} bg={i % 2 == 0 && '#f3f7fa'} property={e} detail={itemdetails[0][e]} />)
+
+                  }
                 </Stack>
               </Box>
             </Flex>

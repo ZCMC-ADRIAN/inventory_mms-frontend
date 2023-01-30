@@ -18,7 +18,7 @@ import {
   Button,
   TableContainer,
   Heading,
-  useDisclosure
+  useDisclosure,
 } from "@chakra-ui/react";
 import Search from "./Search";
 
@@ -34,6 +34,7 @@ import {
 import { AiOutlineFolderView } from "react-icons/ai";
 
 import moment from "moment/moment";
+import { useState } from "react";
 
 const InventoryTable = ({
   title,
@@ -74,26 +75,10 @@ const InventoryTable = ({
     borderRadius: "52px",
     fontSize: "20px",
   };
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [itemId, setItemId] = useState([]);
 
-  const ActionsBtn = () => {
-    return (
-      <Flex columnGap={1}>
-        <Button
-          _hover={{
-            bg: "#FCD299",
-            boxShadow: "lg",
-            transform: "scale(1.2,1.2)",
-            transition: "0.3s",
-          }}
-          onClick={()=>{onOpen()}}
-        >
-          <AiOutlineFolderView color="orange" />
-        </Button>
-      </Flex>
-    );
-  };
-
+  
   return (
     <Box>
       <Box w={"100%"}>
@@ -177,15 +162,19 @@ const InventoryTable = ({
                       return (
                         <Td {...cell.getCellProps()}>
                           {cell.column.id === "action" ? (
-                            <ActionsBtn />
-                          ) : cell.column.id === "created_at" ? (
-                            moment(cell.row.values.created_at).format(
-                              "hh:mm a MM-DD-YYYY"
-                            )
-                          ) : cell.column.id === "updated_at" ? (
-                            moment(cell.row.values.updated_at).format(
-                              "hh:mm a MM-DD-YYYY"
-                            )
+                            <Flex columnGap={1}>
+                              <Button
+                                _hover={{
+                                  bg: "#FCD299",
+                                  boxShadow: "lg",
+                                  transform: "scale(1.2,1.2)",
+                                  transition: "0.3s",
+                                }}
+                                onClick={()=>{onOpen(cell.row.values.Pk_inventoryId); setItemId(cell.row.values.Pk_inventoryId)}}
+                              >
+                                <AiOutlineFolderView color="orange" />
+                              </Button>
+                            </Flex>
                           ) : cell.column.id === "dept" ? (
                             <Text
                               fontWeight={"bold"}
@@ -220,8 +209,8 @@ const InventoryTable = ({
         </Table>
       </TableContainer>
 
-      <InventoryModal isOpen={isOpen} onClose={onClose} onOpen={onOpen}/>
-      
+      <InventoryModal isOpen={isOpen} onClose={onClose} onOpen={onOpen} itemId={itemId}/>
+
       {page.length >= 1 ? (
         <Flex justifyContent={"end"} mt={5}>
           <div id="btnleft">

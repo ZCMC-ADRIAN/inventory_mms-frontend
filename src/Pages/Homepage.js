@@ -1,5 +1,6 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import CreateItem from "../Components/CreateItem";
+import localApi from "../API/Api";
 import {
   Tabs,
   TabList,
@@ -20,12 +21,22 @@ const Homepage = () => {
   const [tab, setTab] = useState("inItem");
   const title = "Inventory";
   const [fetch, setFetch] = useState(false);
+  const [data, setData] = useState([]);
+
+  const fetchData = async () => {
+    let responseData = await localApi.get("data-table");
+    setData(responseData.data);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const column = useMemo(
     () => [
       {
         Header: "No",
-        accessor: "id",
+        accessor: "Pk_inventoryId",
       },
       {
         Header: "Item Description",
@@ -33,7 +44,7 @@ const Homepage = () => {
       },
       {
         Header: "Available",
-        accessor: "available",
+        accessor: "Quantity",
       },
       {
         Header: "Issued",
@@ -44,59 +55,12 @@ const Homepage = () => {
         accessor: "returned",
       },
       {
-        Header: "Category",
-        accessor: "category",
-      },
-      {
         Header: "ACTION",
         accessor: "action",
       },
     ],
     []
   );
-
-  const Department_Dataset = [
-    {
-      id: 1,
-      desc: 'Speaker System Stereo Megaoke',
-      available: 20,
-      issued: 0,
-      returned: 0,
-      category: "Equipment"
-    },
-    {
-      id: 2,
-      desc: 'Speaker System Stereo Megaoke',
-      available: 20,
-      issued: 0,
-      returned: 0,
-      category: "Equipment"
-    },
-    {
-      id: 3,
-      desc: 'Speaker System Stereo Megaoke',
-      available: 20,
-      issued: 0,
-      returned: 0,
-      category: "Equipment"
-    },
-    {
-      id: 4,
-      desc: 'Speaker System Stereo Megaoke',
-      available: 20,
-      issued: 0,
-      returned: 0,
-      category: "Equipment"
-    },
-    {
-      id: 5,
-      desc: 'Speaker System Stereo Megaoke',
-      available: 20,
-      issued: 0,
-      returned: 0,
-      category: "Equipment"
-    }
-  ];
 
   return (
     <>
@@ -106,7 +70,7 @@ const Homepage = () => {
           {tab === "create" && <CreateItem setTab={setTab} />}
           {tab === "inItem" && <In setTab={setTab} />}
           {tab === "inventory" && (
-            <InventoryTable title={title} fetch={fetch} columns={column} data={Department_Dataset}/>
+            <InventoryTable title={title} fetch={fetch} columns={column} data={data}/>
           )}
           {tab === "listIn" && <InTable />}
         </div>

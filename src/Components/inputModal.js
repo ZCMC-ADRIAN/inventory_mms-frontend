@@ -28,14 +28,30 @@ import {
 } from "@chakra-ui/react";
 import SearchSel from "./searchableSelect/searchSel";
 
-export const VerticallyCenter = ({
-  title,
-  children,
-  isOpen,
-  onClose,
-  postSubmit,
-}) => {
-  const { itemdetails } = useContext(DataContext);
+export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
+  const {
+    itemdetails,
+    setdeliveryD,
+    setIarDate,
+    setIarNo,
+    setquantity,
+    setpackZ,
+    setLoose,
+    setRemarks,
+    postInventory,
+    locDatas,
+    locValue,
+    setLocValue,
+    selectedLoc,
+    setSelectedLoc,
+    fetchLoc,
+    condDatas,
+    condItem,
+    setConItem,
+    selectedCond,
+    setSelectedCond,
+    fetchcond,
+  } = useContext(DataContext);
 
   const CardDet = ({ property, detail, bg }) => {
     return (
@@ -53,9 +69,7 @@ export const VerticallyCenter = ({
     );
   };
 
-
-
-  ////Delivery_date	Quantity	pack_size	loose	Remarks	
+  //
 
   return (
     <>
@@ -67,28 +81,50 @@ export const VerticallyCenter = ({
             {/* {children} */}
             <Flex color={"blackAlpha.600"} h={"70vh"}>
               <Box flex={8} alignSelf={"center"}>
-                <Grid alignItems={'center'} templateColumns='repeat(6, 1fr)' gap={6} paddingEnd={5}>
-                  <GridItem colSpan={6} w='100%' >
-                    <Box >
-                      <SearchSel name={"Location"} />
+                <Grid
+                  alignItems={"center"}
+                  templateColumns="repeat(6, 1fr)"
+                  gap={6}
+                  paddingEnd={5}
+                >
+                  <GridItem colSpan={6} w="100%">
+                    {selectedLoc && selectedLoc.Pk_locationId}
+                    <Box>
+                      <SearchSel
+                        name={"Location"}
+                        data={locDatas}
+                        propertyName={"location_name"}
+                        fetchdat={fetchLoc}
+                        setSelect={setSelectedLoc}
+                        isSelect={selectedLoc}
+                        setValue={setLocValue}
+                        valueD={locValue}
+                      />
                     </Box>
                   </GridItem>
-                  <GridItem colSpan={3} w='100%' >
-                    <Box >
-                      <SearchSel name={"Condition"} />
+                  <GridItem colSpan={3} w="100%">
+                    {selectedCond && selectedCond.Pk_conditionsId}
+                    <Box>
+                      <SearchSel
+                        name={"Condition"}
+                        data={condDatas}
+                        propertyName={"conditions_name"}
+                        fetchdat={fetchcond}
+                        setSelect={setSelectedCond}
+                        isSelect={selectedCond}
+                        setValue={setConItem}
+                        valueD={condItem}
+                      />
                     </Box>
                   </GridItem>
-                  <GridItem colSpan={3} w='100%' >
+                  <GridItem colSpan={3} w="100%">
                     <FormControl>
-                      <FormLabel >IAR No</FormLabel>
+                      <FormLabel>IAR No</FormLabel>
                       <Input
-                        onClick={() => {
-                          //fetchdat(null);
-                          //setVisible(!isVisible);
-                        }}
                         //value={ }
                         onChange={(e) => {
                           //setValue(e.target.value);
+                          setIarNo(e.target.value);
                         }}
                       />
                     </FormControl>
@@ -98,7 +134,7 @@ export const VerticallyCenter = ({
                       <FormLabel>IAR Date</FormLabel>
                       <Input
                         // value={acquisition}
-                        // onChange={(e) => setAcquisition(e.target.value)}
+                        onChange={(e) => setIarDate(e.target.value)}
                         type="date"
                       />
                     </FormControl>
@@ -108,14 +144,17 @@ export const VerticallyCenter = ({
                       <FormLabel>Delivery Date</FormLabel>
                       <Input
                         // value={acquisition}
-                        // onChange={(e) => setAcquisition(e.target.value)}
+                        onChange={(e) => {
+                          setdeliveryD(e.target.value);
+                          //console.log(e.target.value);
+                        }}
                         type="date"
                       />
                     </FormControl>
                   </GridItem>
-                  <GridItem colSpan={3} w='100%' >
+                  <GridItem colSpan={3} w="100%">
                     <FormControl>
-                      <FormLabel >Quantity</FormLabel>
+                      <FormLabel>Quantity</FormLabel>
                       <Input
                         onClick={() => {
                           //fetchdat(null);
@@ -123,14 +162,14 @@ export const VerticallyCenter = ({
                         }}
                         //value={ }
                         onChange={(e) => {
-                          //setValue(e.target.value);
+                          setquantity(e.target.value);
                         }}
                       />
                     </FormControl>
                   </GridItem>
-                  <GridItem colSpan={3} w='100%' >
+                  <GridItem colSpan={3} w="100%">
                     <FormControl>
-                      <FormLabel >Pack Size</FormLabel>
+                      <FormLabel>Pack Size</FormLabel>
                       <Input
                         onClick={() => {
                           //fetchdat(null);
@@ -138,14 +177,14 @@ export const VerticallyCenter = ({
                         }}
                         //value={ }
                         onChange={(e) => {
-                          //setValue(e.target.value);
+                          setpackZ(e.target.value);
                         }}
                       />
                     </FormControl>
                   </GridItem>
-                  <GridItem colSpan={3} w='100%' >
+                  <GridItem colSpan={3} w="100%">
                     <FormControl>
-                      <FormLabel >Loose</FormLabel>
+                      <FormLabel>Loose</FormLabel>
                       <Input
                         onClick={() => {
                           //fetchdat(null);
@@ -153,23 +192,23 @@ export const VerticallyCenter = ({
                         }}
                         //value={ }
                         onChange={(e) => {
-                          //setValue(e.target.value);
+                          setLoose(e.target.value);
                         }}
                       />
                     </FormControl>
                   </GridItem>
-                  <GridItem colSpan={3} w='100%' >
+                  <GridItem colSpan={3} w="100%">
                     <FormControl>
-                      <FormLabel >Remarks</FormLabel>
+                      <FormLabel>Remarks</FormLabel>
                       <Input
-                        variant='flushed'
+                        variant="flushed"
                         onClick={() => {
                           //fetchdat(null);
                           //setVisible(!isVisible);
                         }}
                         //value={ }
                         onChange={(e) => {
-                          //setValue(e.target.value);
+                          setRemarks(e.target.value);
                         }}
                       />
                     </FormControl>
@@ -208,16 +247,21 @@ export const VerticallyCenter = ({
                     </Flex>
                   </Box>
 
-                  {
-                    itemdetails != null && Object.keys(itemdetails[0]).map((e, i) => <CardDet key={i} bg={i % 2 == 0 && '#f3f7fa'} property={e} detail={itemdetails[0][e]} />)
-
-                  }
+                  {itemdetails != null &&
+                    Object.keys(itemdetails[0]).map((e, i) => (
+                      <CardDet
+                        key={i}
+                        bg={i % 2 == 0 && "#f3f7fa"}
+                        property={e}
+                        detail={itemdetails[0][e]}
+                      />
+                    ))}
                 </Stack>
               </Box>
             </Flex>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme={"teal"} onClick={postSubmit}>
+            <Button colorScheme={"teal"} onClick={postInventory}>
               Submit
             </Button>
           </ModalFooter>

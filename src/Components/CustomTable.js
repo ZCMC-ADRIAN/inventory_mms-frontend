@@ -90,7 +90,7 @@ const CustomTable = ({ title, columns, data, child, children }) => {
     setLocValue,
     setSelectedLoc,
     fetchLoc,
-    fetchItem
+    fetchItem,
   } = useContext(DataContext);
   const {
     getTableProps,
@@ -116,7 +116,6 @@ const CustomTable = ({ title, columns, data, child, children }) => {
     usePagination
   );
 
-
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [id, setid] = useState(null);
 
@@ -129,22 +128,12 @@ const CustomTable = ({ title, columns, data, child, children }) => {
   return (
     <Box bg={"white"} padding={"20px"}>
       {children}
-      <VerticallyCenter isOpen={isOpen} onOpen={onOpen} onClose={onClose} id={id}>
-        <SimpleGrid columns={4} columnGap={3} rowGap={6} w={"full"} h={"full"}>
-          <GridItem colSpan={4}>
-            <SearchSel
-              name={"Location"}
-              data={locDatas}
-              propertyName={"location_name"}
-              fetchdat={fetchLoc}
-              setSelect={setSelectedLoc}
-              isSelect={selectedLoc}
-              setValue={setLocValue}
-              valueD={locValue}
-            />
-          </GridItem>
-        </SimpleGrid>
-      </VerticallyCenter>
+      <VerticallyCenter
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onClose={onClose}
+        id={id}
+      ></VerticallyCenter>
       <Box w={"100%"}>
         <Flex flexDirection={["column", "column", "row", "row"]}>
           <Box w={"100%"}>
@@ -218,12 +207,13 @@ const CustomTable = ({ title, columns, data, child, children }) => {
                       onOpen();
                       // console.log(fetchItem(row.original.Pk_itemId));
                       fetchItem(row.original.Pk_itemId);
-                    }} className="td" {...row.getRowProps()}>
+                    }}
+                    className="td"
+                    {...row.getRowProps()}
+                  >
                     {row.cells.map((cell) => {
                       return (
-                        <Td
-                          {...cell.getCellProps()}
-                        >
+                        <Td {...cell.getCellProps()}>
                           {/* {cell.column.id === "action" ? (
                             <ActionsBtn />
                           ) : cell.column.id === "created_at" ? (

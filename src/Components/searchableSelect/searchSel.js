@@ -48,7 +48,7 @@ const SearchSel = ({
       );
       setVisible(true);
       setSelect(false);
-    } else if (ev.key === "Enter") {
+    } else if (ev.key === "Enter" || ev.key === "Tab") {
       setValue(data[selectedIndex][propertyName]);
       setSelect(data[selectedIndex]);
     }
@@ -59,6 +59,10 @@ const SearchSel = ({
       <FormControl>
         <FormLabel color={"blackAlpha.600"}>{name}</FormLabel>
         <Input
+          onFocus={() => {
+            fetchdat(null);
+            setVisible(!isVisible);
+          }}
           onClick={() => {
             fetchdat(null);
             setVisible(!isVisible);

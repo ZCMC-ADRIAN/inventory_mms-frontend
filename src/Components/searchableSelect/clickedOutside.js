@@ -3,15 +3,13 @@ import { useEffect, useRef } from "react";
 export const useClickOutside = (handler) => {
   let domNode = useRef();
 
-  useEffect(() => {
-    let maybeHandler = (event) => {
-      if (domNode.current) {
-        if (!domNode.current.contains(event.target)) {
-          handler();
-        }
-      }
-    };
+  let maybeHandler = (event) => {
+    if (domNode.current && !domNode.current.contains(event.target)) {
+      handler();
+    }
+  };
 
+  useEffect(() => {
     document.addEventListener("mousedown", maybeHandler);
 
     return () => {
@@ -19,5 +17,4 @@ export const useClickOutside = (handler) => {
     };
   });
   return domNode;
-}
-
+};

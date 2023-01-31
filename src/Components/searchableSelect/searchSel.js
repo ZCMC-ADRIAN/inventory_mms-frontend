@@ -19,7 +19,6 @@ import {
   InputLeftAddon,
 } from "@chakra-ui/react";
 import { useClickOutside } from "../useClickOutside";
-
 const SearchSel = ({
   name,
   data,
@@ -35,6 +34,7 @@ const SearchSel = ({
   });
   const [isVisible, setVisible] = useState();
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [timeoutId, setTimeoutId] = useState(null);
   const handleKeyDown = (ev, opt) => {
     if (ev.key === "ArrowDown") {
       setSelectedIndex((selectedIndex + 1) % data.length);
@@ -54,6 +54,18 @@ const SearchSel = ({
     }
   };
 
+  const handleSearch = (term) => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+
+    setTimeoutId(
+      setTimeout(() => {
+        // fetch data from database using the search term
+        fetchdat(term);
+      }, 500)
+    );
+  };
   return (
     <>
       <FormControl>
@@ -74,7 +86,7 @@ const SearchSel = ({
           onChange={(e) => {
             setValue(e.target.value);
             setSelect(null);
-            fetchdat(e.target.value);
+            handleSearch(e.target.value);
           }}
         />
         {isVisible && data && !isSelect && (

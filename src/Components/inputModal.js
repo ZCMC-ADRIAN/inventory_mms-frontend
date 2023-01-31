@@ -25,6 +25,7 @@ import {
   FormControl,
   FormLabel,
   Input,
+  useToast,
 } from "@chakra-ui/react";
 import SearchSel from "./searchableSelect/searchSel";
 
@@ -52,7 +53,7 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
     setSelectedCond,
     fetchcond,
   } = useContext(DataContext);
-
+  const toast = useToast();
   const CardDet = ({ property, detail, bg }) => {
     return (
       <Box bg={bg} fontSize={15} color={"blackAlpha.600"} w={"100%"} h={"2em"}>
@@ -261,7 +262,12 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
             </Flex>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme={"teal"} onClick={postInventory}>
+            <Button
+              colorScheme={"teal"}
+              onClick={() => {
+                postInventory();
+              }}
+            >
               Submit
             </Button>
           </ModalFooter>

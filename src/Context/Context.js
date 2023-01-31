@@ -1,6 +1,6 @@
 import { createContext, useState } from "react";
 import api from "../API/Api";
-
+import { useToast } from "@chakra-ui/react";
 const DataContext = createContext({});
 
 export const Context = ({ children }) => {
@@ -22,23 +22,7 @@ export const Context = ({ children }) => {
 
   //////////////////
   //Loc
-
-  const postInventory = async () => {
-    try {
-      const response = await api.post("/inv", {
-        deliveryD: deliveryD,
-        iarDate: iarDate,
-        iarNo: iarNo,
-        quantity: quantity,
-        packZ: packZ,
-        loose: loose,
-      });
-      return response.data;
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
+  const toast = useToast();
   const fetchItem = async (value) => {
     try {
       const response = await api.get("/itemdetail/" + value);
@@ -89,6 +73,104 @@ export const Context = ({ children }) => {
   const [packZ, setpackZ] = useState("");
   const [loose, setLoose] = useState("");
   const [remarks, setRemarks] = useState("");
+
+  const postInventory = async () => {
+    if (locValue.length < 1) {
+      toast({
+        title: `please select Location`,
+        status: "error",
+        isClosable: true,
+      });
+      return;
+    }
+    if (condItem.length < 1) {
+      toast({
+        title: `please select condition`,
+        status: "error",
+        isClosable: true,
+      });
+      return;
+    }
+    if (iarNo === "" || iarNo === null) {
+      toast({
+        title: `please enter IAR number`,
+        status: "error",
+        isClosable: true,
+      });
+      return;
+    }
+    if (iarDate === "" || iarDate === null) {
+      toast({
+        title: `please select IAR date`,
+        status: "error",
+        isClosable: true,
+      });
+      return;
+    }
+    if (deliveryD === "" || deliveryD === null) {
+      toast({
+        title: `please select Delivery Date`,
+        status: "error",
+        isClosable: true,
+      });
+      return;
+    }
+    if (quantity === "" || quantity === null) {
+      toast({
+        title: `please enter quantity`,
+        status: "error",
+        isClosable: true,
+      });
+      return;
+    }
+    if (packZ === "" || packZ === null) {
+      toast({
+        title: `please enter Pack size`,
+        status: "error",
+        isClosable: true,
+      });
+      return;
+    }
+
+    try {
+      const response = await api
+        .post("/inv", {
+          itemId: itemId,
+          condition_id: selectedCond && selectedCond.Pk_conditionsId,
+          location_id: selectedLoc && selectedLoc.Pk_locationId,
+          newcondition_name: condItem,
+          newlocation_name: locValue,
+          iar_no: iarNo,
+          iar_date: iarDate,
+          delivery_date: deliveryD,
+          quantity: quantity,
+          pack_size: packZ,
+          loose: loose,
+          remarks: remarks,
+        })
+        .then((e) => {
+          if (!selectedLoc) {
+            toast({
+              title: `New location created`,
+              status: "success",
+              isClosable: true,
+            });
+          }
+          if (!selectedCond) {
+            toast({
+              title: `New Condition created`,
+              status: "success",
+              isClosable: true,
+            });
+          }
+          return e;
+        });
+
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <DataContext.Provider

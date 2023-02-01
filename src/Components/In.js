@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import {
   SimpleGrid,
   GridItem,
@@ -17,32 +17,18 @@ import {
   Icon,
   Container,
   InputLeftAddon,
+  Box,
 } from "@chakra-ui/react";
 import useAuth from "../Hooks/useAuth";
 import { HiSearch } from "react-icons/hi";
 import { useClickOutside } from "../Components/useClickOutside";
 import InItemModal from "./InItemModal";
+import api from "../API/Api";
+import SearchSel from "./searchableSelect/searchSel";
+import CustomTable from "./CustomTable";
 
 const In = ({ setTab, users }) => {
   const toast = useToast();
-  const [item, setItem] = useState([]);
-  const { appState, setAppState, inventory, user } = useAuth();
-  const [isClick, setIsClick] = useState(false);
-  const getUniqueAPI =
-    "https://script.google.com/macros/s/AKfycby9YK1q3CQDA_vESrSQpylqOCIvAirNfkifar2-79o-8enMFT6E-b3Gt8a_qrVnFlmEfg/exec?action=getUnique";
-
-  useEffect(() => {
-    fetch(getUniqueAPI, { method: "get" })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) {
-          setItem(data.filter((e) => e.desc !== ""));
-        }
-      })
-      .catch((error) => console.log(error));
-  }, [appState]);
-
-  const todate = new Date();
 
   const [desc, setDesc] = useState("");
   const [brand, setBrand] = useState("");
@@ -65,6 +51,8 @@ const In = ({ setTab, users }) => {
   const [condition, setCondition] = useState("");
   const [fundSource, setFundSource] = useState("");
   const [acquisitionCost, setAcquisitionCost] = useState("");
+  
+  // const [getLocation, setGetLocation] = useState([]);
 
   const getLocation = [
     { location: "MMS"},
@@ -138,75 +126,285 @@ const In = ({ setTab, users }) => {
       });
       return;
     }
+
+    // fetch(inItemAPI, {
+    //   method: "POST",
+    //   body: JSON.stringify({
+    //     timestamp: todayTime + " " + todayDate,
+    //     desc,
+    //     brand,
+    //     lot,
+    //     expiration:
+    //       expiration !== "NOT INDICATED"
+    //         ? new Date(expiration).getMonth() +
+    //           1 +
+    //           "/" +
+    //           new Date(expiration).getDate() +
+    //           "/" +
+    //           new Date(expiration).getFullYear()
+    //         : "NOT INDICATED",
+    //     iar,
+    //     iarDate:
+    //       iarDate !== ""
+    //         ? new Date(iarDate).getMonth() +
+    //           1 +
+    //           "/" +
+    //           new Date(iarDate).getDate() +
+    //           "/" +
+    //           new Date(iarDate).getFullYear()
+    //         : null,
+
+    //     delivery:
+    //       delivery !== ""
+    //         ? new Date(delivery).getMonth() +
+    //           1 +
+    //           "/" +
+    //           new Date(delivery).getDate() +
+    //           "/" +
+    //           new Date(delivery).getFullYear()
+    //         : null,
+
+    //     quantity,
+    //     pack,
+    //     loose,
+    //     unit,
+    //     total,
+    //     location,
+    //     supplier,
+    //     manufacturer,
+    //     origin,
+    //     acquisition: donors.includes(supplier.toLocaleLowerCase())
+    //       ? "Donation"
+    //       : "Purchase",
+    //     expirationMonths,
+    //     remarks,
+    //     condition,
+    //     fundSource,
+    //     acquisitionCost,
+    //     user: user?.firstname + " " + user?.lastname,
+    //   }),
+    // })
+    //   .then(async (response) => {
+    //     const isJson = response.headers
+    //       .get("content-type")
+    //       ?.includes("application/json");
+    //     const data = isJson && (await response.json());
+
+    //     if (response.ok) {
+    //       setIsClick(false);
+    //       clearForm();
+    //       setAppState("Item Created");
+    //       setTimeout(() => setAppState(""), 500);
+    //       toast({
+    //         title: "Item Created",
+    //         description: "Added one (1) item to the database",
+    //         status: "success",
+    //         duration: 9000,
+    //         isClosable: true,
+    //       });
+    //     }
+
+    //     // check for error response
+    //     if (!response.ok) {
+    //       setIsClick(false);
+    //       // get error message from body or default to response status
+    //       const error = (data && data.message) || response.status;
+
+    //       return Promise.reject(error);
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     setIsClick(false);
+    //     toast({
+    //       title: "Error",
+    //       description: "An error occured",
+    //       status: "error",
+    //       duration: 9000,
+    //       isClosable: true,
+    //     });
+    //   });
   };
 
   useEffect(() => {
-    const fetchTotal = () => {
-      if (!quantity && !pack && !loose) {
-        return setTotal(0);
-      } else if (quantity && pack && loose) {
-        return setTotal(parseInt(quantity * pack) + parseInt(loose));
-      } else if (quantity && !pack && !loose) {
-        return setTotal(0);
-      } else if (!quantity && pack && loose) {
-        return setTotal(parseInt(pack) + parseInt(loose));
-      } else if (!pack && loose) {
-        return setTotal(loose);
-      } else if (quantity && pack && !loose) {
-        return setTotal(parseInt(quantity * pack));
-      } else {
-        return setTotal(pack);
-      }
-    };
+    fetchTableData();
+  }, [searchTerm]);
 
-    fetchTotal();
-  }, [quantity, pack, loose]);
+  const [tableData, setTableData] = useState([]);
 
-  const getExpirationMonth = (date1, date2) => {
-    let months;
-    months = (date2.getFullYear() - date1.getFullYear()) * 12;
-    months -= date1.getMonth();
-    months += date2.getMonth();
+  const fetchTableData = async (value) => {
+    const result = await api.get(`/itemtable`, {
+      params: {
+        q: value ? value : "",
+      },
+    });
+    setTableData(result.data);
+  };
 
-    if (months < 0) {
-      return setExpirationMonths("EXPIRED");
-    } else {
-      return setExpirationMonths(
-        months > 1 ? `${months} MONTHS` : `${months} MONTH`
-      );
-    }
+  const fetchitem = async (value) => {
+    const result = await api.get(`/item`, {
+      params: {
+        q: value,
+      },
+    });
+    setSearchterm(result.data);
   };
 
   const [dropdown, setDropdown] = useState(false);
-  const [term, setTerm] = useState("");
 
   const domNod = useClickOutside(() => {
     setDropdown(false);
   });
 
+  const [typeData, setTypeData] = useState();
+  const [typeSelect, setTypeSelect] = useState();
+  const [typeValue, setTypeValue] = useState();
+  const fetchtypes = async (value) => {
+    const result = await api.get(`/type`, {
+      params: {
+        q: value,
+      },
+    });
+    setTypeData(result.data);
+  };
+
+  const columns = useMemo(
+    () => [
+      {
+        Header: "Item desc",
+        accessor: "item_name",
+      },
+      {
+        Header: "Brand",
+        accessor: "brand_name",
+      },
+      {
+        Header: "manufacturer",
+        accessor: "manu_name",
+      },
+      {
+        Header: "Type",
+        accessor: "type_name",
+      },
+      {
+        Header: "Article",
+        accessor: "article_name",
+      },
+      {
+        Header: "Remarks",
+        accessor: "remarks",
+      },
+    ],
+    []
+  );
+
   return (
     <>
-      <Container
-        boxShadow="rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;"
-        bg="#fff"
-        padding={5}
-        borderRadius={8}
-        maxW="container.lg"
-        w="full"
-        h="full"
-      >
-        <SimpleGrid
-          columns={6}
-          columnGap={3}
-          rowGap={6}
-          w="full"
-          h={"full"}
-          p={6}
-          flexDirection="column"
-        >
-          <GridItem colSpan={4}>
+      <div className="table-container">
+        <CustomTable title={"ITEMS"} columns={columns} data={tableData} >
+          <SimpleGrid
+            columns={6}
+            columnGap={3}
+            rowGap={6}
+            w="full"
+            h={"full"}
+            p={6}
+            flexDirection="column"
+          >
+            <GridItem colSpan={2}>
+              <FormControl>
+                <FormLabel>Item description</FormLabel>
+                <div
+                  ref={domNod}
+                  onClick={() => {
+                    setDropdown(!dropdown);
+                    fetchitem();
+                  }}
+                  className="custom-select"
+                >
+                  <p>{itemDesc === "" ? "- Select Item -" : itemDesc}</p>
+                  {dropdown && (
+                    <div
+                      onClick={(e) => e.stopPropagation()}
+                      className="select-dropdown"
+                    >
+                      <div className="select-input-container">
+                        <InputGroup>
+                          <InputLeftElement
+                            pointerEvents="none"
+                            color="gray.300"
+                            fontSize="1.2em"
+                            children={<Icon as={HiSearch} />}
+                          />
+                          <Input
+                            background="#fff"
+                            value={term}
+                            onChange={(e) => {
+                              setTerm(e.target.value);
+                              fetchitem(e.target.value);
+                            }}
+                            fontSize="14px"
+                            placeholder="Search"
+                          />
+                        </InputGroup>
+                        <Button
+                          onClick={() => {
+                            setTab("create");
+                          }}
+                          fontSize="14px"
+                          ml={2}
+                        >
+                          New
+                        </Button>
+                      </div>
+
+                      {searchTerm?.map((item, index) => {
+                        return (
+                          <>
+                            <p
+                              onClick={() => {
+                                setDesc(item.item_name);
+                                setDropdown(false);
+                                setItemDesc(item.item_name);
+                                fetchTableData(item.item_name);
+                              }}
+                              key={index}
+                            >
+                              {item.item_name}
+                            </p>
+                          </>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              </FormControl>
+            </GridItem>
+            <GridItem colSpan={4}>
+              <SearchSel
+                name={"Article"} // form label
+                data={typeData} // data fetched from db
+                propertyName={"type_name"} //property name to display to the select
+                fetchdat={fetchtypes} //async function for fetch the data
+                setSelect={setTypeSelect} //Select
+                isSelect={typeSelect} //is Selected
+                setValue={setTypeValue} //set value for viewing in select input
+                valueD={typeValue} //value
+              />
+            </GridItem>
+            <>
+              {/* <GridItem colSpan={4}>
             <FormControl isRequired>
-              <FormLabel>Item Description</FormLabel>
+              <SearchSel
+                name={"name select"} // form label
+                data={typeData} // data fetched from db
+                propertyName={"type_name"} //property name to display to the select
+                fetchdat={fetchtypes} //async function for fetch the data
+                setSelect={setTypeSelect} //Select
+                isSelect={typeSelect} //is Selected
+                setValue={setTypeValue} //set value for viewing in select input
+                valueD={typeValue} //value
+              />
+              <FormLabel>Item Description:{desc && desc}</FormLabel>
               <div
                 ref={domNod}
                 onClick={() => setDropdown(!dropdown)}
@@ -231,6 +429,7 @@ const In = ({ setTab, users }) => {
                           value={term}
                           onChange={(e) => {
                             setTerm(e.target.value);
+                            fetchitem(e.target.value);
                           }}
                           fontSize="14px"
                           placeholder="Search"
@@ -250,66 +449,26 @@ const In = ({ setTab, users }) => {
                       </Button>
                     </div>
 
-                    {item
-                      ?.filter((val) => {
-                        if (term === "") {
-                          return val;
-                        } else if (
-                          val.desc
-                            .toLowerCase()
-                            .includes(term.toLocaleLowerCase())
-                        ) {
-                          return val;
-                        }
-                      })
-                      .filter((e) => e.desc !== "#N/A")
-                      .map((item, index) => {
-                        return (
+                    {searchTerm?.map((item, index) => {
+                      return (
+                        <>
                           <p
-                            className={desc === item.desc ? "active" : ""}
+                            // className={desc === item.desc ? "active" : ""}
+                            // onClick={() => {
+                            //   // setDesc(item.desc);
+                            //   setDropdown(false);
+                            // }}
                             onClick={() => {
-                              setDesc(item.desc);
+                              setDesc(item.Pk_itemId);
                               setDropdown(false);
                             }}
                             key={index}
                           >
-                            {item.desc}{" "}
-                            {/* <span
-                              className={
-                                inventory?.filter(
-                                  (e) => e.desc === item.desc
-                                )[0]?.available === 0
-                                  ? "empty"
-                                  : ""
-                              }
-                            >
-                              {
-                                inventory?.filter(
-                                  (e) => e.desc === item.desc
-                                )[0]?.available
-                              }
-                            </span> */}
+                            {item.item_name}
                           </p>
-                        );
-                      })}
-
-                    {item
-                      ?.filter((f) =>
-                        f.desc.toLowerCase().includes(term.toLocaleLowerCase())
-                      )
-                      .filter((e) => e.desc !== "#N/A").length === 0 && (
-                      <p
-                        onClick={() => {
-                          setDesc("");
-                          setTerm("");
-                          setDropdown(false);
-                          setTab("create");
-                        }}
-                        className="no-data"
-                      >
-                        No data found. Create new.
-                      </p>
-                    )}
+                        </>
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -319,7 +478,50 @@ const In = ({ setTab, users }) => {
           <GridItem colSpan={2}>
             <FormControl>
               <FormLabel>Brand</FormLabel>
-              <Input value={brand} onChange={(e) => setBrand(e.target.value)} />
+              <Input
+                onClick={() => setbrandRecommendDiv(!brandRecommendDiv)}
+                tabIndex={0}
+                onKeyDown={handleKeyDown}
+                value={brand}
+                onChange={(e) => {
+                  setBrand(e.target.value);
+                  fetchbrand(e.target.value);
+                  setSelectBrand(null);
+                }}
+              />
+              {
+                //if input tempsearchSTATE here has a brand and !isSELECTEDbrandID it will display the drop down
+                brandRecommendDiv && brandData && !isSelectBrand && (
+                  <div
+                    ref={brandRD}
+                    className="select-dropdown"
+                    style={{ top: "75px" }}
+                  >
+                    {brandData.map((e, index) => {
+                      return (
+                        <p
+                          onMouseEnter={() => {
+                            setBrand(e.brand_name);
+                          }}
+                          onClick={() => {
+                            setSelectBrand(e);
+                            setBrand(e.brand_name);
+                          }}
+                          key={index}
+                          style={{
+                            backgroundColor:
+                              index === selectedIndex && `rgb(238, 240, 241)`,
+                          }}
+                        >
+                          {e.brand_name}
+                        </p>
+                      );
+                    })}
+                  </div>
+                )
+                //if user click on brand it will close the dropdown and SETisSELECTEDbrandID
+                //
+              }
             </FormControl>
           </GridItem>
 
@@ -432,35 +634,22 @@ const In = ({ setTab, users }) => {
           <GridItem colSpan={3}>
             <FormControl>
               <FormLabel>Location</FormLabel>
-
-              <Input
+              <Select
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-              />
+                placeholder="- Select Location -"
+              >
+                <option value="MMS Main Storage Level 1">
+                  MMS Main Storage Level 1
+                </option>
+                <option value="MMS Main Storage Level 2">
+                  MMS Main Storage Level 2
+                </option>
+                <option value="Tent 1">Tent 1</option>
+                <option value="Tent 2">Tent 2</option>
+                <option value="Tower 1">Tower 1</option>
+              </Select>
             </FormControl>
-            <div className="dropdown">
-              {getLocation
-                .filter((item) => {
-                  const searchLocation = location.toLowerCase();
-                  const locationName = item.location.toLowerCase();
-
-                  return (
-                    searchLocation &&
-                    locationName.startsWith(searchLocation) &&
-                    locationName !== searchLocation
-                  );
-                })
-                .slice(0, 10)
-                .map((item) => (
-                  <div
-                    onClick={() => onLocation(item.location)}
-                    className="dropdown-row"
-                    key={item.location}
-                  >
-                    <li>{item.location}</li>
-                  </div>
-                ))}
-            </div>
           </GridItem>
 
           <GridItem colSpan={3}>
@@ -469,7 +658,6 @@ const In = ({ setTab, users }) => {
               <Input
                 value={supplier}
                 onChange={(e) => setSupplier(e.target.value)}
-                disabled
               />
             </FormControl>
           </GridItem>
@@ -480,7 +668,6 @@ const In = ({ setTab, users }) => {
               <Input
                 value={manufacturer}
                 onChange={(e) => setManufacturer(e.target.value)}
-                disabled
               />
             </FormControl>
           </GridItem>
@@ -501,7 +688,6 @@ const In = ({ setTab, users }) => {
               <Input
                 value={condition}
                 onChange={(e) => setCondition(e.target.value)}
-                disabled
               />
             </FormControl>
           </GridItem>
@@ -539,10 +725,11 @@ const In = ({ setTab, users }) => {
                 onChange={(e) => setRemarks(e.target.value)}
               />
             </FormControl>
-          </GridItem>
-        </SimpleGrid>
-
-        <HStack marginTop={5} justifyContent="flex-end">
+          </GridItem> */}
+            </>
+          </SimpleGrid>
+        </CustomTable>
+        {/* <HStack marginTop={5} justifyContent="flex-end">
           <Button
             color="#fff"
             isLoading={isClick ? true : false}
@@ -553,8 +740,8 @@ const In = ({ setTab, users }) => {
           >
             IN
           </Button>
-        </HStack>
-      </Container>
+        </HStack> */}
+      </div>
     </>
   );
 };

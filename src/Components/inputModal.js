@@ -52,6 +52,7 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
     selectedCond,
     setSelectedCond,
     fetchcond,
+    clearAll,
   } = useContext(DataContext);
   const toast = useToast();
   const CardDet = ({ property, detail, bg }) => {
@@ -89,7 +90,6 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
                   paddingEnd={5}
                 >
                   <GridItem colSpan={6} w="100%">
-                    {selectedLoc && selectedLoc.Pk_locationId}
                     <Box>
                       <SearchSel
                         name={"Location"}
@@ -104,7 +104,6 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
                     </Box>
                   </GridItem>
                   <GridItem colSpan={3} w="100%">
-                    {selectedCond && selectedCond.Pk_conditionsId}
                     <Box>
                       <SearchSel
                         name={"Condition"}
@@ -265,7 +264,23 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
             <Button
               colorScheme={"teal"}
               onClick={() => {
-                postInventory();
+                postInventory().then((e) => {
+                  if (e.status) {
+                    toast({
+                      title: `please check your inputs`,
+                      status: "error",
+                      isClosable: true,
+                    });
+                  } else {
+                    clearAll();
+                    onClose();
+                    toast({
+                      title: `New inventory added`,
+                      status: "success",
+                      isClosable: true,
+                    });
+                  }
+                });
               }}
             >
               Submit

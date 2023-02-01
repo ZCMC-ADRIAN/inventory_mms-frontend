@@ -33,7 +33,7 @@ const SearchSel = ({
     setVisible(false);
   });
   const [isVisible, setVisible] = useState();
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(null);
   const [timeoutId, setTimeoutId] = useState(null);
   const handleKeyDown = (ev, opt) => {
     if (ev.key === "ArrowDown") {
@@ -71,10 +71,10 @@ const SearchSel = ({
       <FormControl>
         <FormLabel color={"blackAlpha.600"}>{name}</FormLabel>
         <Input
-          onFocus={() => {
-            fetchdat(null);
-            setVisible(!isVisible);
-          }}
+          // onFocus={() => {
+          //   fetchdat(null);
+          //   setVisible(!isVisible);
+          // }}
           onClick={() => {
             fetchdat(null);
             setVisible(!isVisible);
@@ -94,9 +94,9 @@ const SearchSel = ({
             {data.map((e, index) => {
               return (
                 <p
-                  onMouseEnter={() => {
-                    setValue(e[propertyName]);
-                  }}
+                  // onMouseEnter={() => {
+                  //   setValue(e[propertyName]);
+                  // }}
                   onClick={() => {
                     setSelect(e);
                     setValue(e[propertyName]);

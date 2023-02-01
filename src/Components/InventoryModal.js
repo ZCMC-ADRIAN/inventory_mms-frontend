@@ -46,7 +46,7 @@ const InventoryModal = ({ isOpen, onClose, itemId }) => {
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6} display='flex'>
-            <Box bg='blue.100' p={4} w='50%' fontSize={14} mr={5}>
+            <Box bg='blue.100' p={4} w='50%' fontSize={14} mr={5} overflow='scroll' overflowX='hidden'>
               <Flex>
                 <Text mr={3} fontWeight='bold'>Brand:</Text>
                 {details.map((data)=>{
@@ -97,7 +97,11 @@ const InventoryModal = ({ isOpen, onClose, itemId }) => {
               </Flex>
               <Flex mb={10}>
                 <Text mr={3} fontWeight='bold'>Cost:</Text>
-                <Text>₱ 8,500</Text>
+                {details.map((data)=>{
+                  return(
+                    <Text>₱ {data.costs}</Text>
+                  )
+                })}
               </Flex>
 
               <Flex flexDirection='column' mb={2}>

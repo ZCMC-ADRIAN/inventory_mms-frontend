@@ -5,10 +5,10 @@ const localApi = axios.create({
   baseURL: serverUrl,
 });
 
-// localApi.interceptors.request.use(function (config) {
-//   const token = sessionStorage.getItem('Authorization');
-//   config.headers.Authorization = 'Bearer ' + token;
-//   return config;
-// });
+localApi.interceptors.request.use(function (config) {
+  const token = sessionStorage.getItem('Authorization');
+  config.headers.Authorization = 'Bearer ' + token;
+  return config;
+});
 
 export default localApi;

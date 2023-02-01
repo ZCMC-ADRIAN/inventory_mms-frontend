@@ -2,54 +2,48 @@ import React, {useState} from "react";
 import "./Sidebar.css";
 import Nouser from "../Assets/nouser.png";
 import useAuth from "../Hooks/useAuth";
-import api from "../API/Api";
 import {FcDocument, FcAddDatabase, FcRight, FcLeft, FcUpLeft} from 'react-icons/fc'
-import LogoutModal from "./LogoutModal";
+import { useNavigate } from "react-router-dom";
+import localApi from "../API/Api";
 
 const Sidebar = ({ setTab, tab }) => {
+  const navigate = useNavigate();
   const { user } = useAuth();
-  const [modal, setModal] = useState(false)
-  const submitLogout = async () => {
-    setModal(true)
-    try {
-      const response = await api.get("/api/auth/logout");
 
-      if (response) {
-        window.location.reload();
+  const logout = () => {
+    let cancel = true;
+    const out = async () => {
+      const response = await localApi.post("logout");
+      if (cancel) {
+        if (response.data.status === 1) {
+          navigate('/');
+          sessionStorage.removeItem('Authorization');
+        }
       }
-    } catch (error) {
-      console.log(error);
-      setModal(false)
-    }
+    };
+    out();
+    return () => {
+      cancel = false;
+    };
   };
 
 
   return (
     <>
-    {modal && <LogoutModal />}
     <div className="sidebar">
       <div className="header">
         <div className="avatar">
           <img src={Nouser} alt="Avatar Profile" />
         </div>
-        <h1>Adrian Agcaoili</h1>
+        <h1>{user?.firstname + " " + user?.lastname}</h1>
         <h2>
-          MMS | <span onClick={() => submitLogout()}>Logout</span>
+          MMS | <span onClick={logout}>Logout</span>
         </h2>
       </div>
 
       <div className="navigation">
         <label>Manage</label>
         <ul style={{ marginBottom: "40px" }}>
-          {/* <li
-            onClick={() => setTab("create")}
-            className={tab === "create" ? "active" : ""}
-          >
-            <p>
-              <FcAddDatabase />
-            </p>
-            Create Item
-          </li> */}
           <li
             onClick={() => setTab("inItem")}
             className={tab === "inItem" || tab === "create" ? "active" : ""}
@@ -59,24 +53,6 @@ const Sidebar = ({ setTab, tab }) => {
             </p>
             In Item
           </li>
-          {/* <li
-            onClick={() => setTab("outItem")}
-            className={tab === "outItem" ? "active" : ""}
-          >
-            <p>
-              <FcLeft />
-            </p>{" "}
-            Out Item
-          </li>
-          <li
-            onClick={() => setTab("returnItem")}
-            className={tab === "returnItem" ? "active" : ""}
-          >
-            <p>
-              <FcUpLeft />
-            </p>
-            Return Item
-          </li> */}
         </ul>
 
         <label>Monitor</label>
@@ -90,42 +66,6 @@ const Sidebar = ({ setTab, tab }) => {
             </p>
             Inventory
           </li>
-          {/* <li
-            onClick={() => setTab("listIn")}
-            className={tab === "listIn" ? "active" : ""}
-          >
-            <p>
-              <FcDocument />
-            </p>
-            List of In
-          </li>
-          <li
-            onClick={() => setTab("listOut")}
-            className={tab === "listOut" ? "active" : ""}
-          >
-            <p>
-              <FcDocument />
-            </p>
-            List of Out
-          </li>
-          <li
-            onClick={() => setTab("listReturn")}
-            className={tab === "listReturn" ? "active" : ""}
-          >
-            <p>
-              <FcDocument />
-            </p>
-            List of Return
-          </li>
-          <li
-            onClick={() => setTab("binCard")}
-            className={tab === "binCard" ? "active" : ""}
-          >
-            <p>
-              <FcDocument />
-            </p>
-            Bin Card
-          </li> */}
         </ul>
       </div>
     </div>

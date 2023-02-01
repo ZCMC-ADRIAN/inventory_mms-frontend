@@ -61,7 +61,6 @@ const Equipment = ({ setTab }) => {
   const [isClick, setIsClick] = useState(false);
 
   //In state
-  const [lot, setLot] = useState("");
   const [expiration, setExpiration] = useState("");
   const [itemStatus, setItemStatus] = useState("");
   const [itemStatusOther, setItemStatusOther] = useState("");
@@ -116,7 +115,6 @@ const Equipment = ({ setTab }) => {
     setDonor("");
     setRemarks("");
     setCost("");
-    setLot("");
     setExpiration("");
     setAccessories("");
     setItemStatus("");
@@ -491,12 +489,12 @@ const Equipment = ({ setTab }) => {
             </FormControl>
           </GridItem>
 
-          <GridItem colSpan={2}>
+          {/* <GridItem colSpan={2}>
             <FormControl>
               <FormLabel>Lot/Serial #</FormLabel>
               <Input value={lot} onChange={(e) => setLot(e.target.value)} />
             </FormControl>
-          </GridItem>
+          </GridItem> */}
 
           <GridItem colSpan={2}>
             <FormControl>

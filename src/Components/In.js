@@ -23,7 +23,7 @@ import { HiSearch } from "react-icons/hi";
 import { useClickOutside } from "../Components/useClickOutside";
 import InItemModal from "./InItemModal";
 
-const In = ({ setTab }) => {
+const In = ({ setTab, users }) => {
   const toast = useToast();
   const [item, setItem] = useState([]);
   const { appState, setAppState, inventory, user } = useAuth();
@@ -65,8 +65,6 @@ const In = ({ setTab }) => {
   const [condition, setCondition] = useState("");
   const [fundSource, setFundSource] = useState("");
   const [acquisitionCost, setAcquisitionCost] = useState("");
-  
-  // const [getLocation, setGetLocation] = useState([]);
 
   const getLocation = [
     { location: "MMS"},
@@ -140,103 +138,6 @@ const In = ({ setTab }) => {
       });
       return;
     }
-
-    // fetch(inItemAPI, {
-    //   method: "POST",
-    //   body: JSON.stringify({
-    //     timestamp: todayTime + " " + todayDate,
-    //     desc,
-    //     brand,
-    //     lot,
-    //     expiration:
-    //       expiration !== "NOT INDICATED"
-    //         ? new Date(expiration).getMonth() +
-    //           1 +
-    //           "/" +
-    //           new Date(expiration).getDate() +
-    //           "/" +
-    //           new Date(expiration).getFullYear()
-    //         : "NOT INDICATED",
-    //     iar,
-    //     iarDate:
-    //       iarDate !== ""
-    //         ? new Date(iarDate).getMonth() +
-    //           1 +
-    //           "/" +
-    //           new Date(iarDate).getDate() +
-    //           "/" +
-    //           new Date(iarDate).getFullYear()
-    //         : null,
-
-    //     delivery:
-    //       delivery !== ""
-    //         ? new Date(delivery).getMonth() +
-    //           1 +
-    //           "/" +
-    //           new Date(delivery).getDate() +
-    //           "/" +
-    //           new Date(delivery).getFullYear()
-    //         : null,
-
-    //     quantity,
-    //     pack,
-    //     loose,
-    //     unit,
-    //     total,
-    //     location,
-    //     supplier,
-    //     manufacturer,
-    //     origin,
-    //     acquisition: donors.includes(supplier.toLocaleLowerCase())
-    //       ? "Donation"
-    //       : "Purchase",
-    //     expirationMonths,
-    //     remarks,
-    //     condition,
-    //     fundSource,
-    //     acquisitionCost,
-    //     user: user?.firstname + " " + user?.lastname,
-    //   }),
-    // })
-    //   .then(async (response) => {
-    //     const isJson = response.headers
-    //       .get("content-type")
-    //       ?.includes("application/json");
-    //     const data = isJson && (await response.json());
-
-    //     if (response.ok) {
-    //       setIsClick(false);
-    //       clearForm();
-    //       setAppState("Item Created");
-    //       setTimeout(() => setAppState(""), 500);
-    //       toast({
-    //         title: "Item Created",
-    //         description: "Added one (1) item to the database",
-    //         status: "success",
-    //         duration: 9000,
-    //         isClosable: true,
-    //       });
-    //     }
-
-    //     // check for error response
-    //     if (!response.ok) {
-    //       setIsClick(false);
-    //       // get error message from body or default to response status
-    //       const error = (data && data.message) || response.status;
-
-    //       return Promise.reject(error);
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     setIsClick(false);
-    //     toast({
-    //       title: "Error",
-    //       description: "An error occured",
-    //       status: "error",
-    //       duration: 9000,
-    //       isClosable: true,
-    //     });
-    //   });
   };
 
   useEffect(() => {

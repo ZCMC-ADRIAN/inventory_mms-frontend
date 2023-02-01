@@ -31,199 +31,133 @@ const In = ({ setTab, users }) => {
   const toast = useToast();
 
   const [desc, setDesc] = useState("");
-  const [brand, setBrand] = useState("");
-  const [lot, setLot] = useState("");
-  const [expiration, setExpiration] = useState("");
-  const [iar, setIar] = useState("");
-  const [iarDate, setIarDate] = useState("");
-  const [delivery, setDelivery] = useState("");
-  const [quantity, setQuantity] = useState(0);
-  const [pack, setPack] = useState(0);
-  const [loose, setLoose] = useState(0);
-  const [unit, setUnit] = useState("");
-  const [total, setTotal] = useState("");
-  const [location, setLocation] = useState("");
-  const [supplier, setSupplier] = useState("");
-  const [manufacturer, setManufacturer] = useState("");
-  const [origin, setOrigin] = useState("");
-  const [expirationMonths, setExpirationMonths] = useState("");
-  const [remarks, setRemarks] = useState("");
-  const [condition, setCondition] = useState("");
-  const [fundSource, setFundSource] = useState("");
-  const [acquisitionCost, setAcquisitionCost] = useState("");
-  
-  // const [getLocation, setGetLocation] = useState([]);
+  const [itemDesc, setItemDesc] = useState("");
+  const [searchTerm, setSearchterm] = useState([]);
+  const [term, setTerm] = useState("");
+  // const handleInItem = async () => {
+  //   setIsClick(true);
 
-  const getLocation = [
-    { location: "MMS"},
-    { location: "OMCC"},
-  ];
+  //   if (total === 0) {
+  //     setIsClick(false);
+  //     toast({
+  //       title: "Error",
+  //       description: "Please enter quantity",
+  //       status: "error",
+  //       duration: 9000,
+  //       isClosable: true,
+  //     });
+  //     return;
+  //   }
 
-  const onLocation = (searchLocation) => {
-    setLocation(searchLocation);
-  };
+  //   if (!desc) {
+  //     setIsClick(false);
+  //     toast({
+  //       title: "Error",
+  //       description: "Enter Item Description",
+  //       status: "error",
+  //       duration: 9000,
+  //       isClosable: true,
+  //     });
+  //     return;
+  //   }
 
-  const donors = [
-    "doh",
-    "department of health",
-    "icrc",
-    "international committee of the red cross",
-    "biatf",
-    "who",
-    "world health organization",
-  ];
+  //   fetch(inItemAPI, {
+  //     method: "POST",
+  //     body: JSON.stringify({
+  //       timestamp: todayTime + " " + todayDate,
+  //       desc,
+  //       brand,
+  //       lot,
+  //       expiration:
+  //         expiration !== "NOT INDICATED"
+  //           ? new Date(expiration).getMonth() +
+  //             1 +
+  //             "/" +
+  //             new Date(expiration).getDate() +
+  //             "/" +
+  //             new Date(expiration).getFullYear()
+  //           : "NOT INDICATED",
+  //       iar,
+  //       iarDate:
+  //         iarDate !== ""
+  //           ? new Date(iarDate).getMonth() +
+  //             1 +
+  //             "/" +
+  //             new Date(iarDate).getDate() +
+  //             "/" +
+  //             new Date(iarDate).getFullYear()
+  //           : null,
 
-  // const inItemAPI =
-  //   "https://script.google.com/macros/s/AKfycbzD3yhqneDKW_UvKgr-H6AGA1J3o3Jei_Ql3_t2MMQW7_XrdJ1vF3Th2kZyU7Mv2M5J9Q/exec?action=inItem";
+  //       delivery:
+  //         delivery !== ""
+  //           ? new Date(delivery).getMonth() +
+  //             1 +
+  //             "/" +
+  //             new Date(delivery).getDate() +
+  //             "/" +
+  //             new Date(delivery).getFullYear()
+  //           : null,
 
-  const clearForm = () => {
-    setDesc("");
-    setBrand("");
-    setLot("");
-    setExpiration("");
-    setIar("");
-    setIarDate("");
-    setDelivery("");
-    setQuantity("");
-    setPack("");
-    setLoose("");
-    setUnit("");
-    setTotal("");
-    setLocation("");
-    setSupplier("");
-    setManufacturer("");
-    setOrigin("");
-    setExpirationMonths("");
-    setRemarks("");
-    setCondition("");
-    setFundSource("");
-    setAcquisitionCost("");
-  };
+  //       quantity,
+  //       pack,
+  //       loose,
+  //       unit,
+  //       total,
+  //       location,
+  //       supplier,
+  //       manufacturer,
+  //       origin,
+  //       acquisition: donors.includes(supplier.toLocaleLowerCase())
+  //         ? "Donation"
+  //         : "Purchase",
+  //       expirationMonths,
+  //       remarks,
+  //       condition,
+  //       fundSource,
+  //       acquisitionCost,
+  //       user: user?.firstname + " " + user?.lastname,
+  //     }),
+  //   })
+  //     .then(async (response) => {
+  //       const isJson = response.headers
+  //         .get("content-type")
+  //         ?.includes("application/json");
+  //       const data = isJson && (await response.json());
 
-  const handleInItem = async () => {
-    setIsClick(true);
+  //       if (response.ok) {
+  //         setIsClick(false);
+  //         clearForm();
+  //         setAppState("Item Created");
+  //         setTimeout(() => setAppState(""), 500);
+  //         toast({
+  //           title: "Item Created",
+  //           description: "Added one (1) item to the database",
+  //           status: "success",
+  //           duration: 9000,
+  //           isClosable: true,
+  //         });
+  //       }
 
-    if (total === 0) {
-      setIsClick(false);
-      toast({
-        title: "Error",
-        description: "Please enter quantity",
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
-      return;
-    }
+  //       // check for error response
+  //       if (!response.ok) {
+  //         setIsClick(false);
+  //         // get error message from body or default to response status
+  //         const error = (data && data.message) || response.status;
 
-    if (!desc) {
-      setIsClick(false);
-      toast({
-        title: "Error",
-        description: "Enter Item Description",
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
-      return;
-    }
-
-    // fetch(inItemAPI, {
-    //   method: "POST",
-    //   body: JSON.stringify({
-    //     timestamp: todayTime + " " + todayDate,
-    //     desc,
-    //     brand,
-    //     lot,
-    //     expiration:
-    //       expiration !== "NOT INDICATED"
-    //         ? new Date(expiration).getMonth() +
-    //           1 +
-    //           "/" +
-    //           new Date(expiration).getDate() +
-    //           "/" +
-    //           new Date(expiration).getFullYear()
-    //         : "NOT INDICATED",
-    //     iar,
-    //     iarDate:
-    //       iarDate !== ""
-    //         ? new Date(iarDate).getMonth() +
-    //           1 +
-    //           "/" +
-    //           new Date(iarDate).getDate() +
-    //           "/" +
-    //           new Date(iarDate).getFullYear()
-    //         : null,
-
-    //     delivery:
-    //       delivery !== ""
-    //         ? new Date(delivery).getMonth() +
-    //           1 +
-    //           "/" +
-    //           new Date(delivery).getDate() +
-    //           "/" +
-    //           new Date(delivery).getFullYear()
-    //         : null,
-
-    //     quantity,
-    //     pack,
-    //     loose,
-    //     unit,
-    //     total,
-    //     location,
-    //     supplier,
-    //     manufacturer,
-    //     origin,
-    //     acquisition: donors.includes(supplier.toLocaleLowerCase())
-    //       ? "Donation"
-    //       : "Purchase",
-    //     expirationMonths,
-    //     remarks,
-    //     condition,
-    //     fundSource,
-    //     acquisitionCost,
-    //     user: user?.firstname + " " + user?.lastname,
-    //   }),
-    // })
-    //   .then(async (response) => {
-    //     const isJson = response.headers
-    //       .get("content-type")
-    //       ?.includes("application/json");
-    //     const data = isJson && (await response.json());
-
-    //     if (response.ok) {
-    //       setIsClick(false);
-    //       clearForm();
-    //       setAppState("Item Created");
-    //       setTimeout(() => setAppState(""), 500);
-    //       toast({
-    //         title: "Item Created",
-    //         description: "Added one (1) item to the database",
-    //         status: "success",
-    //         duration: 9000,
-    //         isClosable: true,
-    //       });
-    //     }
-
-    //     // check for error response
-    //     if (!response.ok) {
-    //       setIsClick(false);
-    //       // get error message from body or default to response status
-    //       const error = (data && data.message) || response.status;
-
-    //       return Promise.reject(error);
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     setIsClick(false);
-    //     toast({
-    //       title: "Error",
-    //       description: "An error occured",
-    //       status: "error",
-    //       duration: 9000,
-    //       isClosable: true,
-    //     });
-    //   });
-  };
+  //         return Promise.reject(error);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       setIsClick(false);
+  //       toast({
+  //         title: "Error",
+  //         description: "An error occured",
+  //         status: "error",
+  //         duration: 9000,
+  //         isClosable: true,
+  //       });
+  //     });
+  // };
 
   useEffect(() => {
     fetchTableData();

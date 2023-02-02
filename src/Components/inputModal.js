@@ -53,6 +53,12 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
     setSelectedCond,
     fetchcond,
     clearAll,
+    assocDatas,
+    assocValue,
+    setassocValue,
+    selectedAssoc,
+    setSelectedAssoc,
+    fetchAssoc,
   } = useContext(DataContext);
   const toast = useToast();
   const CardDet = ({ property, detail, bg }) => {
@@ -89,8 +95,9 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
                   gap={6}
                   paddingEnd={5}
                 >
-                  <GridItem colSpan={6} w="100%">
+                  <GridItem colSpan={3} w="100%">
                     <Box>
+
                       <SearchSel
                         name={"Location"}
                         data={locDatas}
@@ -103,8 +110,24 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
                       />
                     </Box>
                   </GridItem>
+
                   <GridItem colSpan={3} w="100%">
                     <Box>
+                      <SearchSel
+                        name={"Associate"}
+                        data={assocDatas}
+                        propertyName={"person_name"}
+                        fetchdat={fetchAssoc}
+                        setSelect={setSelectedAssoc}
+                        isSelect={selectedAssoc}
+                        setValue={setassocValue}
+                        valueD={assocValue}
+                      />
+                    </Box>
+                  </GridItem>
+                  <GridItem colSpan={3} w="100%">
+                    <Box>
+
                       <SearchSel
                         name={"Condition"}
                         data={condDatas}
@@ -265,7 +288,8 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
               colorScheme={"teal"}
               onClick={() => {
                 postInventory().then((e) => {
-                  if (e.status) {
+                  if (e.status == 500) {
+                    console.log(e.status == 500)
                     toast({
                       title: `please check your inputs`,
                       status: "error",
@@ -279,8 +303,24 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
                       status: "success",
                       isClosable: true,
                     });
+                    if (!selectedLoc) {
+                      toast({
+                        title: `New location created`,
+                        status: "success",
+                        isClosable: true,
+                      });
+                    }
+                    if (!selectedCond) {
+                      toast({
+                        title: `New Condition created`,
+                        status: "success",
+                        isClosable: true,
+                      });
+                    }
                   }
                 });
+
+
               }}
             >
               Submit
@@ -291,3 +331,5 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
     </>
   );
 };
+
+

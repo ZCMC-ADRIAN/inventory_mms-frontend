@@ -4,24 +4,6 @@ import { useToast } from "@chakra-ui/react";
 const DataContext = createContext({});
 
 export const Context = ({ children }) => {
-  // const [appState, setAppState] = useState(null);
-  // const [item, setItem] = useState([]);
-  // const [outItem, setOutItem] = useState([]);
-  // const [inventory, setInventory] = useState([]);
-  // const [equipment, setEquipment] = useState([]);
-  // const [verified, setVerified] = useState(null);
-  // const [inItem, setInItem] = useState([]);
-  // const [returnItem, setReturnItem] = useState([]);
-  // const [people, setPeople] = useState([]);
-
-  // const [itemDatas, setItemDatas] = useState([]);
-  // const [selectedItem, setSelectedItem] = useState([]);
-  // const [selectedItemIndex, setSelectedItemindex] = useState();
-  ///////////DELETE TOP/////////////
-  ////////////////////////////
-
-  //////////////////
-  //Loc
   const toast = useToast();
   const fetchItem = async (value) => {
     try {
@@ -45,6 +27,17 @@ export const Context = ({ children }) => {
       },
     });
     setLocDatas(result.data);
+  };
+
+  const [assocDatas, setassocDatas] = useState([]);
+  const [assocValue, setassocValue] = useState([]);
+  const [selectedAssoc, setSelectedAssoc] = useState();
+
+
+  const fetchAssoc = async () => {
+    console.log(`/assoc/${selectedLoc && selectedLoc.Pk_locationId}`);
+    const result = await api.get(`/assoc/${selectedLoc && selectedLoc.Pk_locationId}`);
+    setassocDatas(result.data);
   };
 
   //modaldetails
@@ -74,12 +67,15 @@ export const Context = ({ children }) => {
   const [loose, setLoose] = useState("");
   const [remarks, setRemarks] = useState("");
 
+
   const clearAll = () => {
     setItemId(null);
     setSelectedCond(null);
     setSelectedLoc(null);
+    setSelectedAssoc(null);
     setConItem([]);
     setLocValue([]);
+    setassocValue([]);
     setIarDate("");
     setIarNo("");
     setdeliveryD("");
@@ -153,8 +149,10 @@ export const Context = ({ children }) => {
           itemId: itemId,
           condition_id: selectedCond && selectedCond.Pk_conditionsId,
           location_id: selectedLoc && selectedLoc.Pk_locationId,
+          assoc_id: selectedAssoc && selectedLoc.Pk_assocId,
           newcondition_name: condItem,
           newlocation_name: locValue,
+          newAssoc_name: assocValue,
           iar_no: iarNo,
           iar_date: iarDate,
           delivery_date: deliveryD,
@@ -163,23 +161,6 @@ export const Context = ({ children }) => {
           loose: loose,
           remarks: remarks,
         })
-        .then((e) => {
-          if (!selectedLoc) {
-            toast({
-              title: `New location created`,
-              status: "success",
-              isClosable: true,
-            });
-          }
-          if (!selectedCond) {
-            toast({
-              title: `New Condition created`,
-              status: "success",
-              isClosable: true,
-            });
-          }
-          return e;
-        });
       return response.data;
     } catch (error) {
       console.error(error);
@@ -231,6 +212,15 @@ export const Context = ({ children }) => {
         setpackZ,
         setLoose,
         setRemarks,
+
+        //assoc
+        assocDatas,
+        setassocDatas,
+        assocValue,
+        setassocValue,
+        selectedAssoc,
+        setSelectedAssoc,
+        fetchAssoc,
       }}
     >
       {children}

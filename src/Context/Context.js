@@ -74,6 +74,21 @@ export const Context = ({ children }) => {
   const [loose, setLoose] = useState("");
   const [remarks, setRemarks] = useState("");
 
+  const clearAll = () => {
+    setItemId(null);
+    setSelectedCond(null);
+    setSelectedLoc(null);
+    setConItem([]);
+    setLocValue([]);
+    setIarDate("");
+    setIarNo("");
+    setdeliveryD("");
+    setquantity("");
+    setpackZ("");
+    setLoose("");
+    setRemarks("");
+  };
+
   const postInventory = async () => {
     if (locValue.length < 1) {
       toast({
@@ -165,7 +180,6 @@ export const Context = ({ children }) => {
           }
           return e;
         });
-
       return response.data;
     } catch (error) {
       console.error(error);
@@ -179,6 +193,7 @@ export const Context = ({ children }) => {
         // locDatas,
         // locItem,
         // selectedLocIndex,
+        clearAll,
         fetchcond,
         postInventory,
         itemId,

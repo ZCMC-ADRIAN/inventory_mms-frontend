@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useContext } from "react";
 import {
   SimpleGrid,
   GridItem,
@@ -26,8 +26,10 @@ import InItemModal from "./InItemModal";
 import api from "../API/Api";
 import SearchSel from "./searchableSelect/searchSel";
 import CustomTable from "./CustomTable";
+import DataContext from "../Context/Context";
 
 const In = ({ setTab, users }) => {
+  const { tableData, fetchTableData } = useContext(DataContext);
   const toast = useToast();
 
   const [desc, setDesc] = useState("");
@@ -35,20 +37,18 @@ const In = ({ setTab, users }) => {
   const [searchTerm, setSearchterm] = useState([]);
   const [term, setTerm] = useState("");
 
-  useEffect(() => {
-    fetchTableData();
-  }, [searchTerm]);
+  // useEffect(() => {
+  //   fetchTableData();
+  // }, [searchTerm]);
 
-  const [tableData, setTableData] = useState([]);
-
-  const fetchTableData = async (value) => {
-    const result = await api.get(`/itemtable`, {
-      params: {
-        q: value ? value : "",
-      },
-    });
-    setTableData(result.data);
-  };
+  // const fetchTableData = async (value) => {
+  //   const result = await api.get(`/itemtable`, {
+  //     params: {
+  //       q: value ? value : "",
+  //     },
+  //   });
+  //   setTableData(result.data);
+  // };
 
   const fetchitem = async (value) => {
     const result = await api.get(`/item`, {
@@ -64,18 +64,6 @@ const In = ({ setTab, users }) => {
   const domNod = useClickOutside(() => {
     setDropdown(false);
   });
-
-  const [typeData, setTypeData] = useState();
-  const [typeSelect, setTypeSelect] = useState();
-  const [typeValue, setTypeValue] = useState();
-  const fetchtypes = async (value) => {
-    const result = await api.get(`/type`, {
-      params: {
-        q: value,
-      },
-    });
-    setTypeData(result.data);
-  };
 
   const columns = useMemo(
     () => [
@@ -106,6 +94,21 @@ const In = ({ setTab, users }) => {
     ],
     []
   );
+  const [timeoutId, setTimeoutId] = useState(null);
+  const handleSearch = (term) => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+
+    setTimeoutId(
+      setTimeout(() => {
+        // fetch data from database using the search term
+        // fetchdat(term);
+
+        fetchitem(term.target.value);
+      }, 500)
+    );
+  };
 
   return (
     <>
@@ -150,7 +153,7 @@ const In = ({ setTab, users }) => {
                             value={term}
                             onChange={(e) => {
                               setTerm(e.target.value);
-                              fetchitem(e.target.value);
+                              handleSearch(e);
                             }}
                             fontSize="14px"
                             placeholder="Search"
@@ -188,18 +191,6 @@ const In = ({ setTab, users }) => {
                   )}
                 </div>
               </FormControl>
-            </GridItem>
-            <GridItem colSpan={4}>
-              <SearchSel
-                name={"Article"} // form label
-                data={typeData} // data fetched from db
-                propertyName={"type_name"} //property name to display to the select
-                fetchdat={fetchtypes} //async function for fetch the data
-                setSelect={setTypeSelect} //Select
-                isSelect={typeSelect} //is Selected
-                setValue={setTypeValue} //set value for viewing in select input
-                valueD={typeValue} //value
-              />
             </GridItem>
           </SimpleGrid>
         </CustomTable>

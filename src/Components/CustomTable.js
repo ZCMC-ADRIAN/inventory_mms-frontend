@@ -82,16 +82,7 @@ const ActionsBtn = () => {
 };
 
 const CustomTable = ({ title, columns, data, child, children }) => {
-  const {
-    locDatas,
-    locValue,
-    selectedLoc,
-    setLocDatas,
-    setLocValue,
-    setSelectedLoc,
-    fetchLoc,
-    fetchItem,
-  } = useContext(DataContext);
+  const { fetchItem } = useContext(DataContext);
   const {
     getTableProps,
     getTableBodyProps,

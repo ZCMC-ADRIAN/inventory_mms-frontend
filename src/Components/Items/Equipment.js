@@ -203,7 +203,7 @@ const Equipment = ({ setTab }) => {
         px={{ sm: "10" }}
       >
         <Stack spacing="3">
-          <form>
+          <form onSubmit={handleCreate}>
             <Stack spacing="4">
               <Stack spacing="4">
                 <HStack

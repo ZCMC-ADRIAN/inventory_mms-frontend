@@ -95,8 +95,16 @@ const InventoryModal = ({ isOpen, onClose, itemId }) => {
                   )
                 })}
               </Flex>
-              <Flex mb={10}>
+              <Flex>
                 <Text mr={3} fontWeight='bold'>Cost:</Text>
+                {details.map((data)=>{
+                  return(
+                    <Text>₱ {data.costs}</Text>
+                  )
+                })}
+              </Flex>
+              <Flex mb={10}>
+                <Text mr={3} fontWeight='bold'>Location:</Text>
                 {details.map((data)=>{
                   return(
                     <Text>₱ {data.costs}</Text>
@@ -105,7 +113,7 @@ const InventoryModal = ({ isOpen, onClose, itemId }) => {
               </Flex>
 
               <Flex flexDirection='column' mb={2}>
-                <Text textAlign='center' mr={3} fontWeight='bold'>Quantity</Text>
+                <Text textAlign='center' mr={3} fontWeight='bold'>Quantity</Text> 
                 <Box bg='black' p='0.5px'></Box>
               </Flex>
               <Flex>

@@ -149,14 +149,14 @@ export const Context = ({ children }) => {
       });
       return;
     }
-    if (packZ === "" || packZ === null) {
-      toast({
-        title: `please enter Pack size`,
-        status: "error",
-        isClosable: true,
-      });
-      return;
-    }
+    // if (packZ === "" || packZ === null) {
+    //   toast({
+    //     title: `please enter Pack size`,
+    //     status: "error",
+    //     isClosable: true,
+    //   });
+    //   return;
+    // }
 
     try {
       const response = await api

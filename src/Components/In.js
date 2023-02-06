@@ -37,9 +37,9 @@ const In = ({ setTab, users }) => {
   const [searchTerm, setSearchterm] = useState([]);
   const [term, setTerm] = useState("");
 
-  // useEffect(() => {
-  //   fetchTableData();
-  // }, [searchTerm]);
+  useEffect(() => {
+    fetchTableData();
+  }, []);
 
   // const fetchTableData = async (value) => {
   //   const result = await api.get(`/itemtable`, {

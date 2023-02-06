@@ -12,6 +12,12 @@ import {
   useToast,
   InputLeftAddon,
   InputGroup,
+  Container,
+  Stack,
+  Box,
+  Center,
+  Text,
+  Link,
 } from "@chakra-ui/react";
 import useAuth from "../../Hooks/useAuth";
 import localApi from "../../API/Api";
@@ -83,8 +89,8 @@ const Equipment = ({ setTab }) => {
     let responseStatus = await localApi.get("status");
     setGetStatus(responseStatus.data);
 
-    let responseSupplier = await localApi.get("supplier",{
-      params: {acquiMode : acquiMode}
+    let responseSupplier = await localApi.get("supplier", {
+      params: { acquiMode: acquiMode },
     });
     setGetSupplier(responseSupplier.data);
   };
@@ -163,7 +169,7 @@ const Equipment = ({ setTab }) => {
         unit: unit,
         location: location,
         acquisitionMode: acquiMode,
-        supplier: donor === 'Other' ? donorOther : donor,
+        supplier: donor === "Other" ? donorOther : donor,
         remarks: remarks,
         expiration: expiration,
         cost: cost,
@@ -188,352 +194,361 @@ const Equipment = ({ setTab }) => {
   };
 
   return (
-    <>
-      <form onSubmit={handleCreate}>
-        <SimpleGrid
-          columns={6}
-          columnGap={4}
-          rowGap={6}
-          w="full"
-          h={"full"}
-          p={6}
-        >
-          <GridItem colSpan={3}>
-            <FormControl isRequired>
-              <FormLabel>Item Description (Original)</FormLabel>
-              <Textarea
-                value={descOrig}
-                onChange={(e) => setDescOrig(e.target.value)}
-                placeholder="Original Description"
-              />
-            </FormControl>
-          </GridItem>
+    <div>
+      <Box
+        boxShadow="rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;"
+        bg="#fff"
+        borderRadius={8}
+        py={{ sm: "8" }}
+        px={{ sm: "10" }}
+      >
+        <Stack spacing="3">
+          <form>
+            <Stack spacing="4">
+              <Stack spacing="4">
+                <HStack
+                  display={"flex"}
+                  flexDirection={{ lg: "row", md: "row", sm: "column" }}
+                >
+                  <FormControl isRequired>
+                    <FormLabel>Item Description (Original)</FormLabel>
+                    <Textarea
+                      value={descOrig}
+                      onChange={(e) => setDescOrig(e.target.value)}
+                      placeholder="Original Description"
+                    />
+                  </FormControl>
 
-          <GridItem colSpan={3}>
-            <FormControl isRequired>
-              <FormLabel>Item Description</FormLabel>
-              <Textarea isReadOnly background="#eee" disabled value={desc} />
-            </FormControl>
-          </GridItem>
-          <GridItem colSpan={2}>
-            <FormControl>
-              <FormLabel>Article</FormLabel>
+                  <FormControl isRequired>
+                    <FormLabel>Item Description</FormLabel>
+                    <Textarea
+                      isReadOnly
+                      background="#eee"
+                      disabled
+                      value={desc}
+                    />
+                  </FormControl>
+                </HStack>
 
-              <Select
-                value={article}
-                onChange={(e) => {
-                  setArticle(e.target.value);
-                  setTypeOther("");
-                  setType("");
-                }}
-                placeholder="- Select Article -"
-              >
-                {getArticle.map((item, index) => {
-                  return (
-                    <option value={item.article_name} key={index}>
-                      {item.article_name}
-                    </option>
-                  );
-                })}
-                <option value="Other">Other</option>
-              </Select>
-              {article === "Other" && (
-                <Input
-                  value={articleOther}
-                  onChange={(e) => setArticleOther(e.target.value)}
-                  marginTop={4}
-                  variant="filled"
-                  placeholder="If other, please specify"
-                />
-              )}
-            </FormControl>
-          </GridItem>
+                <HStack
+                  display={"flex"}
+                  flexDirection={{ lg: "row", md: "column", sm: "column" }}
+                >
+                  <FormControl>
+                    <FormLabel>Article</FormLabel>
+                    <Select
+                      value={article}
+                      onChange={(e) => {
+                        setArticle(e.target.value);
+                        setTypeOther("");
+                        setType("");
+                      }}
+                      placeholder="- Select Article -"
+                    >
+                      {getArticle.map((item, index) => {
+                        return (
+                          <option value={item.article_name} key={index}>
+                            {item.article_name}
+                          </option>
+                        );
+                      })}
+                      <option value="Other">Other</option>
+                    </Select>
+                    {article === "Other" && (
+                      <Input
+                        value={articleOther}
+                        onChange={(e) => setArticleOther(e.target.value)}
+                        marginTop={4}
+                        variant="filled"
+                        placeholder="If other, please specify"
+                      />
+                    )}
+                  </FormControl>
 
-          <GridItem colSpan={2}>
-            <FormControl>
-              <FormLabel>Type/Form</FormLabel>
-              <Select
-                value={type}
-                onChange={(e) => setType(e.target.value)}
-                placeholder="- Select Type/Form -"
-              >
-                {getTypes.map((item, index) => {
-                  return (
-                    <option value={item.type_name} key={index}>
-                      {item.type_name}
-                    </option>
-                  );
-                })}
-                <option value="Other">Other</option>
-              </Select>
+                  <FormControl>
+                    <FormLabel>Type/Form</FormLabel>
+                    <Select
+                      value={type}
+                      onChange={(e) => setType(e.target.value)}
+                      placeholder="- Select Type/Form -"
+                    >
+                      {getTypes.map((item, index) => {
+                        return (
+                          <option value={item.type_name} key={index}>
+                            {item.type_name}
+                          </option>
+                        );
+                      })}
+                      <option value="Other">Other</option>
+                    </Select>
 
-              {type === "Other" && (
-                <Input
-                  value={typeOther}
-                  onChange={(e) => setTypeOther(e.target.value)}
-                  marginTop={4}
-                  variant="filled"
-                  placeholder="If other, please specify"
-                />
-              )}
-            </FormControl>
-          </GridItem>
+                    {type === "Other" && (
+                      <Input
+                        value={typeOther}
+                        onChange={(e) => setTypeOther(e.target.value)}
+                        marginTop={4}
+                        variant="filled"
+                        placeholder="If other, please specify"
+                      />
+                    )}
+                  </FormControl>
 
-          <GridItem colSpan={1}>
-            <FormControl>
-              <FormLabel>Model</FormLabel>
-              <Input value={model} onChange={(e) => setModel(e.target.value)} />
-            </FormControl>
-          </GridItem>
+                  <FormControl>
+                    <FormLabel>Model</FormLabel>
+                    <Input
+                      value={model}
+                      onChange={(e) => setModel(e.target.value)}
+                    />
+                  </FormControl>
 
-          <GridItem colSpan={1}>
-            <FormControl>
-              <FormLabel>Variety/Color</FormLabel>
-              <Input
-                value={variant}
-                onChange={(e) => setVariant(e.target.value)}
-              />
-            </FormControl>
-          </GridItem>
+                  <FormControl>
+                    <FormLabel>Variety/Color</FormLabel>
+                    <Input
+                      value={variant}
+                      onChange={(e) => setVariant(e.target.value)}
+                    />
+                  </FormControl>
+                </HStack>
 
-          <GridItem colSpan={3}>
-            <FormControl>
-              <FormLabel>Details2</FormLabel>
-              <Textarea
-                value={details}
-                onChange={(e) => setDetails(e.target.value)}
-              />
-            </FormControl>
-          </GridItem>
+                <HStack
+                  display={"flex"}
+                  flexDirection={{ lg: "row", md: "column", sm: "column" }}
+                >
+                  <FormControl>
+                    <FormLabel>Details2</FormLabel>
+                    <Textarea
+                      value={details}
+                      onChange={(e) => setDetails(e.target.value)}
+                    />
+                  </FormControl>
 
-          <GridItem colSpan={3}>
-            <FormControl>
-              <FormLabel>Accessories</FormLabel>
-              <Textarea
-                value={accessories}
-                onChange={(e) => setAccessories(e.target.value)}
-              />
-            </FormControl>
-          </GridItem>
+                  <FormControl>
+                    <FormLabel>Accessories</FormLabel>
+                    <Textarea
+                      value={accessories}
+                      onChange={(e) => setAccessories(e.target.value)}
+                    />
+                  </FormControl>
+                </HStack>
 
-          <GridItem colSpan={2}>
-            <FormControl>
-              <FormLabel>Status</FormLabel>
+                <HStack
+                  display={"flex"}
+                  flexDirection={{ lg: "row", md: "column", sm: "column" }}
+                >
+                  <FormControl>
+                    <FormLabel>Status</FormLabel>
 
-              <Select
-                value={itemStatus}
-                onChange={(e) => {
-                  setItemStatus(e.target.value);
-                }}
-                placeholder="- Select Status -"
-              >
-                {getStatus.map((item, index) => {
-                  return (
-                    <option value={item.status_name} key={index}>
-                      {item.status_name}
-                    </option>
-                  );
-                })}
-                <option value="Other">Other</option>
-              </Select>
-              {itemStatus === "Other" && (
-                <Input
-                  value={itemStatusOther}
-                  onChange={(e) => setItemStatusOther(e.target.value)}
-                  marginTop={4}
-                  variant="filled"
-                  placeholder="If other, please specify"
-                />
-              )}
-            </FormControl>
-          </GridItem>
+                    <Select
+                      value={itemStatus}
+                      onChange={(e) => {
+                        setItemStatus(e.target.value);
+                      }}
+                      placeholder="- Select Status -"
+                    >
+                      {getStatus.map((item, index) => {
+                        return (
+                          <option value={item.status_name} key={index}>
+                            {item.status_name}
+                          </option>
+                        );
+                      })}
+                      <option value="Other">Other</option>
+                    </Select>
+                    {itemStatus === "Other" && (
+                      <Input
+                        value={itemStatusOther}
+                        onChange={(e) => setItemStatusOther(e.target.value)}
+                        marginTop={4}
+                        variant="filled"
+                        placeholder="If other, please specify"
+                      />
+                    )}
+                  </FormControl>
 
-          <GridItem colSpan={1}>
-            <FormControl>
-              <FormLabel>Other</FormLabel>
-              <Input value={other} onChange={(e) => setOther(e.target.value)} />
-            </FormControl>
-          </GridItem>
+                  <FormControl>
+                    <FormLabel>Other</FormLabel>
+                    <Input
+                      value={other}
+                      onChange={(e) => setOther(e.target.value)}
+                    />
+                  </FormControl>
 
-          <GridItem colSpan={1}>
-            <FormControl>
-              <FormLabel>Brand</FormLabel>
-              <Input value={brand} onChange={(e) => setBrand(e.target.value)} />
-            </FormControl>
-          </GridItem>
+                  <FormControl>
+                    <FormLabel>Brand</FormLabel>
+                    <Input
+                      value={brand}
+                      onChange={(e) => setBrand(e.target.value)}
+                    />
+                  </FormControl>
 
-          <GridItem colSpan={2}>
-            <FormControl>
-              <FormLabel>Manufacturer</FormLabel>
-              <Input
-                value={manufacturer}
-                onChange={(e) => setManufacturer(e.target.value)}
-              />
-            </FormControl>
-          </GridItem>
+                  <FormControl>
+                    <FormLabel>Manufacturer</FormLabel>
+                    <Input
+                      value={manufacturer}
+                      onChange={(e) => setManufacturer(e.target.value)}
+                    />
+                  </FormControl>
+                </HStack>
 
-          <GridItem colSpan={2}>
-            <FormControl>
-              <FormLabel>Country of Origin</FormLabel>
-              <Input
-                value={origin}
-                onChange={(e) => setOrigin(e.target.value)}
-              />
-            </FormControl>
-          </GridItem>
+                <HStack
+                  display={"flex"}
+                  flexDirection={{ lg: "row", md: "column", sm: "column" }}
+                >
+                  <FormControl>
+                    <FormLabel>Country of Origin</FormLabel>
+                    <Input
+                      value={origin}
+                      onChange={(e) => setOrigin(e.target.value)}
+                    />
+                  </FormControl>
 
-          <GridItem colSpan={2}>
-            <FormControl>
-              <FormLabel>Serial Number</FormLabel>
-              <Input
-                value={serialNum}
-                onChange={(e) => setSerialNum(e.target.value)}
-              />
-            </FormControl>
-          </GridItem>
+                  <FormControl>
+                    <FormLabel>Serial Number</FormLabel>
+                    <Input
+                      value={serialNum}
+                      onChange={(e) => setSerialNum(e.target.value)}
+                    />
+                  </FormControl>
 
-          <GridItem colSpan={2}>
-            <FormControl>
-              <FormLabel>Warranty</FormLabel>
-              <Input
-                value={warranty}
-                onChange={(e) => setWarranty(e.target.value)}
-                type="date"
-              />
-            </FormControl>
-          </GridItem>
+                  <FormControl>
+                    <FormLabel>Warranty</FormLabel>
+                    <Input
+                      value={warranty}
+                      onChange={(e) => setWarranty(e.target.value)}
+                      type="date"
+                    />
+                  </FormControl>
+                </HStack>
 
-          <GridItem colSpan={2}>
-            <FormControl>
-              <FormLabel>Acquisition Date</FormLabel>
-              <Input
-                value={acquisition}
-                onChange={(e) => setAcquisition(e.target.value)}
-                type="date"
-              />
-            </FormControl>
-          </GridItem>
+                <HStack
+                  display={"flex"}
+                  flexDirection={{ lg: "row", md: "column", sm: "column" }}
+                >
+                  <FormControl>
+                    <FormLabel>Acquisition Date</FormLabel>
+                    <Input
+                      value={acquisition}
+                      onChange={(e) => setAcquisition(e.target.value)}
+                      type="date"
+                    />
+                  </FormControl>
 
-          <GridItem colSpan={2}>
-            <FormControl>
-              <FormLabel>Property Number</FormLabel>
-              <Input
-                value={propertyNum}
-                onChange={(e) => setPropertyNum(e.target.value)}
-              />
-            </FormControl>
-          </GridItem>
+                  <FormControl>
+                    <FormLabel>Property Number</FormLabel>
+                    <Input
+                      value={propertyNum}
+                      onChange={(e) => setPropertyNum(e.target.value)}
+                    />
+                  </FormControl>
 
-          <GridItem colSpan={2}>
-            <FormControl>
-              <FormLabel>Unit</FormLabel>
-              <Input value={unit} onChange={(e) => setUnit(e.target.value)} />
-            </FormControl>
-          </GridItem>
+                  <FormControl>
+                    <FormLabel>Unit</FormLabel>
+                    <Input
+                      value={unit}
+                      onChange={(e) => setUnit(e.target.value)}
+                    />
+                  </FormControl>
+                </HStack>
 
-          <GridItem colSpan={2}>
-            <FormControl>
-              <FormLabel>Acquisition Mode</FormLabel>
-              <Select
-                value={acquiMode}
-                onChange={(e) => setAcquiMode(e.target.value)}
-                placeholder="- Select Acquisition Mode -"
-              >
-                <option>Purchase</option>
-                <option>Donation</option>
-              </Select>
-            </FormControl>
-          </GridItem>
+                <HStack
+                  display={"flex"}
+                  flexDirection={{ lg: "row", md: "column", sm: "column" }}
+                >
+                  <FormControl>
+                    <FormLabel>Acquisition Mode</FormLabel>
+                    <Select
+                      value={acquiMode}
+                      onChange={(e) => setAcquiMode(e.target.value)}
+                      placeholder="- Select Acquisition Mode -"
+                    >
+                      <option>Purchase</option>
+                      <option>Donation</option>
+                    </Select>
+                  </FormControl>
 
-          <GridItem colSpan={2}>
-            <FormControl>
-              <FormLabel>Supplier/Donor</FormLabel>
-              <Select
-                value={donor}
-                onChange={(e) => setDonor(e.target.value)}
-                placeholder="- Select Supplier/Donor -"
-              >
-                {getSupplier.map((item, index)=>{
-                  return (
-                    <option value={item.supplier} key={index}>
-                    {item.supplier}
-                  </option>
-                  )
-                })}
-                <option value="Other">Other</option>
-              </Select>
-              {donor === "Other" && (
-                <Input
-                  value={donorOther}
-                  onChange={(e) => setDonorOther(e.target.value)}
-                  marginTop={4}
-                  variant="filled"
-                  placeholder="If other, please specify"
-                />
-              )}
-            </FormControl>
-          </GridItem>
+                  <FormControl>
+                    <FormLabel>Supplier/Donor</FormLabel>
+                    <Select
+                      value={donor}
+                      onChange={(e) => setDonor(e.target.value)}
+                      placeholder="- Select Supplier/Donor -"
+                    >
+                      {getSupplier.map((item, index) => {
+                        return (
+                          <option value={item.supplier} key={index}>
+                            {item.supplier}
+                          </option>
+                        );
+                      })}
+                      <option value="Other">Other</option>
+                    </Select>
+                    {donor === "Other" && (
+                      <Input
+                        value={donorOther}
+                        onChange={(e) => setDonorOther(e.target.value)}
+                        marginTop={4}
+                        variant="filled"
+                        placeholder="If other, please specify"
+                      />
+                    )}
+                  </FormControl>
 
-          <GridItem colSpan={2}>
-            <FormControl>
-              <FormLabel>Cost</FormLabel>
-              <InputGroup>
-                <InputLeftAddon children="₱" />
-                <Input
-                  type="number"
-                  value={cost}
-                  onChange={(e) => setCost(e.target.value)}
-                  placeholder="Pesos (php)"
-                />
-              </InputGroup>
-            </FormControl>
-          </GridItem>
+                  <FormControl>
+                    <FormLabel>Cost</FormLabel>
+                    <InputGroup>
+                      <InputLeftAddon children="₱" />
+                      <Input
+                        type="number"
+                        value={cost}
+                        onChange={(e) => setCost(e.target.value)}
+                        placeholder="Pesos (php)"
+                      />
+                    </InputGroup>
+                  </FormControl>
 
-          {/* <GridItem colSpan={2}>
-            <FormControl>
-              <FormLabel>Lot/Serial #</FormLabel>
-              <Input value={lot} onChange={(e) => setLot(e.target.value)} />
-            </FormControl>
-          </GridItem> */}
+                  <FormControl>
+                    <FormLabel>Expiration</FormLabel>
+                    <Input
+                      value={expiration}
+                      onChange={(e) => {
+                        setExpiration(e.target.value);
+                      }}
+                      type="date"
+                    />
+                  </FormControl>
+                </HStack>
 
-          <GridItem colSpan={2}>
-            <FormControl>
-              <FormLabel>Expiration</FormLabel>
-              <Input
-                value={expiration}
-                onChange={(e) => {
-                  setExpiration(e.target.value);
-                }}
-                type="date"
-              />
-            </FormControl>
-          </GridItem>
+                <HStack
+                  display={"flex"}
+                  flexDirection={{ lg: "row", md: "column", sm: "column" }}
+                >
+                  <FormControl>
+                    <FormLabel>Remarks</FormLabel>
+                    <Textarea
+                      value={remarks}
+                      onChange={(e) => setRemarks(e.target.value)}
+                    />
+                  </FormControl>
+                </HStack>
 
-          <GridItem colSpan={6}>
-            <FormControl>
-              <FormLabel>Remarks</FormLabel>
-              <Textarea
-                value={remarks}
-                onChange={(e) => setRemarks(e.target.value)}
-              />
-            </FormControl>
-          </GridItem>
-        </SimpleGrid>
-
-        <HStack marginTop={5} justifyContent="flex-end">
-          <Button onClick={() => setTab("inItem")}>Cancel</Button>
-          <Button
-            color="#fff"
-            isLoading={isClick ? true : false}
-            colorScheme="teal"
-            loadingText="Creating Item"
-            type="submit"
-          >
-            Create Item
-          </Button>
-        </HStack>
-      </form>
-    </>
+                <HStack marginTop={5} justifyContent={{base: "flex-end", md: "flex-end", sm: 'center'}}>
+                  <Button onClick={() => setTab("inItem")}>Cancel</Button>
+                  <Button
+                    color="#fff"
+                    isLoading={isClick ? true : false}
+                    colorScheme="teal"
+                    loadingText="Creating Item"
+                    type="submit"
+                  >
+                    Create Item
+                  </Button>
+                </HStack>
+              </Stack>
+            </Stack>
+          </form>
+        </Stack>
+      </Box>
+    </div>
   );
 };
 

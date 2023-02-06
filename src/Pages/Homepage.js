@@ -67,12 +67,17 @@ const Homepage = () => {
       <div className="container">
         <Sidebar setTab={setTab} tab={tab} />
         <div className="component-wrapper">
-          {tab === "create" && <CreateItem setTab={setTab} />}
-          {tab === "inItem" && <In setTab={setTab} />}
-          {tab === "inventory" && (
-            <InventoryTable title={title} fetch={fetch} columns={column} data={data}/>
-          )}
-          {tab === "listIn" && <InTable />}
+            {tab === "create" && <CreateItem setTab={setTab} />}
+            {tab === "inItem" && <In setTab={setTab} />}
+            {tab === "inventory" && (
+              <InventoryTable
+                title={title}
+                fetch={fetch}
+                columns={column}
+                data={data}
+              />
+            )}
+            {tab === "listIn" && <InTable />}
         </div>
       </div>
     </>

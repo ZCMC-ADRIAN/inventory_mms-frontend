@@ -1,10 +1,11 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import api from "../API/Api";
 import { useToast } from "@chakra-ui/react";
 const DataContext = createContext({});
 
 export const Context = ({ children }) => {
   const toast = useToast();
+
   const fetchItem = async (value) => {
     try {
       const response = await api.get("/itemdetail/" + value);
@@ -33,10 +34,11 @@ export const Context = ({ children }) => {
   const [assocValue, setassocValue] = useState([]);
   const [selectedAssoc, setSelectedAssoc] = useState();
 
-
   const fetchAssoc = async () => {
     console.log(`/assoc/${selectedLoc && selectedLoc.Pk_locationId}`);
-    const result = await api.get(`/assoc/${selectedLoc && selectedLoc.Pk_locationId}`);
+    const result = await api.get(
+      `/assoc/${selectedLoc && selectedLoc.Pk_locationId}`
+    );
     setassocDatas(result.data);
   };
 
@@ -67,6 +69,19 @@ export const Context = ({ children }) => {
   const [loose, setLoose] = useState("");
   const [remarks, setRemarks] = useState("");
 
+  const [tableData, setTableData] = useState([]);
+  const fetchTableData = async (value) => {
+    const result = await api.get(`/itemtable`, {
+      params: {
+        q: value ? value : "",
+      },
+    });
+    setTableData(result.data);
+  };
+  useEffect(() => {
+    setSelectedAssoc();
+    setassocValue("");
+  }, [selectedLoc]);
 
   const clearAll = () => {
     setItemId(null);
@@ -149,7 +164,7 @@ export const Context = ({ children }) => {
           itemId: itemId,
           condition_id: selectedCond && selectedCond.Pk_conditionsId,
           location_id: selectedLoc && selectedLoc.Pk_locationId,
-          assoc_id: selectedAssoc && selectedLoc.Pk_assocId,
+          assoc_id: selectedAssoc && selectedAssoc.Pk_assocId,
           newcondition_name: condItem,
           newlocation_name: locValue,
           newAssoc_name: assocValue,
@@ -161,6 +176,10 @@ export const Context = ({ children }) => {
           loose: loose,
           remarks: remarks,
         })
+        .then((e) => {
+          fetchTableData();
+          return e;
+        });
       return response.data;
     } catch (error) {
       console.error(error);
@@ -193,6 +212,9 @@ export const Context = ({ children }) => {
         setLocValue,
         setSelectedLoc,
         fetchLoc,
+
+        tableData,
+        fetchTableData,
 
         condDatas,
         condItem,

@@ -83,7 +83,10 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
     <>
       <Modal onClose={onClose} size={"full"} isOpen={isOpen} isCentered>
         <ModalContent w={"60%"} minW={"60%"} margin={"100px"}>
-          <ModalHeader>{title}</ModalHeader>
+          <ModalHeader>
+            {title}
+            {selectedAssoc && selectedAssoc.Pk_assocId}
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             {/* {children} */}
@@ -97,7 +100,6 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
                 >
                   <GridItem colSpan={3} w="100%">
                     <Box>
-
                       <SearchSel
                         name={"Location"}
                         data={locDatas}
@@ -127,7 +129,6 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
                   </GridItem>
                   <GridItem colSpan={3} w="100%">
                     <Box>
-
                       <SearchSel
                         name={"Condition"}
                         data={condDatas}
@@ -289,7 +290,7 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
               onClick={() => {
                 postInventory().then((e) => {
                   if (e.status == 500) {
-                    console.log(e.status == 500)
+                    console.log(e.status == 500);
                     toast({
                       title: `please check your inputs`,
                       status: "error",
@@ -319,8 +320,6 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
                     }
                   }
                 });
-
-
               }}
             >
               Submit
@@ -331,5 +330,3 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
     </>
   );
 };
-
-

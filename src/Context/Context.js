@@ -117,22 +117,22 @@ export const Context = ({ children }) => {
       });
       return;
     }
-    if (iarNo === "" || iarNo === null) {
-      toast({
-        title: `please enter IAR number`,
-        status: "error",
-        isClosable: true,
-      });
-      return;
-    }
-    if (iarDate === "" || iarDate === null) {
-      toast({
-        title: `please select IAR date`,
-        status: "error",
-        isClosable: true,
-      });
-      return;
-    }
+    // if (iarNo === "" || iarNo === null) {
+    //   toast({
+    //     title: `please enter IAR number`,
+    //     status: "error",
+    //     isClosable: true,
+    //   });
+    //   return;
+    // }
+    // if (iarDate === "" || iarDate === null) {
+    //   toast({
+    //     title: `please select IAR date`,
+    //     status: "error",
+    //     isClosable: true,
+    //   });
+    //   return;
+    // }
     if (deliveryD === "" || deliveryD === null) {
       toast({
         title: `please select Delivery Date`,
@@ -168,13 +168,16 @@ export const Context = ({ children }) => {
           newcondition_name: condItem,
           newlocation_name: locValue,
           newAssoc_name: assocValue,
-          iar_no: iarNo,
-          iar_date: iarDate,
           delivery_date: deliveryD,
           quantity: quantity,
-          pack_size: packZ,
           loose: loose,
           remarks: remarks,
+          /*
+            //FUTURE USE
+          // iar_no: iarNo,
+          // iar_date: iarDate,
+          // pack_size: packZ,
+          */
         })
         .then((e) => {
           fetchTableData();

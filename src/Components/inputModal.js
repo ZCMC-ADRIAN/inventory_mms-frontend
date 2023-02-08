@@ -33,10 +33,7 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
   const {
     itemdetails,
     setdeliveryD,
-    setIarDate,
-    setIarNo,
     setquantity,
-    setpackZ,
     setLoose,
     setRemarks,
     postInventory,
@@ -59,6 +56,8 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
     selectedAssoc,
     setSelectedAssoc,
     fetchAssoc,
+    setpropertyno,
+    setserial,
   } = useContext(DataContext);
   const toast = useToast();
   const CardDet = ({ property, detail, bg }) => {
@@ -81,10 +80,19 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
 
   return (
     <>
-      <Modal onClose={onClose} size={"full"} isOpen={isOpen} isCentered>
+      <Modal
+        onClose={() => {
+          onClose();
+          clearAll();
+        }}
+        size={"full"}
+        isOpen={isOpen}
+        isCentered
+      >
         <ModalContent w={"60%"} minW={"60%"} margin={"100px"}>
           <ModalHeader>
             {title}
+            {selectedLoc && selectedLoc.Pk_locationId}
             {selectedAssoc && selectedAssoc.Pk_assocId}
           </ModalHeader>
           <ModalCloseButton />
@@ -101,7 +109,7 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
                   <GridItem colSpan={3} w="100%">
                     <Box>
                       <SearchSel
-                        name={"Location"}
+                        name={"Locations"}
                         data={locDatas}
                         propertyName={"location_name"}
                         fetchdat={fetchLoc}
@@ -141,29 +149,7 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
                       />
                     </Box>
                   </GridItem>
-                  <GridItem colSpan={3} w="100%">
-                    <FormControl>
-                      <FormLabel>IAR No</FormLabel>
-                      <Input
-                        //value={ }
-                        onChange={(e) => {
-                          //setValue(e.target.value);
-                          setIarNo(e.target.value);
-                        }}
-                      />
-                    </FormControl>
-                  </GridItem>
-                  <GridItem colSpan={2}>
-                    <FormControl>
-                      <FormLabel>IAR Date</FormLabel>
-                      <Input
-                        // value={acquisition}
-                        onChange={(e) => setIarDate(e.target.value)}
-                        type="date"
-                      />
-                    </FormControl>
-                  </GridItem>
-                  <GridItem colSpan={2}>
+                  <GridItem colSpan={3}>
                     <FormControl>
                       <FormLabel>Delivery Date</FormLabel>
                       <Input
@@ -193,15 +179,23 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
                   </GridItem>
                   <GridItem colSpan={3} w="100%">
                     <FormControl>
-                      <FormLabel>Pack Size</FormLabel>
+                      <FormLabel>Property No.</FormLabel>
                       <Input
-                        onClick={() => {
-                          //fetchdat(null);
-                          //setVisible(!isVisible);
-                        }}
+                        onClick={() => {}}
                         //value={ }
                         onChange={(e) => {
-                          setpackZ(e.target.value);
+                          setpropertyno(e.target.value);
+                        }}
+                      />
+                    </FormControl>
+                  </GridItem>
+                  <GridItem colSpan={3} w="100%">
+                    <FormControl>
+                      <FormLabel>Serial</FormLabel>
+                      <Input
+                        onClick={() => {}}
+                        onChange={(e) => {
+                          setserial(e.target.value);
                         }}
                       />
                     </FormControl>
@@ -221,7 +215,7 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
                       />
                     </FormControl>
                   </GridItem>
-                  <GridItem colSpan={3} w="100%">
+                  <GridItem colSpan={6} w="100%">
                     <FormControl>
                       <FormLabel>Remarks</FormLabel>
                       <Input

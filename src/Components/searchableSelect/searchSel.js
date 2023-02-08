@@ -71,13 +71,13 @@ const SearchSel = ({
       <FormControl>
         <FormLabel color={"blackAlpha.600"}>{name}</FormLabel>
         <Input
-          // onFocus={() => {
-          //   fetchdat(null);
-          //   setVisible(!isVisible);
-          // }}
+          onFocus={() => {
+            fetchdat(null);
+            setVisible(true);
+          }}
           onClick={() => {
             fetchdat(null);
-            setVisible(!isVisible);
+            setVisible(true);
           }}
           autoComplete={"off"}
           tabIndex={0}

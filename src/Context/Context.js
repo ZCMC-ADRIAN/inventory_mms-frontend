@@ -62,10 +62,9 @@ export const Context = ({ children }) => {
   const [itemId, setItemId] = useState(null); ///
 
   const [deliveryD, setdeliveryD] = useState("");
-  const [iarDate, setIarDate] = useState("");
-  const [iarNo, setIarNo] = useState("");
   const [quantity, setquantity] = useState("");
-  const [packZ, setpackZ] = useState("");
+  const [propertyno, setpropertyno] = useState("");
+  const [serial, setserial] = useState("");
   const [loose, setLoose] = useState("");
   const [remarks, setRemarks] = useState("");
 
@@ -91,11 +90,10 @@ export const Context = ({ children }) => {
     setConItem([]);
     setLocValue([]);
     setassocValue([]);
-    setIarDate("");
-    setIarNo("");
     setdeliveryD("");
+    setpropertyno("");
+    setserial("");
     setquantity("");
-    setpackZ("");
     setLoose("");
     setRemarks("");
   };
@@ -117,22 +115,6 @@ export const Context = ({ children }) => {
       });
       return;
     }
-    // if (iarNo === "" || iarNo === null) {
-    //   toast({
-    //     title: `please enter IAR number`,
-    //     status: "error",
-    //     isClosable: true,
-    //   });
-    //   return;
-    // }
-    // if (iarDate === "" || iarDate === null) {
-    //   toast({
-    //     title: `please select IAR date`,
-    //     status: "error",
-    //     isClosable: true,
-    //   });
-    //   return;
-    // }
     if (deliveryD === "" || deliveryD === null) {
       toast({
         title: `please select Delivery Date`,
@@ -149,15 +131,6 @@ export const Context = ({ children }) => {
       });
       return;
     }
-    // if (packZ === "" || packZ === null) {
-    //   toast({
-    //     title: `please enter Pack size`,
-    //     status: "error",
-    //     isClosable: true,
-    //   });
-    //   return;
-    // }
-
     try {
       const response = await api
         .post("/inv", {
@@ -169,15 +142,11 @@ export const Context = ({ children }) => {
           newlocation_name: locValue,
           newAssoc_name: assocValue,
           delivery_date: deliveryD,
+          property_no: propertyno,
+          serial: serial,
           quantity: quantity,
           loose: loose,
           remarks: remarks,
-          /*
-            //FUTURE USE
-          // iar_no: iarNo,
-          // iar_date: iarDate,
-          // pack_size: packZ,
-          */
         })
         .then((e) => {
           fetchTableData();
@@ -192,21 +161,11 @@ export const Context = ({ children }) => {
   return (
     <DataContext.Provider
       value={{
-        // locId,
-        // locDatas,
-        // locItem,
-        // selectedLocIndex,
         clearAll,
         fetchcond,
         postInventory,
         itemId,
-        iarDate,
-        setIarDate,
-        iarNo,
-        setIarNo,
-        //items
         fetchItem,
-        /*location*/
         itemdetails,
         locDatas,
         locValue,
@@ -215,7 +174,8 @@ export const Context = ({ children }) => {
         setLocValue,
         setSelectedLoc,
         fetchLoc,
-
+        setpropertyno,
+        setserial,
         tableData,
         fetchTableData,
 
@@ -224,7 +184,6 @@ export const Context = ({ children }) => {
         selectedCond,
         deliveryD,
         quantity,
-        packZ,
         loose,
         remarks,
         //setters
@@ -234,7 +193,6 @@ export const Context = ({ children }) => {
         setSelectedCond,
         setdeliveryD,
         setquantity,
-        setpackZ,
         setLoose,
         setRemarks,
 

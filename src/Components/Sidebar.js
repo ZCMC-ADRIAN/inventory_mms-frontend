@@ -35,7 +35,7 @@ const Sidebar = ({ setTab, tab }) => {
         <div className="avatar">
           <img src={Nouser} alt="Avatar Profile" />
         </div>
-        <h1>{user?.firstname + " " + user?.lastname}</h1>
+        <h1 className="name">{user?.firstname + " " + user?.lastname}</h1>
         <h2>
           MMS | <span onClick={logout}>Logout</span>
         </h2>
@@ -51,7 +51,7 @@ const Sidebar = ({ setTab, tab }) => {
             <p>
               <FcRight />
             </p>
-            In Item
+            <text>In Item</text>
           </li>
         </ul>
 
@@ -64,7 +64,7 @@ const Sidebar = ({ setTab, tab }) => {
             <p>
               <FcDocument />
             </p>
-            Inventory
+            <text>Inventory</text>
           </li>
         </ul>
       </div>

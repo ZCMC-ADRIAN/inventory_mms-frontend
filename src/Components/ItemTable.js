@@ -33,8 +33,6 @@ import {
 } from "@chakra-ui/icons";
 
 import { AiOutlineFolderView } from "react-icons/ai";
-
-import moment from "moment/moment";
 import { useState, useMemo } from "react";
 
 const InventoryTable = ({
@@ -78,7 +76,6 @@ const InventoryTable = ({
   };
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [itemId, setItemId] = useState([]);
-  const [item, setItem] = useState([]);
 
 
   return (
@@ -172,7 +169,7 @@ const InventoryTable = ({
                                   transform: "scale(1.2,1.2)",
                                   transition: "0.3s",
                                 }}
-                                onClick={() => { onOpen(cell.row.values.Pk_inventoryId); setItemId(cell.row.values.Pk_inventoryId); setItem(cell.row.values.desc) }}
+                                onClick={() => { onOpen(cell.row.values.Pk_inventoryId); setItemId(cell.row.values.Pk_inventoryId) }}
                               >
                                 <AiOutlineFolderView color="orange" />
                               </Button>
@@ -211,7 +208,7 @@ const InventoryTable = ({
         </Table>
       </TableContainer>
 
-      <InventoryModal isOpen={isOpen} onClose={onClose} onOpen={onOpen} itemId={itemId} item={item}/>
+      <InventoryModal isOpen={isOpen} onClose={onClose} onOpen={onOpen} itemId={itemId}/>
 
       {page.length >= 1 ? (
         <Flex justifyContent={"end"} mt={5}>

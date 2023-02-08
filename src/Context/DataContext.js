@@ -13,7 +13,7 @@ export const DataProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if(sessionStorage.length > 0){
+    if(sessionStorage.length < 1){
       fetchUser();
     }
   }, [appState]);

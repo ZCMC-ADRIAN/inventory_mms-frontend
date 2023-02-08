@@ -1,5 +1,8 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import { useTable, usePagination } from "react-table";
+import { useClickOutside } from "./useClickOutside";
 import localApi from "../API/Api";
+import "./Table.css";
 import {
   Modal,
   ModalOverlay,
@@ -13,23 +16,111 @@ import {
   Box,
   Flex,
   Badge,
-  Center
+  Center,
+  Heading,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Select,
+  TableContainer,
+  Tooltip,
+  IconButton
 } from "@chakra-ui/react";
+import {
+  ArrowRightIcon,
+  ArrowLeftIcon,
+  ChevronRightIcon,
+  ChevronLeftIcon,
+} from "@chakra-ui/icons";
 import holder from '../Assets/holder.png';
 
-const InventoryModal = ({ isOpen, onClose, itemId }) => {
-  const [details, setDetails] = useState([]);
+const InventoryModal = ({ isOpen, onClose, child, item }) => {
+  const [data, setData] = useState([]);
+  const [location, setLocation] = useState('');
+  const [searchTerm, setSearchterm] = useState([]);
+  const [term, setTerm] = useState("");
+
 
   const fetchData = async () => {
-    let responseDetails = await localApi.get("details",{
-      params: {inId : itemId}
+    let responseData = await localApi.get("item-list",{
+      params: {desc : item}
     });
-    setDetails(responseDetails.data);
+    setData(responseData.data);
   };
 
   useEffect(() => {
     fetchData();
-  }, [itemId]);
+  }, [item]);
+
+  const columns = useMemo(
+    () => [
+      {
+        Header: "No",
+        accessor: "Pk_inventoryId",
+      },
+      {
+        Header: "Item Description",
+        accessor: "desc",
+      },
+      {
+        Header: "Location",
+        accessor: "location_name",
+      },
+      {
+        Header: "Quantity",
+        accessor: "Quantity"
+      }
+    ],
+    []
+  );
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    prepareRow,
+    page,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state: { pageIndex, pageSize },
+  } = useTable(
+    {
+      columns,
+      data,
+      initialState: { pageIndex: 0 },
+    },
+    usePagination
+  );
+
+  const CustomBtnTheme = {
+    backgroundColor: "#2583CF",
+    borderRadius: "52px",
+    fontSize: "20px",
+  };
+
+  const fetchlocation = async (value) => {
+    const result = await localApi.get(``, {
+      params: {
+        q: value,
+      },
+    });
+    setSearchterm(result.data);
+  };
+
+  const [dropdown, setDropdown] = useState(false);
+
+  const domNod = useClickOutside(() => {
+    setDropdown(false);
+  });
 
   return (
     <>
@@ -37,115 +128,211 @@ const InventoryModal = ({ isOpen, onClose, itemId }) => {
         closeOnOverlayClick={true}
         isOpen={isOpen}
         onClose={onClose}
-        size="3xl"
+        size="full"
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader fontSize={"sm"} color="#2583CF">
-            Speaker System Stereo Megaoke
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody pb={6} display='flex'>
-            <Box bg='blue.100' p={4} w='50%' fontSize={14} mr={5} overflow='scroll' overflowX='hidden'>
-              <Flex>
-                <Text mr={3} fontWeight='bold'>Brand:</Text>
-                {details.map((data)=>{
-                  return(
-                    <Text>{data.brand_name}</Text>
-                  )
-                })}
-              </Flex>
-              <Flex>
-                <Text mr={3} fontWeight='bold'>Manufacturer:</Text>
-                {details.map((data)=>{
-                  return(
-                    <Text>{data.manu_name}</Text>
-                  )
-                })}
-              </Flex>
-              <Flex>
-                <Text mr={3} fontWeight='bold'>Serial No:</Text>
-                {details.map((data)=>{
-                  return(
-                    <Text>{data.serial}</Text>
-                  )
-                })}
-              </Flex>
-              <Flex>
-                <Text mr={3} fontWeight='bold'>Property No:</Text>
-                {details.map((data)=>{
-                  return(
-                    <Text>{data.property_no}</Text>
-                  )
-                })}
-              </Flex>
-              <Flex>
-                <Text mr={3} fontWeight='bold'>Country of origin:</Text>
-                {details.map((data)=>{
-                  return(
-                    <Text>{data.country}</Text>
-                  )
-                })}
-              </Flex>
-              <Flex>
-                <Text mr={3} fontWeight='bold'>Supplier/Donor:</Text>
-                {details.map((data)=>{
-                  return(
-                    <Text>{data.supplier_name}</Text>
-                  )
-                })}
-              </Flex>
-              <Flex>
-                <Text mr={3} fontWeight='bold'>Cost:</Text>
-                {details.map((data)=>{
-                  return(
-                    <Text>₱ {data.costs}</Text>
-                  )
-                })}
-              </Flex>
-              <Flex mb={10}>
-                <Text mr={3} fontWeight='bold'>Location:</Text>
-                {details.map((data)=>{
-                  return(
-                    <Text>₱ {data.costs}</Text>
-                  )
-                })}
-              </Flex>
+          <ModalCloseButton bg='blue.400' />
+          <ModalBody className="item-modal">
+            <Center>
+              <Box w={"80%"}>
+                <Box w={"100%"}>
+                  <Flex
+                    justifyContent={"space-between"}
+                    flexDirection={["column", "column", "row", "row"]}
+                    mt={7}
+                  >
+                    <Flex alignItems={"center"} columnGap={5}>
+                      <Heading size="lg" color={"#2583CF"}>
+                        Items
+                      </Heading>
+                      {/* <Search
+                      search={search}
+                      placeholder={`Search ${title}`}
+                      currsearch={setSearch}
+                    /> */}
+                    </Flex>
+                    <Box>
+                      <Flex columnGap={3} justifyContent={"end"}>
+                        {child !== null ? child : null}
+                        <Select
+                          w={32}
+                          mt={5}
+                          bg={"white"}
+                          size={"sm"}
+                          value={pageSize}
+                          focusBorderColor={"gray.400"}
+                          borderRadius={5}
+                          onChange={(e) => {
+                            setPageSize(Number(e.target.value));
+                          }}
+                        >
+                          {[10, 20, 30, 40, 50].map((pageSize) => (
+                            <option fontSize={14} key={pageSize} value={pageSize}>
+                              Show {pageSize}
+                            </option>
+                          ))}
+                        </Select>
+                      </Flex>
+                    </Box>
+                  </Flex>
+                </Box>
+                <TableContainer w={"100%"}>
+                  <Table
+                    mt={5}
+                    bg={"white"}
+                    maxWidth={"100%"}
+                    className={"table"}
+                    variant="unstyled"
+                    overflow="hidden"
+                    {...getTableProps()}
+                  >
+                    <Thead>
+                      {headerGroups.map((headerGroup) => (
+                        <Tr
+                          h={"5rem"}
+                          fontSize={15}
+                          {...headerGroup.getHeaderGroupProps()}
+                        >
+                          {headerGroup.headers.map((column) => (
+                            <Th
+                              bg={"white"}
+                              color={"gray.600"}
+                              fontSize={15}
+                              border={"white"}
+                              {...column.getHeaderProps()}
+                            >
+                              {column.render("Header")}
+                            </Th>
+                          ))}
+                        </Tr>
+                      ))}
+                    </Thead>
+                    <Tbody {...getTableBodyProps()}>
+                      {page.length >= 1 ? (
+                        page.map((row, i) => {
+                          prepareRow(row);
+                          return (
+                            <Tr className="td" {...row.getRowProps()}>
+                              {row.cells.map((cell) => {
+                                return (
+                                  <Td {...cell.getCellProps()}>
+                                    {cell.column.id === "action" ? (
+                                      <Flex columnGap={1}>
+                                        {/* <Button
+                                        _hover={{
+                                          bg: "#FCD299",
+                                          boxShadow: "lg",
+                                          transform: "scale(1.2,1.2)",
+                                          transition: "0.3s",
+                                        }}
+                                        onClick={() => { onOpen(cell.row.values.Pk_inventoryId); setItemId(cell.row.values.Pk_inventoryId) }}
+                                      >
+                                        <AiOutlineFolderView color="orange" />
+                                      </Button> */}
+                                      </Flex>
+                                    ) : cell.column.id === "dept" ? (
+                                      <Text
+                                        fontWeight={"bold"}
+                                        textTransform={"uppercase"}
+                                        color={"green.600"}
+                                      >
+                                        {cell.row.values.dept_Name}
+                                      </Text>
+                                    ) : cell.column.Header === "No" ? (
+                                      <Text fontWeight={"bold"} color={"green.600"}>
+                                        {pageIndex * 10 + ++i}
+                                      </Text>
+                                    ) : cell.column.Header === "users" ? (
+                                      <>{cell.row.values.user}</>
+                                    ) : cell.column.id === "total" ? (
+                                      <Text fontWeight={"bold"}>
+                                        ₱ {cell.row.values.total}
+                                      </Text>
+                                    ) : (
+                                      cell.render("Cell")
+                                    )}
+                                  </Td>
+                                );
+                              })}
+                            </Tr>
+                          );
+                        })
+                      ) : (
+                        <Text>NO RECORD</Text>
+                      )}
+                    </Tbody>
+                  </Table>
+                </TableContainer>
 
-              <Flex flexDirection='column' mb={2}>
-                <Text textAlign='center' mr={3} fontWeight='bold'>Quantity</Text> 
-                <Box bg='black' p='0.5px'></Box>
-              </Flex>
-              <Flex>
-                <Text mr={3} fontWeight='bold'>Tent 1:</Text>
-                <Text>20</Text>
-              </Flex>
-              <Flex>
-                <Text mr={3} fontWeight='bold'>Tent 2:</Text>
-                <Text>0</Text>
-              </Flex>
-              <Flex>
-                <Text mr={3} fontWeight='bold'>Tower 1:</Text>
-                <Text>34</Text>
-              </Flex>
-              <Flex>
-                <Text mr={3} fontWeight='bold'>Tower 2:</Text>
-                <Text>8</Text>
-              </Flex>
-              <Flex>
-                <Text mr={3} fontWeight='bold'>MMS:</Text>
-                <Text>11</Text>
-              </Flex>
-              <Flex>
-                <Badge colorScheme='green' mr={3} fontWeight='bold'>Total:</Badge>
-                <Badge colorScheme='green'>73</Badge>
-              </Flex>
-            </Box>
-            <Box w={'25rem'} h={'20rem'} bg='gray.100' border='1px' borderColor='gray.300'>
-              <Center display='flex' justifyContent='center' alignItems='center'>
-                <Text>No Image</Text>
-              </Center>
-            </Box>
+                {/* <InventoryModal isOpen={isOpen} onClose={onClose} onOpen={onOpen} itemId={itemId} /> */}
+
+                {page.length >= 1 ? (
+                  <Flex justifyContent={"end"} mt={5}>
+                    <div id="btnleft">
+                      <Tooltip label="First Page">
+                        <IconButton
+                          style={CustomBtnTheme}
+                          onClick={() => gotoPage(0)}
+                          isDisabled={!canPreviousPage}
+                          icon={<ArrowLeftIcon h={3} w={3} color="white" />}
+                          mr={4}
+                        />
+                      </Tooltip>
+                      <Tooltip label="Previous Page">
+                        <IconButton
+                          style={CustomBtnTheme}
+                          className="paginationbtn"
+                          onClick={previousPage}
+                          isDisabled={!canPreviousPage}
+                          icon={<ChevronLeftIcon h={6} w={6} color="white" />}
+                        />
+                      </Tooltip>
+                    </div>
+
+                    <Box bg={"white.200"} p={2} borderRadius={5}>
+                      <Flex>
+                        <Box fontSize={13}>Page</Box>
+                        <Text fontWeight="bold" fontSize={13} ml={2} as="span">
+                          {pageIndex + 1}
+                        </Text>
+                        <Box ml={2} fontSize={13} w={"2rem"}>
+                          of
+                        </Box>
+
+                        <Text fontSize={13} fontWeight="bold" as="span">
+                          {pageOptions.length}
+                        </Text>
+                      </Flex>
+                    </Box>
+
+                    <div id="btnright">
+                      <Tooltip label="Next Page">
+                        <IconButton
+                          style={CustomBtnTheme}
+                          className="paginationbtn"
+                          onClick={nextPage}
+                          isDisabled={!canNextPage}
+                          icon={<ChevronRightIcon h={6} w={6} color="white" />}
+                        />
+                      </Tooltip>
+                      <Tooltip label="Last Page">
+                        <IconButton
+                          style={CustomBtnTheme}
+                          className="paginationbtn"
+                          onClick={() => gotoPage(pageCount - 1)}
+                          isDisabled={!canNextPage}
+                          icon={<ArrowRightIcon h={3} w={3} color="white" />}
+                          ml={4}
+                        />
+                      </Tooltip>
+                    </div>
+                  </Flex>
+                ) : (
+                  ""
+                )}
+              </Box>
+            </Center>
           </ModalBody>
         </ModalContent>
       </Modal>

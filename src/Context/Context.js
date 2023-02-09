@@ -45,6 +45,15 @@ export const Context = ({ children }) => {
   //modaldetails
   const [itemdetails, setItemDetails] = useState(null);
 
+  const [varietyDatas, setVarietyDatas] = useState([]);
+  const [varietyVal, setVarietyVal] = useState([]);
+  const [selectedVariety, setSelectedVariety] = useState();
+  const fetchVar = async () => {
+    //http://127.0.0.1:8000/api/location
+    const result = await api.get("/variety");
+    setVarietyDatas(result.data);
+  };
+
   //Cond
   const [condDatas, setCondDatas] = useState([]);
   const [condItem, setConItem] = useState([]);
@@ -204,6 +213,14 @@ export const Context = ({ children }) => {
         selectedAssoc,
         setSelectedAssoc,
         fetchAssoc,
+
+        //Variety
+        varietyDatas,
+        varietyVal,
+        setVarietyVal,
+        selectedVariety,
+        setSelectedVariety,
+        fetchVar,
       }}
     >
       {children}

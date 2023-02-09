@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { CloseIcon, EditIcon } from "@chakra-ui/icons";
 import {
   SimpleGrid,
   GridItem,
@@ -28,6 +29,9 @@ const SearchSel = ({
   valueD,
   setSelect,
   propertyName,
+  mode,
+  setModEdit,
+  isDrop,
 }) => {
   const ref = useClickOutside(() => {
     setVisible(false);
@@ -68,55 +72,141 @@ const SearchSel = ({
   };
   return (
     <>
-      <FormControl>
-        <FormLabel color={"blackAlpha.600"}>{name}</FormLabel>
-        <Input
-          onFocus={() => {
-            fetchdat(null);
-            setVisible(true);
-          }}
-          onClick={() => {
-            fetchdat(null);
-            setVisible(true);
-          }}
-          onBlur={() => {
-            setVisible(false);
-          }}
-          autoComplete={"off"}
-          tabIndex={0}
-          onKeyDown={handleKeyDown}
-          value={valueD}
-          onChange={(e) => {
-            setValue(e.target.value);
-            setSelect(null);
-            handleSearch(e.target.value);
-          }}
-        />
-        {isVisible && data && !isSelect && (
-          <div ref={ref} className="select-dropdown" style={{ top: "75px" }}>
-            {data.map((e, index) => {
-              return (
-                <p
-                  // onMouseEnter={() => {
-                  //   setValue(e[propertyName]);
-                  // }}
+      {mode == "edit" ? (
+        isDrop ? (
+          <FormControl>
+            <FormLabel color={"blackAlpha.600"}>{name}</FormLabel>
+            <InputGroup size="sm">
+              <Input
+                onFocus={() => {
+                  fetchdat(null);
+                  setVisible(true);
+                }}
+                onClick={() => {
+                  fetchdat(null);
+                  setVisible(true);
+                }}
+                autoComplete={"off"}
+                tabIndex={0}
+                onKeyDown={handleKeyDown}
+                variant="flushed"
+                value={valueD}
+                onChange={(e) => {
+                  setValue(e.target.value);
+                  setSelect(null);
+                  handleSearch(e.target.value);
+                }}
+              />
+              <InputRightElement>
+                <CloseIcon
+                  style={{ cursor: "pointer" }}
+                  boxSize={2.5}
                   onClick={() => {
-                    setSelect(e);
-                    setValue(e[propertyName]);
+                    setModEdit(false);
                   }}
-                  key={index}
-                  style={{
-                    backgroundColor:
-                      index === selectedIndex && `rgb(238, 240, 241)`,
+                ></CloseIcon>
+              </InputRightElement>
+            </InputGroup>
+            {isVisible && data && !isSelect && (
+              <div
+                ref={ref}
+                className="select-dropdown"
+                style={{ top: "40px" }}
+              >
+                {data.map((e, index) => {
+                  return (
+                    <p
+                      onClick={() => {
+                        setSelect(e);
+                        setValue(e[propertyName]);
+                      }}
+                      key={index}
+                      style={{
+                        backgroundColor:
+                          index === selectedIndex && `rgb(238, 240, 241)`,
+                      }}
+                    >
+                      {e[propertyName]}
+                    </p>
+                  );
+                })}
+              </div>
+            )}
+          </FormControl>
+        ) : (
+          <FormControl>
+            <FormLabel color={"blackAlpha.600"}>{name}</FormLabel>
+            <InputGroup size="sm">
+              <Input
+                variant="flushed"
+                value={valueD}
+                onChange={(e) => {
+                  setValue(e.target.value);
+                }}
+              />
+              <InputRightElement>
+                <CloseIcon
+                  style={{ cursor: "pointer" }}
+                  boxSize={2.5}
+                  onClick={() => {
+                    setModEdit(false);
                   }}
-                >
-                  {e[propertyName]}
-                </p>
-              );
-            })}
-          </div>
-        )}
-      </FormControl>
+                ></CloseIcon>
+              </InputRightElement>
+            </InputGroup>
+          </FormControl>
+        )
+      ) : (
+        <FormControl>
+          <FormLabel color={"blackAlpha.600"}>{name}</FormLabel>
+          <Input
+            onFocus={() => {
+              fetchdat(null);
+              setVisible(true);
+            }}
+            onClick={() => {
+              fetchdat(null);
+              setVisible(true);
+            }}
+            // onBlur={() => {
+            //   isVisible(false);
+            // }}
+            autoComplete={"off"}
+            tabIndex={0}
+            onKeyDown={handleKeyDown}
+            value={valueD}
+            onChange={(e) => {
+              setValue(e.target.value);
+              setSelect(null);
+              handleSearch(e.target.value);
+            }}
+          />
+          {isVisible && data && !isSelect && (
+            <div ref={ref} className="select-dropdown" style={{ top: "75px" }}>
+              {data.map((e, index) => {
+                return (
+                  <p
+                    // onMouseEnter={() => {
+                    //   setValue(e[propertyName]);
+                    // }}
+                    onClick={() => {
+                      setSelect(e);
+                      setValue(e[propertyName]);
+                    }}
+                    key={index}
+                    style={{
+                      backgroundColor:
+                        index === selectedIndex && `rgb(238, 240, 241)`,
+                    }}
+                  >
+                    {e[propertyName]}
+                  </p>
+                );
+              })}
+            </div>
+          )}
+        </FormControl>
+      )}
     </>
   );
 };

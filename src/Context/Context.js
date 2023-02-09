@@ -77,6 +77,7 @@ export const Context = ({ children }) => {
     });
     setTableData(result.data);
   };
+  
   useEffect(() => {
     setSelectedAssoc();
     setassocValue("");

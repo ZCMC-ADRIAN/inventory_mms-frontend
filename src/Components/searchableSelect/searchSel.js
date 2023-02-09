@@ -79,6 +79,9 @@ const SearchSel = ({
             fetchdat(null);
             setVisible(true);
           }}
+          onBlur={() => {
+            setVisible(false);
+          }}
           autoComplete={"off"}
           tabIndex={0}
           onKeyDown={handleKeyDown}

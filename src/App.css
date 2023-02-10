@@ -103,6 +103,10 @@
   padding-top: 0px;
 }
 
+.p:empty:not(:focus)::before {
+  content: attr(data-placeholder);
+}
+
 .select-dropdown p {
   min-height: 30px;
   display: flex;

@@ -55,8 +55,6 @@ const InventoryModal = ({ isOpen, onClose, child, item }) => {
   const [data, setTableData] = useState([]);
   const [close, setClose] = useState('none');
 
-  console.log(close)
-
   const fetchlocation = async (value) => {
     const result = await localApi.get(`location-name`, {
       params: {
@@ -249,7 +247,7 @@ const InventoryModal = ({ isOpen, onClose, child, item }) => {
                           </div>
                         </FormControl>
                       </GridItem>
-                      <Button w={12} mt={8} display={close} bg='blue.100' _hover={{ bg: 'blue.200' }} onClick={() => { setLocation([]); fetchTableData([]); setClose('none') }}>
+                      <Button w={12} mt={8} display={close} bg='blue.100' _hover={{ bg: 'blue.200' }} onClick={() => { setLocation([]); fetchTableData([]); setClose('none'); setLocation("- Select Location -") }}>
                         <CloseIcon fontSize={12} color='gray' />
                       </Button>
                     </SimpleGrid>

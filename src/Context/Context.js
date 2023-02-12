@@ -17,6 +17,19 @@ export const Context = ({ children }) => {
     }
   };
 
+  const [countryDatas, setCountryDatas] = useState([]);
+  const [countryValue, setCountryValue] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState();
+  const fetchCountry = async (value) => {
+    const result = await api.get("/country", {
+      params: {
+        q: value,
+      },
+    });
+    setCountryDatas(result.data);
+  };
+
+
   const [locDatas, setLocDatas] = useState([]);
   const [locValue, setLocValue] = useState([]);
   const [selectedLoc, setSelectedLoc] = useState();
@@ -76,6 +89,10 @@ export const Context = ({ children }) => {
   const [serial, setserial] = useState("");
   const [loose, setLoose] = useState("");
   const [remarks, setRemarks] = useState("");
+  const [details, setdetails] = useState(null);
+  const [warranty, setwarranty] = useState(null);
+  const [acquisition, setacquisition] = useState(null);
+  const [expiration, setexpiration] = useState(null);
 
   const [tableData, setTableData] = useState([]);
   const fetchTableData = async (value) => {
@@ -105,6 +122,14 @@ export const Context = ({ children }) => {
     setquantity("");
     setLoose("");
     setRemarks("");
+    setCountryValue([]);
+    setSelectedCountry(null);
+    setVarietyVal([]);
+    setSelectedVariety(null);
+    setdetails(null);
+    setwarranty(null);
+    setacquisition(null);
+    setexpiration(null);
   };
 
   const postInventory = async () => {
@@ -156,6 +181,14 @@ export const Context = ({ children }) => {
           quantity: quantity,
           loose: loose,
           remarks: remarks,
+          EditVariety: selectedVariety && selectedVariety.Pk_varietyId,
+          EditCountry: selectedCountry && selectedCountry.Pk_countryId,
+          Editdetails: details,
+          Editwarranty: warranty,
+          Editacquisition: acquisition,
+          Editexpiration: expiration,
+          countryValue: countryValue,
+          varietyVal: varietyVal,
         })
         .then((e) => {
           fetchTableData();
@@ -221,6 +254,24 @@ export const Context = ({ children }) => {
         selectedVariety,
         setSelectedVariety,
         fetchVar,
+
+        //Country
+        countryDatas,
+        countryValue,
+        setCountryValue,
+        selectedCountry,
+        setSelectedCountry,
+        fetchCountry,
+
+        //edited states nullable
+        details,
+        setdetails,
+        warranty,
+        setwarranty,
+        acquisition,
+        setacquisition,
+        expiration,
+        setexpiration,
       }}
     >
       {children}

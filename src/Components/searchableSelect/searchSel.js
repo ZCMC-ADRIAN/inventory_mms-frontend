@@ -103,6 +103,8 @@ const SearchSel = ({
                   boxSize={2.5}
                   onClick={() => {
                     setModEdit(false);
+                    setSelect(null);
+                    setValue([]);
                   }}
                 ></CloseIcon>
               </InputRightElement>
@@ -149,7 +151,9 @@ const SearchSel = ({
                   style={{ cursor: "pointer" }}
                   boxSize={2.5}
                   onClick={() => {
+                    console.log("details undedited")
                     setModEdit(false);
+                    setValue(null);
                   }}
                 ></CloseIcon>
               </InputRightElement>

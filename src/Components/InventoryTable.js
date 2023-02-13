@@ -46,7 +46,7 @@ import {
 import { AiFillFolderOpen, AiOutlineQrcode, AiFillPrinter } from "react-icons/ai";
 import { FaClipboardList } from "react-icons/fa";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 const InventoryTable = ({
   title,
@@ -57,6 +57,7 @@ const InventoryTable = ({
   const tryin = new useDisclosure(); 
   const [itemId, setItemId] = useState([]);
   const [item, setItem] = useState([]);
+  const [details, setDetails] = useState([]);
 
   const [location, setLocation] = useState('');
   const [searchTerm, setSearchterm] = useState([]);
@@ -301,7 +302,7 @@ const InventoryTable = ({
                                   transform: "scale(1.2,1.2)",
                                   transition: "0.3s",
                                 }}
-                                onClick={() => { onOpen(cell.row.values.Pk_inventoryId); setItemId(cell.row.values.Pk_inventoryId); setItem(cell.row.values.desc) }}
+                                onClick={() => { onOpen(); setItem(cell.row.values.desc) }}
                               >
                                 <AiFillFolderOpen color="orange" />
                               </Button>
@@ -313,7 +314,7 @@ const InventoryTable = ({
                                   transform: "scale(1.2,1.2)",
                                   transition: "0.3s",
                                 }}
-                                onClick={tryin.onOpen}
+                                onClick={()=>{tryin.onOpen(cell.row.original.Pk_inventoryId); setDetails(cell.row.original.Pk_inventoryId); }}
                               >
                                 <FaClipboardList color="teal" />
                               </Button>
@@ -365,7 +366,7 @@ const InventoryTable = ({
       </TableContainer>
 
       <InventoryModal isOpen={isOpen} onClose={onClose} onOpen={onOpen} itemId={itemId} item={item} />
-      <DetailsModal isOpen={tryin.isOpen} onClose={tryin.onClose} onOpen={tryin.onOpen}/>
+      <DetailsModal isOpen={tryin.isOpen} onClose={tryin.onClose} onOpen={tryin.onOpen} details={details}/>
 
       {page.length >= 1 ? (
         <Flex justifyContent={"end"} mt={5}>

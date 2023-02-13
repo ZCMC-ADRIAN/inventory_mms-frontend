@@ -24,7 +24,6 @@ const Homepage = () => {
     () => [
       {
         Header: "No",
-        accessor: "Pk_inventoryId",
       },
       {
         Header: "Item Description",

@@ -44,7 +44,6 @@ import {
   ChevronLeftIcon,
   CloseIcon
 } from "@chakra-ui/icons";
-import holder from '../Assets/holder.png';
 
 const InventoryModal = ({ isOpen, onClose, child, item }) => {
   const [location, setLocation] = useState('');
@@ -144,9 +143,6 @@ const InventoryModal = ({ isOpen, onClose, child, item }) => {
 
     setTimeoutId(
       setTimeout(() => {
-        // fetch data from database using the search term
-        // fetchdat(term);
-
         fetchlocation(term.target.value);
       }, 500)
     );

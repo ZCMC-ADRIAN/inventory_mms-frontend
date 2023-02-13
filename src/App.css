@@ -559,6 +559,12 @@ button.gray:hover {
   transition: 0.18s ease-in-out;
 }
 
+.label{
+  text-transform: uppercase;
+  font-weight: 500;
+  color: gray;
+}
+
 @keyframes refresh {
   from {
     transform: rotate(0deg);

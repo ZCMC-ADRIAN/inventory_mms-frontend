@@ -112,8 +112,33 @@ export const Context = ({ children }) => {
         q: value ? value : "",
       },
     });
+    result.data.forEach((element, index) => {
+      result.data[index]["warranty"] = moment(
+        result.data[index]["warranty"]
+      ).format("MMMM DD YYYY");
+      result.data[index]["acquisition_date"] = moment(
+        result.data[index]["acquisition_date"]
+      ).format("MMMM DD YYYY");
+      result.data[index]["expiration"] = moment(
+        result.data[index]["expiration"]
+      ).format("MMMM DD YYYY");
+    });
     setTableData(result.data);
   };
+
+  {
+    /*
+  response.data[0].Warranty = moment(response.data[0].Warranty).format(
+        "MMMM DD YYYY"
+      );
+      response.data[0]["Acquisition Date"] = moment(
+        response.data[0]["Acquisition Date"]
+      ).format("MMMM DD YYYY");
+      response.data[0]["Expiration Date"] = moment(
+        response.data[0]["Expiration Date"]
+      ).format("MMMM DD YYYY");
+*/
+  }
 
   useEffect(() => {
     setSelectedAssoc();

@@ -1,7 +1,9 @@
 import { useTable, usePagination } from "react-table";
-import { IoAddCircleOutline } from "react-icons/io5";
 import InventoryModal from "./InventoryModal";
-import ItemTable from "./ItemTable";
+import DetailsModal from "./DetailsModal";
+import { useClickOutside } from "./useClickOutside";
+import { HiSearch } from "react-icons/hi";
+import localApi from "../API/Api";
 import {
   Table,
   Thead,
@@ -16,12 +18,20 @@ import {
   Select,
   Box,
   Center,
-  Button,
   TableContainer,
   Heading,
   useDisclosure,
+  FormControl,
+  FormLabel,
+  Icon,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  InputRightElement,
+  SimpleGrid,
+  GridItem,
+  Button
 } from "@chakra-ui/react";
-import Search from "./Search";
 
 import "./Table.css";
 
@@ -30,23 +40,57 @@ import {
   ArrowLeftIcon,
   ChevronRightIcon,
   ChevronLeftIcon,
+  CloseIcon
 } from "@chakra-ui/icons";
 
-import { AiOutlineFolderView } from "react-icons/ai";
+import { AiFillFolderOpen, AiOutlineQrcode, AiFillPrinter } from "react-icons/ai";
+import { FaClipboardList } from "react-icons/fa";
 
-import moment from "moment/moment";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 const InventoryTable = ({
   title,
   columns,
-  data,
-  fetch,
-  search,
-  setSearch,
-  handleClick,
   child,
 }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const tryin = new useDisclosure(); 
+  const [itemId, setItemId] = useState([]);
+  const [item, setItem] = useState([]);
+
+  const [location, setLocation] = useState('');
+  const [searchTerm, setSearchterm] = useState([]);
+  const [term, setTerm] = useState("");
+  const [desc, setDesc] = useState("");
+  const [timeoutId, setTimeoutId] = useState(null);
+  const [data, setTableData] = useState([]);
+  const [close, setClose] = useState('none');
+  const [dropdown, setDropdown] = useState(false);
+
+  const fetchlocation = async (value) => {
+    const result = await localApi.get(`location-name`, {
+      params: {
+        q: value,
+      },
+    });
+    setSearchterm(result.data);
+  };
+
+  const fetchTableData = async (value) => {
+    const result = await localApi.get(`data-table`, {
+      params: {
+        q: value ? value : "",
+        desc: item
+      },
+    });
+    setTableData(result.data);
+  };
+
+  useEffect(() => {
+    fetchlocation();
+    fetchTableData();
+  }, [item]);
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -76,13 +120,29 @@ const InventoryTable = ({
     borderRadius: "52px",
     fontSize: "20px",
   };
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [itemId, setItemId] = useState([]);
-  const [item, setItem] = useState([]);
+
+  const domNod = useClickOutside(() => {
+    setDropdown(false);
+  });
+
+  const handleSearch = (term) => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+
+    setTimeoutId(
+      setTimeout(() => {
+        // fetch data from database using the search term
+        // fetchdat(term);
+
+        fetchlocation(term.target.value);
+      }, 500)
+    );
+  };
 
 
   return (
-    <Box>
+    <Box w={"85%"} bg={"white"} padding={"30px"}>
       <Box w={"100%"}>
         <Flex
           justifyContent={"space-between"}
@@ -92,18 +152,87 @@ const InventoryTable = ({
             <Heading size="lg" color={"#2583CF"}>
               {title}
             </Heading>
-            <Search
-              search={search}
-              placeholder={`Search ${title}`}
-              currsearch={setSearch}
-            />
           </Flex>
+          <SimpleGrid
+            columns={6}
+            columnGap={3}
+            rowGap={6}
+            w="full"
+            h={"full"}
+            p={6}
+            flexDirection="column"
+          >
+            <GridItem colSpan={2}>
+              <FormControl>
+                <FormLabel>Location</FormLabel>
+                <div
+                  ref={domNod}
+                  onClick={() => {
+                    setDropdown(!dropdown);
+                    fetchlocation();
+                    setClose('inline')
+                  }}
+                  className="custom-select"
+                >
+                  <p>{location === "" ? "- Select Location -" : location}</p>
+                  {dropdown && (
+                    <div
+                      onClick={(e) => e.stopPropagation()}
+                      className="select-dropdown"
+                    >
+                      <div className="select-input-container">
+                        <InputGroup>
+                          <InputLeftElement
+                            pointerEvents="none"
+                            color="gray.300"
+                            fontSize="1.2em"
+                            children={<Icon as={HiSearch} />}
+                          />
+                          <Input
+                            background="#fff"
+                            value={term}
+                            onChange={(e) => {
+                              setTerm(e.target.value);
+                              handleSearch(e);
+                            }}
+                            fontSize="14px"
+                            placeholder="Search"
+                          />
+                        </InputGroup>
+                      </div>
+
+                      {searchTerm?.map((item, index) => {
+                        return (
+                          <>
+                            <p
+                              onClick={() => {
+                                setDesc(item.location_name);
+                                setDropdown(false);
+                                setLocation(item.location_name);
+                                fetchTableData(item.location_name);
+                              }}
+                              key={index}
+                            >
+                              {item.location_name}
+                            </p>
+                          </>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              </FormControl>
+            </GridItem>
+            <Button w={12} mt={8} display={close} bg='blue.100' _hover={{ bg: 'blue.200' }} onClick={() => { setLocation([]); fetchTableData([]); setClose('none'); setLocation("- Select Location -") }}>
+              <CloseIcon fontSize={12} color='gray' />
+            </Button>
+          </SimpleGrid>
           <Box>
             <Flex columnGap={3} justifyContent={"end"}>
               {child !== null ? child : null}
               <Select
                 w={32}
-                mt={5}
+                mt={20}
                 bg={"white"}
                 size={"sm"}
                 value={pageSize}
@@ -164,7 +293,7 @@ const InventoryTable = ({
                       return (
                         <Td {...cell.getCellProps()}>
                           {cell.column.id === "action" ? (
-                            <Flex columnGap={1}>
+                            <Flex columnGap={2}>
                               <Button
                                 _hover={{
                                   bg: "#FCD299",
@@ -174,8 +303,32 @@ const InventoryTable = ({
                                 }}
                                 onClick={() => { onOpen(cell.row.values.Pk_inventoryId); setItemId(cell.row.values.Pk_inventoryId); setItem(cell.row.values.desc) }}
                               >
-                                <AiOutlineFolderView color="orange" />
+                                <AiFillFolderOpen color="orange" />
                               </Button>
+
+                              <Button
+                                _hover={{
+                                  bg: "#BEEFDA",
+                                  boxShadow: "lg",
+                                  transform: "scale(1.2,1.2)",
+                                  transition: "0.3s",
+                                }}
+                                onClick={tryin.onOpen}
+                              >
+                                <FaClipboardList color="teal" />
+                              </Button>
+
+                              <Button
+                                _hover={{
+                                  bg: "lightgray",
+                                  boxShadow: "lg",
+                                  transform: "scale(1.2,1.2)",
+                                  transition: "0.3s",
+                                }}
+                              >
+                                <AiFillPrinter color="grey" />
+                              </Button>
+
                             </Flex>
                           ) : cell.column.id === "dept" ? (
                             <Text
@@ -211,7 +364,8 @@ const InventoryTable = ({
         </Table>
       </TableContainer>
 
-      <InventoryModal isOpen={isOpen} onClose={onClose} onOpen={onOpen} itemId={itemId} item={item}/>
+      <InventoryModal isOpen={isOpen} onClose={onClose} onOpen={onOpen} itemId={itemId} item={item} />
+      <DetailsModal isOpen={tryin.isOpen} onClose={tryin.onClose} onOpen={tryin.onOpen}/>
 
       {page.length >= 1 ? (
         <Flex justifyContent={"end"} mt={5}>

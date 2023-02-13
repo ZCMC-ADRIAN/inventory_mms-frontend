@@ -11,9 +11,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import In from "../Components/In";
-import { useNavigate } from "react-router-dom";
 import Sidebar from "../Components/Sidebar";
-import Equipment from "../Components/Items/Equipment";
 import InventoryTable from "../Components/InventoryTable";
 import InTable from "../Components/InTable";
 
@@ -21,16 +19,6 @@ const Homepage = () => {
   const [tab, setTab] = useState("inItem");
   const title = "Inventory";
   const [fetch, setFetch] = useState(false);
-  const [data, setData] = useState([]);
-
-  const fetchData = async () => {
-    let responseData = await localApi.get("data-table");
-    setData(responseData.data);
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   const column = useMemo(
     () => [
@@ -43,16 +31,16 @@ const Homepage = () => {
         accessor: "desc",
       },
       {
-        Header: "Available",
+        Header: "Quantity",
         accessor: "Quantity",
       },
       {
-        Header: "Issued",
-        accessor: "issued",
+        Header: "Serial No",
+        accessor: "serial",
       },
       {
-        Header: "Returned",
-        accessor: "returned",
+        Header: "Property No",
+        accessor: "property_no",
       },
       {
         Header: "ACTION",
@@ -74,7 +62,6 @@ const Homepage = () => {
                 title={title}
                 fetch={fetch}
                 columns={column}
-                data={data}
               />
             )}
             {tab === "listIn" && <InTable />}

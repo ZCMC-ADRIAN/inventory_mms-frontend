@@ -1,21 +1,19 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useContext } from "react";
 import { useTable, usePagination } from "react-table";
 import { useClickOutside } from "./useClickOutside";
 import localApi from "../API/Api";
+import DataContext from "../Context/Context";
+import { HiSearch } from "react-icons/hi";
 import "./Table.css";
 import {
   Modal,
   ModalOverlay,
   ModalContent,
-  ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Button,
   Text,
   Box,
   Flex,
-  Badge,
   Center,
   Heading,
   Table,
@@ -27,32 +25,58 @@ import {
   Select,
   TableContainer,
   Tooltip,
-  IconButton
+  IconButton,
+  FormControl,
+  FormLabel,
+  Icon,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  InputRightElement,
+  SimpleGrid,
+  GridItem,
+  Button
 } from "@chakra-ui/react";
 import {
   ArrowRightIcon,
   ArrowLeftIcon,
   ChevronRightIcon,
   ChevronLeftIcon,
+  CloseIcon
 } from "@chakra-ui/icons";
 import holder from '../Assets/holder.png';
 
 const InventoryModal = ({ isOpen, onClose, child, item }) => {
-  const [data, setData] = useState([]);
   const [location, setLocation] = useState('');
   const [searchTerm, setSearchterm] = useState([]);
   const [term, setTerm] = useState("");
+  const [desc, setDesc] = useState("");
+  const [timeoutId, setTimeoutId] = useState(null);
+  const [data, setTableData] = useState([]);
+  const [close, setClose] = useState('none');
 
-
-  const fetchData = async () => {
-    let responseData = await localApi.get("item-list",{
-      params: {desc : item}
+  const fetchlocation = async (value) => {
+    const result = await localApi.get(`location-name`, {
+      params: {
+        q: value,
+      },
     });
-    setData(responseData.data);
+    setSearchterm(result.data);
+  };
+
+  const fetchTableData = async (value) => {
+    const result = await localApi.get(`item-list`, {
+      params: {
+        q: value ? value : "",
+        desc: item
+      },
+    });
+    setTableData(result.data);
   };
 
   useEffect(() => {
-    fetchData();
+    fetchlocation();
+    fetchTableData();
   }, [item]);
 
   const columns = useMemo(
@@ -107,20 +131,26 @@ const InventoryModal = ({ isOpen, onClose, child, item }) => {
     fontSize: "20px",
   };
 
-  const fetchlocation = async (value) => {
-    const result = await localApi.get(``, {
-      params: {
-        q: value,
-      },
-    });
-    setSearchterm(result.data);
-  };
-
   const [dropdown, setDropdown] = useState(false);
 
   const domNod = useClickOutside(() => {
     setDropdown(false);
   });
+
+  const handleSearch = (term) => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+
+    setTimeoutId(
+      setTimeout(() => {
+        // fetch data from database using the search term
+        // fetchdat(term);
+
+        fetchlocation(term.target.value);
+      }, 500)
+    );
+  };
 
   return (
     <>
@@ -135,7 +165,7 @@ const InventoryModal = ({ isOpen, onClose, child, item }) => {
           <ModalCloseButton bg='blue.400' />
           <ModalBody className="item-modal">
             <Center>
-              <Box w={"80%"}>
+              <Box w={"80%"} bg={"white"} padding={"30px"} mt={10}>
                 <Box w={"100%"}>
                   <Flex
                     justifyContent={"space-between"}
@@ -146,18 +176,87 @@ const InventoryModal = ({ isOpen, onClose, child, item }) => {
                       <Heading size="lg" color={"#2583CF"}>
                         Items
                       </Heading>
-                      {/* <Search
-                      search={search}
-                      placeholder={`Search ${title}`}
-                      currsearch={setSearch}
-                    /> */}
                     </Flex>
+                    <SimpleGrid
+                      columns={6}
+                      columnGap={3}
+                      rowGap={6}
+                      w="full"
+                      h={"full"}
+                      p={6}
+                      flexDirection="column"
+                    >
+                      <GridItem colSpan={2}>
+                        <FormControl>
+                          <FormLabel>Location</FormLabel>
+                          <div
+                            ref={domNod}
+                            onClick={() => {
+                              setDropdown(!dropdown);
+                              fetchlocation();
+                              setClose('inline')
+                            }}
+                            className="custom-select"
+                          >
+                            <p>{location === "" ? "- Select Location -" : location}</p>
+                            {dropdown && (
+                              <div
+                                onClick={(e) => e.stopPropagation()}
+                                className="select-dropdown"
+                              >
+                                <div className="select-input-container">
+                                  <InputGroup>
+                                    <InputLeftElement
+                                      pointerEvents="none"
+                                      color="gray.300"
+                                      fontSize="1.2em"
+                                      children={<Icon as={HiSearch} />}
+                                    />
+                                    <Input
+                                      background="#fff"
+                                      value={term}
+                                      onChange={(e) => {
+                                        setTerm(e.target.value);
+                                        handleSearch(e);
+                                      }}
+                                      fontSize="14px"
+                                      placeholder="Search"
+                                    />
+                                  </InputGroup>
+                                </div>
+
+                                {searchTerm?.map((item, index) => {
+                                  return (
+                                    <>
+                                      <p
+                                        onClick={() => {
+                                          setDesc(item.location_name);
+                                          setDropdown(false);
+                                          setLocation(item.location_name);
+                                          fetchTableData(item.location_name);
+                                        }}
+                                        key={index}
+                                      >
+                                        {item.location_name}
+                                      </p>
+                                    </>
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </div>
+                        </FormControl>
+                      </GridItem>
+                      <Button w={12} mt={8} display={close} bg='blue.100' _hover={{ bg: 'blue.200' }} onClick={() => { setLocation([]); fetchTableData([]); setClose('none'); setLocation("- Select Location -") }}>
+                        <CloseIcon fontSize={12} color='gray' />
+                      </Button>
+                    </SimpleGrid>
                     <Box>
                       <Flex columnGap={3} justifyContent={"end"}>
                         {child !== null ? child : null}
                         <Select
                           w={32}
-                          mt={5}
+                          mt={20}
                           bg={"white"}
                           size={"sm"}
                           value={pageSize}

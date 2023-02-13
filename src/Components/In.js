@@ -18,6 +18,7 @@ import {
   Container,
   InputLeftAddon,
   Box,
+  Flex,
 } from "@chakra-ui/react";
 import useAuth from "../Hooks/useAuth";
 import { HiSearch } from "react-icons/hi";
@@ -64,7 +65,6 @@ const In = ({ setTab, users }) => {
   const domNod = useClickOutside(() => {
     setDropdown(false);
   });
-
   const columns = useMemo(
     () => [
       {
@@ -87,6 +87,12 @@ const In = ({ setTab, users }) => {
         Header: "Article",
         accessor: "article_name",
       },
+      { Header: "Variety", accessor: "variety" },
+      { Header: "Country/origin", accessor: "country" },
+      { Header: "Detail", accessor: "details2" },
+      { Header: "Warranty", accessor: "warranty" },
+      { Header: "Acquisition Date", accessor: "acquisition_date" },
+      { Header: "Expiration", accessor: "expiration" },
       {
         Header: "Remarks",
         accessor: "remarks",
@@ -123,7 +129,7 @@ const In = ({ setTab, users }) => {
             p={6}
             flexDirection="column"
           >
-            <GridItem colSpan={2}>
+            <GridItem colSpan={[6, 3]}>
               <FormControl>
                 <FormLabel>Item description</FormLabel>
                 <div
@@ -134,7 +140,12 @@ const In = ({ setTab, users }) => {
                   }}
                   className="custom-select"
                 >
-                  <p>{itemDesc === "" ? "- Select Item -" : itemDesc}</p>
+                  <Flex width={100} justifyContent={"space-between"}>
+                    <p width={"100px"}>
+                      {itemDesc === "" ? "- Select Item -" : itemDesc}
+                    </p>
+                  </Flex>
+
                   {dropdown && (
                     <div
                       onClick={(e) => e.stopPropagation()}

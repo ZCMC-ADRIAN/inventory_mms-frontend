@@ -121,21 +121,8 @@
   border-radius: 100px;
 }
 
-@media (width < 580px){
+@media (width < 580px) {
   .sidebar {
-    width: 75px;
-  } 
-  .sidebar .avatar{
-    width: 35px;
-    height: 35px;
-  }
-  .sidebar .name{
-    display: none;
-  }
-  .navigation label{
-    display: none;
-  }
-  .navigation text{
     display: none;
   }
 }

@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import api from "../API/Api";
 import { useToast } from "@chakra-ui/react";
+const moment = require("moment");
 const DataContext = createContext({});
 
 export const Context = ({ children }) => {
@@ -8,9 +9,20 @@ export const Context = ({ children }) => {
 
   const fetchItem = async (value) => {
     try {
-      const response = await api.get("/itemdetail/" + value);
-      setItemDetails(response.data);
+      var response = await api.get("/itemdetail/" + value);
       setItemId(value);
+      response.data[0].Warranty = moment(response.data[0].Warranty).format(
+        "MMMM DD YYYY"
+      );
+      response.data[0]["Acquisition Date"] = moment(
+        response.data[0]["Acquisition Date"]
+      ).format("MMMM DD YYYY");
+      response.data[0]["Expiration Date"] = moment(
+        response.data[0]["Expiration Date"]
+      ).format("MMMM DD YYYY");
+
+      console.log(response.data);
+      setItemDetails(response.data);
       return response.data;
     } catch (error) {
       console.error(error);
@@ -28,7 +40,6 @@ export const Context = ({ children }) => {
     });
     setCountryDatas(result.data);
   };
-
 
   const [locDatas, setLocDatas] = useState([]);
   const [locValue, setLocValue] = useState([]);
@@ -103,7 +114,7 @@ export const Context = ({ children }) => {
     });
     setTableData(result.data);
   };
-  
+
   useEffect(() => {
     setSelectedAssoc();
     setassocValue("");

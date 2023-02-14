@@ -30,7 +30,7 @@ import {
   InputRightElement,
   SimpleGrid,
   GridItem,
-  Button
+  Button,
 } from "@chakra-ui/react";
 
 import "./Table.css";
@@ -40,32 +40,32 @@ import {
   ArrowLeftIcon,
   ChevronRightIcon,
   ChevronLeftIcon,
-  CloseIcon
+  CloseIcon,
 } from "@chakra-ui/icons";
 
-import { AiFillFolderOpen, AiOutlineQrcode, AiFillPrinter } from "react-icons/ai";
+import {
+  AiFillFolderOpen,
+  AiOutlineQrcode,
+  AiFillPrinter,
+} from "react-icons/ai";
 import { FaClipboardList } from "react-icons/fa";
 
 import { useState, useEffect } from "react";
 
-const InventoryTable = ({
-  title,
-  columns,
-  child,
-}) => {
+const InventoryTable = ({ title, columns, child }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const tryin = new useDisclosure(); 
+  const tryin = new useDisclosure();
   const [itemId, setItemId] = useState([]);
   const [item, setItem] = useState([]);
   const [details, setDetails] = useState([]);
 
-  const [location, setLocation] = useState('');
+  const [location, setLocation] = useState("");
   const [searchTerm, setSearchterm] = useState([]);
   const [term, setTerm] = useState("");
   const [desc, setDesc] = useState("");
   const [timeoutId, setTimeoutId] = useState(null);
   const [data, setTableData] = useState([]);
-  const [close, setClose] = useState('none');
+  const [close, setClose] = useState("none");
   const [dropdown, setDropdown] = useState(false);
 
   const fetchlocation = async (value) => {
@@ -81,12 +81,11 @@ const InventoryTable = ({
     const result = await localApi.get(`data-table`, {
       params: {
         q: value ? value : "",
-        desc: item
+        desc: item,
       },
     });
     setTableData(result.data);
   };
-
   useEffect(() => {
     fetchlocation();
     fetchTableData();
@@ -141,7 +140,6 @@ const InventoryTable = ({
     );
   };
 
-
   return (
     <Box w={"85%"} bg={"white"} padding={"30px"}>
       <Box w={"100%"}>
@@ -171,7 +169,7 @@ const InventoryTable = ({
                   onClick={() => {
                     setDropdown(!dropdown);
                     fetchlocation();
-                    setClose('inline')
+                    setClose("inline");
                   }}
                   className="custom-select"
                 >
@@ -224,8 +222,20 @@ const InventoryTable = ({
                 </div>
               </FormControl>
             </GridItem>
-            <Button w={12} mt={8} display={close} bg='blue.100' _hover={{ bg: 'blue.200' }} onClick={() => { setLocation([]); fetchTableData([]); setClose('none'); setLocation("- Select Location -") }}>
-              <CloseIcon fontSize={12} color='gray' />
+            <Button
+              w={12}
+              mt={8}
+              display={close}
+              bg="blue.100"
+              _hover={{ bg: "blue.200" }}
+              onClick={() => {
+                setLocation([]);
+                fetchTableData([]);
+                setClose("none");
+                setLocation("- Select Location -");
+              }}
+            >
+              <CloseIcon fontSize={12} color="gray" />
             </Button>
           </SimpleGrid>
           <Box>
@@ -302,7 +312,11 @@ const InventoryTable = ({
                                   transform: "scale(1.2,1.2)",
                                   transition: "0.3s",
                                 }}
-                                onClick={() => { onOpen(); setItem(cell.row.values.desc) }}
+                                onClick={() => {
+                                  onOpen(cell.row.values.Pk_inventoryId);
+                                  setItemId(cell.row.values.Pk_inventoryId);
+                                  setItem(cell.row.values.desc);
+                                }}
                               >
                                 <AiFillFolderOpen color="orange" />
                               </Button>
@@ -314,7 +328,12 @@ const InventoryTable = ({
                                   transform: "scale(1.2,1.2)",
                                   transition: "0.3s",
                                 }}
-                                onClick={()=>{tryin.onOpen(cell.row.original.Pk_inventoryId); setDetails(cell.row.original.Pk_inventoryId); }}
+                                onClick={() => {
+                                  tryin.onOpen(
+                                    cell.row.original.Pk_inventoryId
+                                  );
+                                  setDetails(cell.row.original.Pk_inventoryId);
+                                }}
                               >
                                 <FaClipboardList color="teal" />
                               </Button>
@@ -329,7 +348,6 @@ const InventoryTable = ({
                               >
                                 <AiFillPrinter color="grey" />
                               </Button>
-
                             </Flex>
                           ) : cell.column.id === "dept" ? (
                             <Text
@@ -365,8 +383,19 @@ const InventoryTable = ({
         </Table>
       </TableContainer>
 
-      <InventoryModal isOpen={isOpen} onClose={onClose} onOpen={onOpen} itemId={itemId} item={item} />
-      <DetailsModal isOpen={tryin.isOpen} onClose={tryin.onClose} onOpen={tryin.onOpen} details={details}/>
+      <InventoryModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onOpen={onOpen}
+        itemId={itemId}
+        item={item}
+      />
+      <DetailsModal
+        isOpen={tryin.isOpen}
+        onClose={tryin.onClose}
+        onOpen={tryin.onOpen}
+        details={details}
+      />
 
       {page.length >= 1 ? (
         <Flex justifyContent={"end"} mt={5}>

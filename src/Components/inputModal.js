@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import DataContext from "../Context/Context";
 import {
   Modal,
@@ -26,8 +26,14 @@ import {
   FormLabel,
   Input,
   useToast,
+  color,
+  InputRightElement,
+  InputGroup,
+  InputLeftElement,
 } from "@chakra-ui/react";
 import SearchSel from "./searchableSelect/searchSel";
+import { EditIcon, CloseIcon } from "@chakra-ui/icons";
+import EditableDet from "./EditableDet";
 
 export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
   const {
@@ -58,19 +64,120 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
     fetchAssoc,
     setpropertyno,
     setserial,
+    varietyDatas,
+    varietyVal,
+    setVarietyVal,
+    selectedVariety,
+    setSelectedVariety,
+    fetchVar,
+    countryDatas,
+    countryValue,
+    setCountryValue,
+    selectedCountry,
+    setSelectedCountry,
+    fetchCountry,
+    details,
+    setdetails,
+    warranty,
+    setwarranty,
+    acquisition,
+    setacquisition,
+    expiration,
+    setexpiration,
   } = useContext(DataContext);
+  const editable = [
+    "Variety",
+    "Country origin",
+    "Details",
+    "Warranty",
+    "Acquisition Date",
+    "Expiration Date",
+  ];
+  const Ddown = ["Variety", "Country origin"];
+  const editableDate = ["Warranty", "Acquisition Date", "Expiration Date"];
   const toast = useToast();
+
+
+
   const CardDet = ({ property, detail, bg }) => {
+
+    const [isEdit, setEdit] = useState(false);
     return (
-      <Box bg={bg} fontSize={15} color={"blackAlpha.600"} w={"100%"} h={"2em"}>
+      <Box bg={bg} fontSize={15} color={"blackAlpha.600"} w={"100%"} h={"auto"}>
         <Divider orientation="horizontal" />
         <Flex flexDirection={"row"} gap={0}>
           <Text flex={1} fontWeight={"500"}>
             {property}
           </Text>
-          <Text flex={1} textAlign={"right"}>
-            {detail}
-          </Text>
+          <Box
+            onDoubleClick={() => {
+              setEdit(true);
+            }}
+          >
+            {isEdit && editable.includes(property) ? (
+              editableDate.includes(property) ? (
+                <InputGroup>
+                  <InputRightElement>
+                    <CloseIcon
+                      style={
+                        editable.includes(property) && { cursor: "pointer" }
+                      }
+                      w={3}
+                      onClick={() => {
+                        setEdit(false);
+                      }}
+                    ></CloseIcon>
+                  </InputRightElement>
+                  <Input onChange={(e) => { }} type="date"></Input>
+                </InputGroup>
+              ) : Ddown.includes(property) ? (
+                <SearchSel
+                  data={varietyDatas}
+                  propertyName={"variety"}
+                  fetchdat={fetchVar}
+                  setSelect={setSelectedVariety}
+                  isSelect={selectedVariety}
+                  setValue={setVarietyVal}
+                  valueD={varietyVal}
+                  isDrop={true}
+                  mode={"edit"}
+                  setModEdit={setEdit}
+                ></SearchSel>
+              ) : (
+                // <SearchSel
+                //   data={varietyDatas}
+                //   propertyName={"variety"}
+                //   fetchdat={fetchVar}
+                //   setSelect={setSelectedVariety}
+                //   isSelect={selectedVariety}
+                //   setValue={setVarietyVal}
+                //   valueD={varietyVal}
+                //   isDrop={true}
+                //   mode={"edit"}
+                //   setModEdit={setEdit}
+                // ></SearchSel>
+                <SearchSel mode={"edit"} setModEdit={setEdit}></SearchSel>
+              )
+            ) : (
+              <Text
+                fontWeight={editable.includes(property) && "black"}
+                color={editable.includes(property) && "black"}
+                flex={1}
+                textAlign={"right"}
+              >
+                {detail}
+                {editable.includes(property) && (
+                  <EditIcon
+                    w={8}
+                    onClick={() => {
+                      setEdit(true);
+                    }}
+                    style={editable.includes(property) && { cursor: "pointer" }}
+                  ></EditIcon>
+                )}
+              </Text>
+            )}
+          </Box>
         </Flex>
       </Box>
     );
@@ -92,8 +199,8 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
         <ModalContent w={"60%"} minW={"60%"} margin={"100px"}>
           <ModalHeader>
             {title}
-            {selectedLoc && selectedLoc.Pk_locationId}
-            {selectedAssoc && selectedAssoc.Pk_assocId}
+            {/* {selectedLoc && selectedLoc.Pk_locationId}
+            {selectedAssoc && selectedAssoc.Pk_assocId} */}
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
@@ -181,7 +288,7 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
                     <FormControl>
                       <FormLabel>Property No.</FormLabel>
                       <Input
-                        onClick={() => {}}
+                        onClick={() => { }}
                         //value={ }
                         onChange={(e) => {
                           setpropertyno(e.target.value);
@@ -193,14 +300,14 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
                     <FormControl>
                       <FormLabel>Serial</FormLabel>
                       <Input
-                        onClick={() => {}}
+                        onClick={() => { }}
                         onChange={(e) => {
                           setserial(e.target.value);
                         }}
                       />
                     </FormControl>
                   </GridItem>
-                  <GridItem colSpan={3} w="100%">
+                  {/* <GridItem colSpan={3} w="100%">
                     <FormControl>
                       <FormLabel>Loose</FormLabel>
                       <Input
@@ -214,7 +321,7 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
                         }}
                       />
                     </FormControl>
-                  </GridItem>
+                  </GridItem> */}
                   <GridItem colSpan={6} w="100%">
                     <FormControl>
                       <FormLabel>Remarks</FormLabel>
@@ -259,21 +366,78 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
                       <Image
                         boxSize="300px"
                         objectFit="cover"
-                        src="https://media.karousell.com/media/photos/products/2022/5/29/dell_latitude_5520_intel_core__1653831125_b8e7d0fe.jpg"
+                        src="https://cdn-icons-png.flaticon.com/128/1160/1160358.png"
                         alt="Dan Abramov"
                       ></Image>
                     </Flex>
                   </Box>
 
                   {itemdetails != null &&
-                    Object.keys(itemdetails[0]).map((e, i) => (
-                      <CardDet
-                        key={i}
-                        bg={i % 2 == 0 && "#f3f7fa"}
-                        property={e}
-                        detail={itemdetails[0][e]}
-                      />
-                    ))}
+                    Object.keys(itemdetails[0]).map((e, i) => {
+                      if (e == "Variety") {
+                        return (<EditableDet
+                          key={i}
+                          bg={i % 2 == 0 && "#f3f7fa"}
+                          property={e}
+                          detail={itemdetails[0][e]}
+                          data={varietyDatas}
+                          propertyName={"variety"}
+                          fetchdat={fetchVar}
+                          setSelect={setSelectedVariety}
+                          isSelect={selectedVariety}
+                          setValue={setVarietyVal}
+                          valueD={varietyVal}
+                          isDrop={true}
+                          mode={"edit"}
+                        >
+                        </EditableDet>)
+                      } else if (e == "Country origin") {
+                        return (<EditableDet
+                          key={i}
+                          bg={i % 2 == 0 && "#f3f7fa"}
+                          property={e}
+                          detail={itemdetails[0][e]}
+                          data={countryDatas}
+                          propertyName={"country"}
+                          fetchdat={fetchCountry}
+                          setSelect={setSelectedCountry}
+                          isSelect={selectedCountry}
+                          setValue={setCountryValue}
+                          valueD={countryValue}
+                          isDrop={true}
+                          mode={"edit"}
+                        >
+                        </EditableDet>)
+                      } else {
+                        return (<EditableDet
+                          key={i}
+                          bg={i % 2 == 0 && "#f3f7fa"}
+                          property={e}
+                          detail={itemdetails[0][e]}
+                          data={countryDatas}
+                          propertyName={"country"}
+                          fetchdat={fetchCountry}
+                          setSelect={setSelectedCountry}
+                          isSelect={selectedCountry}
+                          setValue={setCountryValue}
+                          valueD={countryValue}
+                          isDrop={false}
+                          mode={"edit"}
+                          setdetails={setdetails}
+                          setwarranty={setwarranty}
+                          setacquisition={setacquisition}
+                          setexpiration={setexpiration}
+                        >
+                        </EditableDet>)
+                      }
+                    }
+                      // <CardDet
+                      //   key={i}
+                      //   bg={i % 2 == 0 && "#f3f7fa"}
+                      //   property={e}
+                      //   detail={itemdetails[0][e]}
+                      // />
+                    )}
                 </Stack>
               </Box>
             </Flex>

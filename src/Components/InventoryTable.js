@@ -50,13 +50,14 @@ import {
 } from "react-icons/ai";
 import { FaClipboardList } from "react-icons/fa";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 const InventoryTable = ({ title, columns, child }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const tryin = new useDisclosure();
   const [itemId, setItemId] = useState([]);
   const [item, setItem] = useState([]);
+  const [details, setDetails] = useState([]);
 
   const [location, setLocation] = useState("");
   const [searchTerm, setSearchterm] = useState([]);
@@ -327,7 +328,12 @@ const InventoryTable = ({ title, columns, child }) => {
                                   transform: "scale(1.2,1.2)",
                                   transition: "0.3s",
                                 }}
-                                onClick={tryin.onOpen}
+                                onClick={() => {
+                                  tryin.onOpen(
+                                    cell.row.original.Pk_inventoryId
+                                  );
+                                  setDetails(cell.row.original.Pk_inventoryId);
+                                }}
                               >
                                 <FaClipboardList color="teal" />
                               </Button>
@@ -388,6 +394,7 @@ const InventoryTable = ({ title, columns, child }) => {
         isOpen={tryin.isOpen}
         onClose={tryin.onClose}
         onOpen={tryin.onOpen}
+        details={details}
       />
 
       {page.length >= 1 ? (

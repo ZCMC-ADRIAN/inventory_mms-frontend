@@ -51,7 +51,6 @@ import {
 import { FaClipboardList } from "react-icons/fa";
 
 import { useState, useEffect } from "react";
-
 const InventoryTable = ({ title, columns, child }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const tryin = new useDisclosure();

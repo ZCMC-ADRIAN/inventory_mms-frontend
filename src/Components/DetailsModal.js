@@ -35,7 +35,7 @@ const DetailsModal = ({ isOpen, onClose, details }) => {
 
     return (
         <div>
-            <Modal isOpen={isOpen} onClose={onClose} size='4xl'>
+            <Modal isOpen={isOpen} onClose={onClose} size='xl'>
                 <ModalOverlay />
                 {data.map((item) => {
                     return (
@@ -101,13 +101,13 @@ const DetailsModal = ({ isOpen, onClose, details }) => {
                                             <Text fontWeight={600} color='black'>{item.total_value}</Text>
                                         </Flex>
                                     </Container>
-                                    <Container>
+                                    {/* <Container>
                                         <Flex>
                                             <Text mt={1}><MdPerson color='#63b3ed' /></Text>
                                             <Text ml={2} mr={2} className='label'>Assigned Person: </Text>
                                             <Text fontWeight={600} color='black'>{item.person_name}</Text>
                                         </Flex>
-                                    </Container>
+                                    </Container> */}
                                 </Flex>
                             </ModalBody>
                         </ModalContent>

@@ -68,8 +68,12 @@ const In = ({ setTab, users }) => {
   const columns = useMemo(
     () => [
       {
+        Header: "Item name",
+        accessor: "item name",
+      },
+      {
         Header: "Item desc",
-        accessor: "item_name",
+        accessor: "Item desc",
       },
       {
         Header: "Brand",

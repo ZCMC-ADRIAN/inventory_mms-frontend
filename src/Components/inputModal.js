@@ -85,22 +85,9 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
     expiration,
     setexpiration,
   } = useContext(DataContext);
-  const editable = [
-    "Variety",
-    "Country origin",
-    "Details",
-    "Warranty",
-    "Acquisition Date",
-    "Expiration Date",
-  ];
-  const Ddown = ["Variety", "Country origin"];
-  const editableDate = ["Warranty", "Acquisition Date", "Expiration Date"];
   const toast = useToast();
 
-
-
   const CardDet = ({ property, detail, bg }) => {
-
     const [isEdit, setEdit] = useState(false);
     return (
       <Box bg={bg} fontSize={15} color={"blackAlpha.600"} w={"100%"} h={"auto"}>
@@ -109,75 +96,10 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
           <Text flex={1} fontWeight={"500"}>
             {property}
           </Text>
-          <Box
-            onDoubleClick={() => {
-              setEdit(true);
-            }}
-          >
-            {isEdit && editable.includes(property) ? (
-              editableDate.includes(property) ? (
-                <InputGroup>
-                  <InputRightElement>
-                    <CloseIcon
-                      style={
-                        editable.includes(property) && { cursor: "pointer" }
-                      }
-                      w={3}
-                      onClick={() => {
-                        setEdit(false);
-                      }}
-                    ></CloseIcon>
-                  </InputRightElement>
-                  <Input onChange={(e) => { }} type="date"></Input>
-                </InputGroup>
-              ) : Ddown.includes(property) ? (
-                <SearchSel
-                  data={varietyDatas}
-                  propertyName={"variety"}
-                  fetchdat={fetchVar}
-                  setSelect={setSelectedVariety}
-                  isSelect={selectedVariety}
-                  setValue={setVarietyVal}
-                  valueD={varietyVal}
-                  isDrop={true}
-                  mode={"edit"}
-                  setModEdit={setEdit}
-                ></SearchSel>
-              ) : (
-                // <SearchSel
-                //   data={varietyDatas}
-                //   propertyName={"variety"}
-                //   fetchdat={fetchVar}
-                //   setSelect={setSelectedVariety}
-                //   isSelect={selectedVariety}
-                //   setValue={setVarietyVal}
-                //   valueD={varietyVal}
-                //   isDrop={true}
-                //   mode={"edit"}
-                //   setModEdit={setEdit}
-                // ></SearchSel>
-                <SearchSel mode={"edit"} setModEdit={setEdit}></SearchSel>
-              )
-            ) : (
-              <Text
-                fontWeight={editable.includes(property) && "black"}
-                color={editable.includes(property) && "black"}
-                flex={1}
-                textAlign={"right"}
-              >
-                {detail}
-                {editable.includes(property) && (
-                  <EditIcon
-                    w={8}
-                    onClick={() => {
-                      setEdit(true);
-                    }}
-                    style={editable.includes(property) && { cursor: "pointer" }}
-                  ></EditIcon>
-                )}
-              </Text>
-            )}
-          </Box>
+
+          <Text flex={1} textAlign={"right"}>
+            {detail}
+          </Text>
         </Flex>
       </Box>
     );
@@ -288,7 +210,7 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
                     <FormControl>
                       <FormLabel>Property No.</FormLabel>
                       <Input
-                        onClick={() => { }}
+                        onClick={() => {}}
                         //value={ }
                         onChange={(e) => {
                           setpropertyno(e.target.value);
@@ -300,7 +222,7 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
                     <FormControl>
                       <FormLabel>Serial</FormLabel>
                       <Input
-                        onClick={() => { }}
+                        onClick={() => {}}
                         onChange={(e) => {
                           setserial(e.target.value);
                         }}
@@ -373,71 +295,71 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
                   </Box>
 
                   {itemdetails != null &&
-                    Object.keys(itemdetails[0]).map((e, i) => {
-                      if (e == "Variety") {
-                        return (<EditableDet
-                          key={i}
-                          bg={i % 2 == 0 && "#f3f7fa"}
-                          property={e}
-                          detail={itemdetails[0][e]}
-                          data={varietyDatas}
-                          propertyName={"variety"}
-                          fetchdat={fetchVar}
-                          setSelect={setSelectedVariety}
-                          isSelect={selectedVariety}
-                          setValue={setVarietyVal}
-                          valueD={varietyVal}
-                          isDrop={true}
-                          mode={"edit"}
-                        >
-                        </EditableDet>)
-                      } else if (e == "Country origin") {
-                        return (<EditableDet
-                          key={i}
-                          bg={i % 2 == 0 && "#f3f7fa"}
-                          property={e}
-                          detail={itemdetails[0][e]}
-                          data={countryDatas}
-                          propertyName={"country"}
-                          fetchdat={fetchCountry}
-                          setSelect={setSelectedCountry}
-                          isSelect={selectedCountry}
-                          setValue={setCountryValue}
-                          valueD={countryValue}
-                          isDrop={true}
-                          mode={"edit"}
-                        >
-                        </EditableDet>)
-                      } else {
-                        return (<EditableDet
-                          key={i}
-                          bg={i % 2 == 0 && "#f3f7fa"}
-                          property={e}
-                          detail={itemdetails[0][e]}
-                          data={countryDatas}
-                          propertyName={"country"}
-                          fetchdat={fetchCountry}
-                          setSelect={setSelectedCountry}
-                          isSelect={selectedCountry}
-                          setValue={setCountryValue}
-                          valueD={countryValue}
-                          isDrop={false}
-                          mode={"edit"}
-                          setdetails={setdetails}
-                          setwarranty={setwarranty}
-                          setacquisition={setacquisition}
-                          setexpiration={setexpiration}
-                        >
-                        </EditableDet>)
-                      }
-                    }
-                      // <CardDet
-                      //   key={i}
-                      //   bg={i % 2 == 0 && "#f3f7fa"}
-                      //   property={e}
-                      //   detail={itemdetails[0][e]}
-                      // />
-                    )}
+                    Object.keys(itemdetails[0]).map((e, i) => (
+                      //   if (e == "Variety") {
+                      //     return (<EditableDet
+                      //       key={i}
+                      //       bg={i % 2 == 0 && "#f3f7fa"}
+                      //       property={e}
+                      //       detail={itemdetails[0][e]}
+                      //       data={varietyDatas}
+                      //       propertyName={"variety"}
+                      //       fetchdat={fetchVar}
+                      //       setSelect={setSelectedVariety}
+                      //       isSelect={selectedVariety}
+                      //       setValue={setVarietyVal}
+                      //       valueD={varietyVal}
+                      //       isDrop={true}
+                      //       mode={"edit"}
+                      //     >
+                      //     </EditableDet>)
+                      //   } else if (e == "Country origin") {
+                      //     return (<EditableDet
+                      //       key={i}
+                      //       bg={i % 2 == 0 && "#f3f7fa"}
+                      //       property={e}
+                      //       detail={itemdetails[0][e]}
+                      //       data={countryDatas}
+                      //       propertyName={"country"}
+                      //       fetchdat={fetchCountry}
+                      //       setSelect={setSelectedCountry}
+                      //       isSelect={selectedCountry}
+                      //       setValue={setCountryValue}
+                      //       valueD={countryValue}
+                      //       isDrop={true}
+                      //       mode={"edit"}
+                      //     >
+                      //     </EditableDet>)
+                      //   } else {
+                      //     return (<EditableDet
+                      //       key={i}
+                      //       bg={i % 2 == 0 && "#f3f7fa"}
+                      //       property={e}
+                      //       detail={itemdetails[0][e]}
+                      //       data={countryDatas}
+                      //       propertyName={"country"}
+                      //       fetchdat={fetchCountry}
+                      //       setSelect={setSelectedCountry}
+                      //       isSelect={selectedCountry}
+                      //       setValue={setCountryValue}
+                      //       valueD={countryValue}
+                      //       isDrop={false}
+                      //       mode={"edit"}
+                      //       setdetails={setdetails}
+                      //       setwarranty={setwarranty}
+                      //       setacquisition={setacquisition}
+                      //       setexpiration={setexpiration}
+                      //     >
+                      //     </EditableDet>)
+                      //   }
+                      // }
+                      <CardDet
+                        key={i}
+                        bg={i % 2 == 0 && "#f3f7fa"}
+                        property={e}
+                        detail={itemdetails[0][e]}
+                      />
+                    ))}
                 </Stack>
               </Box>
             </Flex>

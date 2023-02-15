@@ -194,14 +194,14 @@ export const Context = ({ children }) => {
     //   });
     //   return;
     // }
-    if (quantity === "" || quantity === null) {
-      toast({
-        title: `please enter quantity`,
-        status: "error",
-        isClosable: true,
-      });
-      return;
-    }
+    // if (quantity === "" || quantity === null) {
+    //   toast({
+    //     title: `please enter quantity`,
+    //     status: "error",
+    //     isClosable: true,
+    //   });
+    //   return;
+    // }
     try {
       const response = await api
         .post("/inv", {
@@ -215,7 +215,7 @@ export const Context = ({ children }) => {
           delivery_date: deliveryD,
           property_no: propertyno,
           serial: serial,
-          quantity: quantity,
+          quantity: 1,
           loose: loose,
           remarks: remarks,
           EditVariety: selectedVariety && selectedVariety.Pk_varietyId,

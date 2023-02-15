@@ -271,21 +271,6 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
                   </GridItem>
                   <GridItem colSpan={3} w="100%">
                     <FormControl>
-                      <FormLabel>Quantity</FormLabel>
-                      <Input
-                        onClick={() => {
-                          //fetchdat(null);
-                          //setVisible(!isVisible);
-                        }}
-                        //value={ }
-                        onChange={(e) => {
-                          setquantity(e.target.value);
-                        }}
-                      />
-                    </FormControl>
-                  </GridItem>
-                  <GridItem colSpan={3} w="100%">
-                    <FormControl>
                       <FormLabel>Property No.</FormLabel>
                       <Input
                         onClick={() => { }}

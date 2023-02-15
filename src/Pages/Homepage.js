@@ -31,16 +31,16 @@ const Homepage = () => {
       },
       {
         Header: "Quantity",
-        accessor: "Quantity",
+        accessor: "total_qty",
       },
-      {
-        Header: "Serial No",
-        accessor: "serial",
-      },
-      {
-        Header: "Property No",
-        accessor: "property_no",
-      },
+      // {
+      //   Header: "Serial No",
+      //   accessor: "serial",
+      // },
+      // {
+      //   Header: "Property No",
+      //   accessor: "property_no",
+      // },
       {
         Header: "ACTION",
         accessor: "action",

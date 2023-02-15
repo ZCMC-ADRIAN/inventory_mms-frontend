@@ -402,13 +402,13 @@ const Equipment = ({ setTab }) => {
                     />
                   </FormControl>
 
-                  <FormControl>
+                  {/* <FormControl>
                     <FormLabel>Serial Number</FormLabel>
                     <Input
                       value={serialNum}
                       onChange={(e) => setSerialNum(e.target.value)}
                     />
-                  </FormControl>
+                  </FormControl> */}
 
                   <FormControl>
                     <FormLabel>Warranty</FormLabel>
@@ -433,13 +433,13 @@ const Equipment = ({ setTab }) => {
                     />
                   </FormControl>
 
-                  <FormControl>
+                  {/* <FormControl>
                     <FormLabel>Property Number</FormLabel>
                     <Input
                       value={propertyNum}
                       onChange={(e) => setPropertyNum(e.target.value)}
                     />
-                  </FormControl>
+                  </FormControl> */}
 
                   <FormControl>
                     <FormLabel>Unit</FormLabel>

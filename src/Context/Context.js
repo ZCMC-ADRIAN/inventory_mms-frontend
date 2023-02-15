@@ -186,14 +186,14 @@ export const Context = ({ children }) => {
       });
       return;
     }
-    if (deliveryD === "" || deliveryD === null) {
-      toast({
-        title: `please select Delivery Date`,
-        status: "error",
-        isClosable: true,
-      });
-      return;
-    }
+    // if (deliveryD === "" || deliveryD === null) {
+    //   toast({
+    //     title: `please select Delivery Date`,
+    //     status: "error",
+    //     isClosable: true,
+    //   });
+    //   return;
+    // }
     if (quantity === "" || quantity === null) {
       toast({
         title: `please enter quantity`,

@@ -140,7 +140,7 @@ const In = ({ setTab, users }) => {
                   }}
                   className="custom-select"
                 >
-                  <Flex width={100} justifyContent={"space-between"}>
+                  <Flex width={80} justifyContent={"space-between"}>
                     <p width={"100px"}>
                       {itemDesc === "" ? "- Select Item -" : itemDesc}
                     </p>

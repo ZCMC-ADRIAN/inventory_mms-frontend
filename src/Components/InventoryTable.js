@@ -57,6 +57,7 @@ const InventoryTable = ({ title, columns, child }) => {
   const [itemId, setItemId] = useState([]);
   const [item, setItem] = useState([]);
   const [details, setDetails] = useState([]);
+  const [header, setHeader] = useState([]);
 
   const [location, setLocation] = useState("");
   const [searchTerm, setSearchterm] = useState([]);
@@ -85,10 +86,19 @@ const InventoryTable = ({ title, columns, child }) => {
     });
     setTableData(result.data);
   };
+
+  const fetchHeader = async () => {
+    const result = await localApi.get("header", {
+      params: { header: details },
+    });
+    setHeader(result.data);
+  };
+
   useEffect(() => {
+    fetchHeader();
     fetchlocation();
     fetchTableData();
-  }, [item]);
+  }, [item, details]);
 
   const {
     getTableProps,
@@ -304,7 +314,7 @@ const InventoryTable = ({ title, columns, child }) => {
                         <Td {...cell.getCellProps()}>
                           {cell.column.id === "action" ? (
                             <Flex columnGap={2}>
-                              <Button
+                              {/* <Button
                                 _hover={{
                                   bg: "#FCD299",
                                   boxShadow: "lg",
@@ -318,7 +328,7 @@ const InventoryTable = ({ title, columns, child }) => {
                                 }}
                               >
                                 <AiFillFolderOpen color="orange" />
-                              </Button>
+                              </Button> */}
 
                               <Button
                                 _hover={{
@@ -331,7 +341,7 @@ const InventoryTable = ({ title, columns, child }) => {
                                   tryin.onOpen(
                                     cell.row.original.Pk_inventoryId
                                   );
-                                  setDetails(cell.row.original.Pk_inventoryId);
+                                  setDetails(row.original.desc);
                                 }}
                               >
                                 <FaClipboardList color="teal" />
@@ -393,6 +403,7 @@ const InventoryTable = ({ title, columns, child }) => {
         isOpen={tryin.isOpen}
         onClose={tryin.onClose}
         onOpen={tryin.onOpen}
+        header={header}
         details={details}
       />
 

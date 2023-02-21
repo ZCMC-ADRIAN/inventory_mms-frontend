@@ -1,8 +1,5 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import localApi from "../API/Api";
-import { HiSearch } from "react-icons/hi";
-import { useTable, usePagination } from "react-table";
-import { useClickOutside } from "./useClickOutside";
 import {
   Modal,
   ModalOverlay,
@@ -10,464 +7,214 @@ import {
   ModalHeader,
   ModalBody,
   ModalCloseButton,
-  Text,
-  Flex,
-  Center,
-  Heading,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Select,
-  TableContainer,
-  Tooltip,
-  IconButton,
-  FormControl,
-  FormLabel,
-  Icon,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  InputRightElement,
   SimpleGrid,
   GridItem,
-  Button,
-  Box,
+  Text,
+  Flex,
+  Badge,
 } from "@chakra-ui/react";
+import { AiFillTags } from "react-icons/ai";
+import { FaHashtag, FaUser, FaBox, FaHandHolding } from "react-icons/fa";
+import { ImLocation2 } from "react-icons/im";
 import {
-  ArrowRightIcon,
-  ArrowLeftIcon,
-  ChevronRightIcon,
-  ChevronLeftIcon,
-  CloseIcon,
-} from "@chakra-ui/icons";
+  BsStack,
+  BsQuestionSquareFill,
+  BsCalendar2DateFill,
+} from "react-icons/bs";
+import {
+  MdBrandingWatermark,
+  MdArticle,
+  MdClass,
+  MdModelTraining,
+} from "react-icons/md";
 
-const DetailsModal = ({ isOpen, onClose, details, header, child, item }) => {
-  const [location, setLocation] = useState("");
-  const [searchTerm, setSearchterm] = useState([]);
-  const [term, setTerm] = useState("");
-  const [desc, setDesc] = useState("");
-  const [close, setClose] = useState("none");
-  const [timeoutId, setTimeoutId] = useState(null);
-  const [data, setTableData] = useState([]);
+const DetailsModal = ({ isOpen, onClose, inventoryId }) => {
+  const [details, setDetails] = useState([]);
 
-  const fetchlocation = async (value) => {
-    const result = await localApi.get(`location-name`, {
+  const fetchDetails = async (value) => {
+    const result = await localApi.get("details", {
       params: {
-        q: value,
+        inventoryId: inventoryId,
       },
     });
-    setSearchterm(result.data);
-  };
-
-  const fetchTableData = async (value) => {
-    const result = await localApi.get(`item-list`, {
-      params: {
-        q: value ? value : "",
-        desc: details,
-      },
-    });
-    setTableData(result.data);
+    setDetails(result.data);
   };
 
   useEffect(() => {
-    fetchlocation();
-    fetchTableData();
-  }, [details, item]);
-
-  const columns = useMemo(
-    () => [
-      {
-        Header: "No",
-        accessor: "Pk_inventoryId",
-      },
-      {
-        Header: "Item Description",
-        accessor: "desc",
-      },
-      {
-        Header: "Property No",
-        accessor: "property_no",
-      },
-      {
-        Header: "Serial",
-        accessor: "serial",
-      },
-      {
-        Header: "Location",
-        accessor: "location_name",
-      },
-      {
-        Header: "Assigned Person",
-        accessor: "person_name",
-      }
-    ],
-    []
-  );
-
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    prepareRow,
-    page,
-    canPreviousPage,
-    canNextPage,
-    pageOptions,
-    pageCount,
-    gotoPage,
-    nextPage,
-    previousPage,
-    setPageSize,
-    state: { pageIndex, pageSize },
-  } = useTable(
-    {
-      columns,
-      data,
-      initialState: { pageIndex: 0 },
-    },
-    usePagination
-  );
-
-  const CustomBtnTheme = {
-    backgroundColor: "#2583CF",
-    borderRadius: "52px",
-    fontSize: "20px",
-  };
-
-  const [dropdown, setDropdown] = useState(false);
-
-  const domNod = useClickOutside(() => {
-    setDropdown(false);
-  });
-
-  const handleSearch = (term) => {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-
-    setTimeoutId(
-      setTimeout(() => {
-        fetchlocation(term.target.value);
-      }, 500)
-    );
-  };
+    fetchDetails();
+  }, [inventoryId]);
 
   return (
     <div>
-      <Modal isOpen={isOpen} onClose={onClose} size="full">
+      <Modal isOpen={isOpen} onClose={onClose} size="4xl">
         <ModalOverlay />
-        <ModalContent>
-          {header.map((title, key) => {
-            return (
-              <ModalHeader
-                key={key}
-                bg="blue.300"
-                borderRadius={5}
-                fontSize={16}
-                color="white"
-              >
-                {title.item_name}
+        {details.map((data, key) => {
+          return (
+            <ModalContent key={key}>
+              <ModalHeader>
+                <Badge colorScheme="blue">{data.desc}</Badge>
               </ModalHeader>
-            );
-          })}
-          <ModalCloseButton bg="white" _hover={{ bg: "gray.300" }} />
-          <ModalBody className="item-modal" p={8}>
-            <Center>
-              <Box w={"80%"} bg={"white"} padding={"30px"} mt={10}>
-                <Box w={"100%"}>
-                  <Flex
-                    justifyContent={"space-between"}
-                    flexDirection={["column", "column", "row", "row"]}
-                    mt={7}
-                  >
-                    <Flex alignItems={"center"} columnGap={5}>
-                      <Heading size="lg" color={"#2583CF"}>
-                        Items
-                      </Heading>
+              <ModalCloseButton />
+              <ModalBody p={10}>
+                <SimpleGrid columns={4} spacing={10}>
+                  <GridItem colSpan={2}>
+                    <Flex mt={2}>
+                      <Text mt={1} fontSize={"17px"} color="#2583CF" mr={3}>
+                        <ImLocation2 />
+                      </Text>
+                      <Text mr={3} fontWeight={600} color="gray.500">
+                        LOCATION:
+                      </Text>
+                      <Text>{data.location_name}</Text>
                     </Flex>
-                    <SimpleGrid
-                      columns={6}
-                      columnGap={3}
-                      rowGap={6}
-                      w="full"
-                      h={"full"}
-                      p={6}
-                      flexDirection="column"
-                    >
-                      <GridItem colSpan={2}>
-                        <FormControl>
-                          <FormLabel>Location</FormLabel>
-                          <div
-                            ref={domNod}
-                            onClick={() => {
-                              setDropdown(!dropdown);
-                              fetchlocation();
-                              setClose("inline");
-                            }}
-                            className="custom-select"
-                          >
-                            <p>
-                              {location === ""
-                                ? "- Select Location -"
-                                : location}
-                            </p>
-                            {dropdown && (
-                              <div
-                                onClick={(e) => e.stopPropagation()}
-                                className="select-dropdown"
-                              >
-                                <div className="select-input-container">
-                                  <InputGroup>
-                                    <InputLeftElement
-                                      pointerEvents="none"
-                                      color="gray.300"
-                                      fontSize="1.2em"
-                                      children={<Icon as={HiSearch} />}
-                                    />
-                                    <Input
-                                      background="#fff"
-                                      value={term}
-                                      onChange={(e) => {
-                                        setTerm(e.target.value);
-                                        handleSearch(e);
-                                      }}
-                                      fontSize="14px"
-                                      placeholder="Search"
-                                    />
-                                  </InputGroup>
-                                </div>
 
-                                {searchTerm?.map((item, index) => {
-                                  return (
-                                    <>
-                                      <p
-                                        onClick={() => {
-                                          setDesc(item.location_name);
-                                          setDropdown(false);
-                                          setLocation(item.location_name);
-                                          fetchTableData(item.location_name);
-                                        }}
-                                        key={index}
-                                      >
-                                        {item.location_name}
-                                      </p>
-                                    </>
-                                  );
-                                })}
-                              </div>
-                            )}
-                          </div>
-                        </FormControl>
-                      </GridItem>
-                      <Button
-                        w={12}
-                        mt={8}
-                        display={close}
-                        bg="blue.100"
-                        _hover={{ bg: "blue.200" }}
-                        onClick={() => {
-                          setLocation([]);
-                          fetchTableData([]);
-                          setClose("none");
-                          setLocation("- Select Location -");
-                        }}
+                    <Flex mt={2}>
+                      <Text mt={1} fontSize={"17px"} color="#2583CF" mr={3}>
+                        <FaUser />
+                      </Text>
+                      <Text mr={3} fontWeight={600} color="gray.500">
+                        ASSIGNED PERSON:
+                      </Text>
+                      <Text>{data.person_name}</Text>
+                    </Flex>
+
+                    <Flex mt={2}>
+                      <Text mt={1} fontSize={"16px"} color="#2583CF" mr={3}>
+                        <FaBox />
+                      </Text>
+                      <Text mr={3} fontWeight={600} color="gray.500">
+                        UNIT:
+                      </Text>
+                      <Text>{data.unit}</Text>
+                    </Flex>
+
+                    <Flex mt={2}>
+                      <Text mt={1} fontSize={"17px"} color="#2583CF" mr={3}>
+                        <BsStack />
+                      </Text>
+                      <Text mr={3} fontWeight={600} color="gray.500">
+                        QUANTITY:
+                      </Text>
+                      <Text>{data.qty}</Text>
+                    </Flex>
+
+                    <Flex mt={2}>
+                      <Text
+                        fontSize={"17px"}
+                        fontWeight="bold"
+                        color="#2583CF"
+                        mr={3}
                       >
-                        <CloseIcon fontSize={12} color="gray" />
-                      </Button>
-                    </SimpleGrid>
-                    <Box>
-                      <Flex columnGap={3} justifyContent={"end"}>
-                        {child !== null ? child : null}
-                        <Select
-                          w={32}
-                          mt={20}
-                          bg={"white"}
-                          size={"sm"}
-                          value={pageSize}
-                          focusBorderColor={"gray.400"}
-                          borderRadius={5}
-                          onChange={(e) => {
-                            setPageSize(Number(e.target.value));
-                          }}
-                        >
-                          {[10, 20, 30, 40, 50].map((pageSize) => (
-                            <option
-                              fontSize={14}
-                              key={pageSize}
-                              value={pageSize}
-                            >
-                              Show {pageSize}
-                            </option>
-                          ))}
-                        </Select>
-                      </Flex>
-                    </Box>
-                  </Flex>
-                </Box>
-                <TableContainer w={"100%"}>
-                  <Table
-                    mt={5}
-                    bg={"white"}
-                    maxWidth={"100%"}
-                    className={"table"}
-                    variant="unstyled"
-                    overflow="hidden"
-                    {...getTableProps()}
-                  >
-                    <Thead>
-                      {headerGroups.map((headerGroup) => (
-                        <Tr
-                          h={"5rem"}
-                          fontSize={15}
-                          {...headerGroup.getHeaderGroupProps()}
-                        >
-                          {headerGroup.headers.map((column) => (
-                            <Th
-                              bg={"white"}
-                              color={"gray.600"}
-                              fontSize={15}
-                              border={"white"}
-                              {...column.getHeaderProps()}
-                            >
-                              {column.render("Header")}
-                            </Th>
-                          ))}
-                        </Tr>
-                      ))}
-                    </Thead>
-                    <Tbody {...getTableBodyProps()}>
-                      {page.length >= 1 ? (
-                        page.map((row, i) => {
-                          prepareRow(row);
-                          return (
-                            <Tr className="td" {...row.getRowProps()}>
-                              {row.cells.map((cell) => {
-                                return (
-                                  <Td {...cell.getCellProps()}>
-                                    {cell.column.id === "action" ? (
-                                      <Flex columnGap={1}>
-                                        {/* <Button
-                                        _hover={{
-                                          bg: "#FCD299",
-                                          boxShadow: "lg",
-                                          transform: "scale(1.2,1.2)",
-                                          transition: "0.3s",
-                                        }}
-                                        onClick={() => { onOpen(cell.row.values.Pk_inventoryId); setItemId(cell.row.values.Pk_inventoryId) }}
-                                      >
-                                        <AiOutlineFolderView color="orange" />
-                                      </Button> */}
-                                      </Flex>
-                                    ) : cell.column.id === "dept" ? (
-                                      <Text
-                                        fontWeight={"bold"}
-                                        textTransform={"uppercase"}
-                                        color={"green.600"}
-                                      >
-                                        {cell.row.values.dept_Name}
-                                      </Text>
-                                    ) : cell.column.Header === "No" ? (
-                                      <Text
-                                        fontWeight={"bold"}
-                                        color={"green.600"}
-                                      >
-                                        {pageIndex * 10 + ++i}
-                                      </Text>
-                                    ) : cell.column.Header === "users" ? (
-                                      <>{cell.row.values.user}</>
-                                    ) : cell.column.id === "total" ? (
-                                      <Text fontWeight={"bold"}>
-                                        ₱ {cell.row.values.total}
-                                      </Text>
-                                    ) : (
-                                      cell.render("Cell")
-                                    )}
-                                  </Td>
-                                );
-                              })}
-                            </Tr>
-                          );
-                        })
-                      ) : (
-                        <Text>NO RECORD</Text>
-                      )}
-                    </Tbody>
-                  </Table>
-                </TableContainer>
+                        ₱
+                      </Text>
+                      <Text mr={3} fontWeight={600} color="gray.500">
+                        UNIT VALUE:
+                      </Text>
+                      <Text>{data.cost}</Text>
+                    </Flex>
 
-                {/* <InventoryModal isOpen={isOpen} onClose={onClose} onOpen={onOpen} itemId={itemId} /> */}
+                    <Flex mt={2}>
+                      <Text
+                        fontSize={"17px"}
+                        fontWeight="bold"
+                        color="#2583CF"
+                        mr={3}
+                      >
+                        ₱
+                      </Text>
+                      <Text mr={3} fontWeight={600} color="gray.500">
+                        TOTAL VALUE:
+                      </Text>
+                      <Text>{data.total_cost}</Text>
+                    </Flex>
+                  </GridItem>
 
-                {page.length >= 1 ? (
-                  <Flex justifyContent={"end"} mt={5}>
-                    <div id="btnleft">
-                      <Tooltip label="First Page">
-                        <IconButton
-                          style={CustomBtnTheme}
-                          onClick={() => gotoPage(0)}
-                          isDisabled={!canPreviousPage}
-                          icon={<ArrowLeftIcon h={3} w={3} color="white" />}
-                          mr={4}
-                        />
-                      </Tooltip>
-                      <Tooltip label="Previous Page">
-                        <IconButton
-                          style={CustomBtnTheme}
-                          className="paginationbtn"
-                          onClick={previousPage}
-                          isDisabled={!canPreviousPage}
-                          icon={<ChevronLeftIcon h={6} w={6} color="white" />}
-                        />
-                      </Tooltip>
-                    </div>
+                  <GridItem colSpan={2}>
+                    <Flex>
+                      <Text mt={1} fontSize={"17px"} color="#2583CF" mr={3}>
+                        <MdBrandingWatermark />
+                      </Text>
+                      <Text mr={3} fontWeight={600} color="gray.500">
+                        BRAND:
+                      </Text>
+                      <Text>{data.brand_name}</Text>
+                    </Flex>
 
-                    <Box bg={"white.200"} p={2} borderRadius={5}>
-                      <Flex>
-                        <Box fontSize={13}>Page</Box>
-                        <Text fontWeight="bold" fontSize={13} ml={2} as="span">
-                          {pageIndex + 1}
-                        </Text>
-                        <Box ml={2} fontSize={13} w={"2rem"}>
-                          of
-                        </Box>
+                    <Flex mt={2}>
+                      <Text mt={1} fontSize={"17px"} color="#2583CF" mr={3}>
+                        <MdArticle />
+                      </Text>
+                      <Text mr={3} fontWeight={600} color="gray.500">
+                        ARTICLE:
+                      </Text>
+                      <Text>{data.article}</Text>
+                    </Flex>
 
-                        <Text fontSize={13} fontWeight="bold" as="span">
-                          {pageOptions.length}
-                        </Text>
-                      </Flex>
-                    </Box>
+                    <Flex mt={2}>
+                      <Text mt={1} fontSize={"17px"} color="#2583CF" mr={3}>
+                        <MdClass />
+                      </Text>
+                      <Text mr={3} fontWeight={600} color="gray.500">
+                        TYPE:
+                      </Text>
+                      <Text>{data.type_name}</Text>
+                    </Flex>
 
-                    <div id="btnright">
-                      <Tooltip label="Next Page">
-                        <IconButton
-                          style={CustomBtnTheme}
-                          className="paginationbtn"
-                          onClick={nextPage}
-                          isDisabled={!canNextPage}
-                          icon={<ChevronRightIcon h={6} w={6} color="white" />}
-                        />
-                      </Tooltip>
-                      <Tooltip label="Last Page">
-                        <IconButton
-                          style={CustomBtnTheme}
-                          className="paginationbtn"
-                          onClick={() => gotoPage(pageCount - 1)}
-                          isDisabled={!canNextPage}
-                          icon={<ArrowRightIcon h={3} w={3} color="white" />}
-                          ml={4}
-                        />
-                      </Tooltip>
-                    </div>
-                  </Flex>
-                ) : (
-                  ""
-                )}
-              </Box>
-            </Center>
-          </ModalBody>
-        </ModalContent>
+                    <Flex mt={2}>
+                      <Text mt={1} fontSize={"17px"} color="#2583CF" mr={3}>
+                        <BsQuestionSquareFill />
+                      </Text>
+                      <Text mr={3} fontWeight={600} color="gray.500">
+                        STATUS:
+                      </Text>
+                      <Text>{data.status_name}</Text>
+                    </Flex>
+
+                    <Flex mt={2}>
+                      <Text mt={1} fontSize={"17px"} color="#2583CF" mr={3}>
+                        <MdModelTraining />
+                      </Text>
+                      <Text mr={3} fontWeight={600} color="gray.500">
+                        MODEL:
+                      </Text>
+                      <Text>{data.model}</Text>
+                    </Flex>
+
+                    <Flex mt={2}>
+                      <Text mt={1} fontSize={"17px"} color="#2583CF" mr={3}>
+                        <BsCalendar2DateFill />
+                      </Text>
+                      <Text mr={3} fontWeight={600} color="gray.500">
+                        WARRANTY:
+                      </Text>
+                      <Text>{data.warranty}</Text>
+                    </Flex>
+
+                    <Flex mt={2}>
+                      <Text mt={1} fontSize={"17px"} color="#2583CF" mr={3}>
+                        <BsCalendar2DateFill />
+                      </Text>
+                      <Text mr={3} fontWeight={600} color="gray.500">
+                        ACQUISITION DATE:
+                      </Text>
+                      <Text>{data.acquisition_date}</Text>
+                    </Flex>
+
+                    <Flex mt={2}>
+                      <Text mt={1} fontSize={"17px"} color="#2583CF" mr={3}>
+                        <FaHandHolding />
+                      </Text>
+                      <Text mr={3} fontWeight={600} color="gray.500">
+                        ACQUISITION MODE:
+                      </Text>
+                      <Text>{data.fundSource}</Text>
+                    </Flex>
+                  </GridItem>
+                </SimpleGrid>
+              </ModalBody>
+            </ModalContent>
+          );
+        })}
       </Modal>
     </div>
   );

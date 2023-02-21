@@ -1,6 +1,6 @@
 import { useTable, usePagination } from "react-table";
 import InventoryModal from "./InventoryModal";
-import DetailsModal from "./DetailsModal";
+import DetailsModal from "./ItemModal";
 import { useClickOutside } from "./useClickOutside";
 import { HiSearch } from "react-icons/hi";
 import localApi from "../API/Api";
@@ -51,6 +51,8 @@ import {
 import { FaClipboardList } from "react-icons/fa";
 
 import { useState, useEffect } from "react";
+import ItemModal from "./ItemModal";
+
 const InventoryTable = ({ title, columns, child }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const tryin = new useDisclosure();
@@ -63,6 +65,7 @@ const InventoryTable = ({ title, columns, child }) => {
   const [searchTerm, setSearchterm] = useState([]);
   const [term, setTerm] = useState("");
   const [desc, setDesc] = useState("");
+  const [category, setCategory] = useState("");
   const [timeoutId, setTimeoutId] = useState(null);
   const [data, setTableData] = useState([]);
   const [close, setClose] = useState("none");
@@ -170,7 +173,7 @@ const InventoryTable = ({ title, columns, child }) => {
             p={6}
             flexDirection="column"
           >
-            <GridItem colSpan={2}>
+            <GridItem colSpan={[6, 2]}>
               <FormControl>
                 <FormLabel>Location</FormLabel>
                 <div
@@ -246,6 +249,24 @@ const InventoryTable = ({ title, columns, child }) => {
             >
               <CloseIcon fontSize={12} color="gray" />
             </Button>
+
+            {/* <GridItem colSpan={[6, 2]}>
+              <FormControl>
+                <FormLabel>Category</FormLabel>
+                <Select
+                  placeholder=" - Select Category -"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                >
+                  <option>Medical Equipment</option>
+                  <option>Janitotrial Equipment</option>
+                  <option>Office</option>
+                  <option>Furniture</option>
+                  <option>Other</option>
+                </Select>
+              </FormControl>
+            </GridItem> */}
+            
           </SimpleGrid>
           <Box>
             <Flex columnGap={3} justifyContent={"end"}>
@@ -314,22 +335,6 @@ const InventoryTable = ({ title, columns, child }) => {
                         <Td {...cell.getCellProps()}>
                           {cell.column.id === "action" ? (
                             <Flex columnGap={2}>
-                              {/* <Button
-                                _hover={{
-                                  bg: "#FCD299",
-                                  boxShadow: "lg",
-                                  transform: "scale(1.2,1.2)",
-                                  transition: "0.3s",
-                                }}
-                                onClick={() => {
-                                  onOpen(cell.row.values.Pk_inventoryId);
-                                  setItemId(cell.row.values.Pk_inventoryId);
-                                  setItem(cell.row.values.desc);
-                                }}
-                              >
-                                <AiFillFolderOpen color="orange" />
-                              </Button> */}
-
                               <Button
                                 _hover={{
                                   bg: "#BEEFDA",
@@ -399,7 +404,7 @@ const InventoryTable = ({ title, columns, child }) => {
         itemId={itemId}
         item={item}
       />
-      <DetailsModal
+      <ItemModal
         isOpen={tryin.isOpen}
         onClose={tryin.onClose}
         onOpen={tryin.onOpen}

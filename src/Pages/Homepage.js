@@ -1,17 +1,8 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import CreateItem from "../Components/CreateItem";
-import localApi from "../API/Api";
-import {
-  Tabs,
-  TabList,
-  Tab,
-  TabPanel,
-  TabPanels,
-  Container,
-  Text,
-} from "@chakra-ui/react";
+
 import In from "../Components/In";
-import Sidebar from "../Components/Sidebar";
+import SidebarContent from "../Components/Sidebar";
 import InventoryTable from "../Components/InventoryTable";
 import InTable from "../Components/InTable";
 
@@ -33,14 +24,14 @@ const Homepage = () => {
         Header: "Quantity",
         accessor: "total_qty",
       },
-      // {
-      //   Header: "Serial No",
-      //   accessor: "serial",
-      // },
-      // {
-      //   Header: "Property No",
-      //   accessor: "property_no",
-      // },
+      {
+        Header: "Location",
+        accessor: "location_name"
+      },
+      {
+        Header: "Category",
+        accessor: "itemCateg_name"
+      },
       {
         Header: "ACTION",
         accessor: "action",
@@ -52,7 +43,7 @@ const Homepage = () => {
   return (
     <>
       <div className="container">
-        <Sidebar setTab={setTab} tab={tab} />
+        <SidebarContent setTab={setTab} tab={tab} />
         <div className="component-wrapper">
           {tab === "create" && <CreateItem setTab={setTab} />}
           {tab === "inItem" && <In setTab={setTab} />}

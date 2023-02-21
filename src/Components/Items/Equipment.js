@@ -5,19 +5,13 @@ import {
   Input,
   Textarea,
   HStack,
-  SimpleGrid,
-  GridItem,
   Select,
   Button,
   useToast,
   InputLeftAddon,
   InputGroup,
-  Container,
   Stack,
   Box,
-  Center,
-  Text,
-  Link,
 } from "@chakra-ui/react";
 import useAuth from "../../Hooks/useAuth";
 import localApi from "../../API/Api";
@@ -55,7 +49,7 @@ const Equipment = ({ setTab }) => {
   const [donor, setDonor] = useState("");
   const [donorOther, setDonorOther] = useState("");
   const [remarks, setRemarks] = useState("");
-  const [category, setCategory] = useState("Equipment");
+  const [category, setCategory] = useState("");
   const [cost, setCost] = useState(0);
   const [accessories, setAccessories] = useState("");
   const [acquiMode, setAcquiMode] = useState("");
@@ -126,6 +120,7 @@ const Equipment = ({ setTab }) => {
     setItemStatus("");
     setItemStatusOther("");
     setAcquiMode("");
+    setCategory("");
   };
 
   const { setAppState } = useAuth();
@@ -206,6 +201,21 @@ const Equipment = ({ setTab }) => {
           <form onSubmit={handleCreate}>
             <Stack spacing="4">
               <Stack spacing="4">
+                <FormControl isRequired w={{ lg: 400, md: 300, sm: 250 }}>
+                  <FormLabel>Category</FormLabel>
+                  <Select
+                    placeholder=" -- Select Category -- "
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                  >
+                    <option>Medical Equipment</option>
+                    <option>Janitorial Equipment</option>
+                    <option>Office Equipment</option>
+                    <option>Furniture</option>
+                    <option>Other</option>
+                  </Select>
+                </FormControl>
+
                 <HStack
                   display={"flex"}
                   flexDirection={{ lg: "row", md: "row", sm: "column" }}
@@ -531,7 +541,14 @@ const Equipment = ({ setTab }) => {
                   </FormControl>
                 </HStack>
 
-                <HStack marginTop={5} justifyContent={{base: "flex-end", md: "flex-end", sm: 'center'}}>
+                <HStack
+                  marginTop={5}
+                  justifyContent={{
+                    base: "flex-end",
+                    md: "flex-end",
+                    sm: "center",
+                  }}
+                >
                   <Button onClick={() => setTab("inItem")}>Cancel</Button>
                   <Button
                     color="#fff"

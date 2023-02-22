@@ -212,6 +212,7 @@ const Equipment = ({ setTab }) => {
                     <option>Janitorial Equipment</option>
                     <option>Office Equipment</option>
                     <option>Furniture</option>
+                    <option>Appliances</option>
                     <option>Other</option>
                   </Select>
                 </FormControl>

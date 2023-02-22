@@ -311,7 +311,7 @@ const InventoryModal = ({ isOpen, onClose, child, item }) => {
                             <Tr className="td" {...row.getRowProps()}>
                               {row.cells.map((cell) => {
                                 return (
-                                  <Td {...cell.getCellProps()}>
+                                  <Td {...cell.getCellProps()} whiteSpace='pre-line'>
                                     {cell.column.id === "action" ? (
                                       <Flex columnGap={1}>
                                         {/* <Button

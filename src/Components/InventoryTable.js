@@ -332,7 +332,7 @@ const InventoryTable = ({ title, columns, child }) => {
                   <Tr className="td" {...row.getRowProps()}>
                     {row.cells.map((cell) => {
                       return (
-                        <Td {...cell.getCellProps()}>
+                        <Td {...cell.getCellProps()} whiteSpace='pre-line'>
                           {cell.column.id === "action" ? (
                             <Flex columnGap={2}>
                               <Button

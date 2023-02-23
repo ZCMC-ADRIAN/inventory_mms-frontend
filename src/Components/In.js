@@ -65,15 +65,12 @@ const In = ({ setTab, users }) => {
   const domNod = useClickOutside(() => {
     setDropdown(false);
   });
+
   const columns = useMemo(
     () => [
       {
         Header: "Item name",
         accessor: "item name",
-      },
-      {
-        Header: "Item desc",
-        accessor: "Item desc",
       },
       {
         Header: "Brand",
@@ -89,7 +86,7 @@ const In = ({ setTab, users }) => {
       },
       {
         Header: "Article",
-        accessor: "article_name",
+        accessor: "article name",
       },
       { Header: "Variety", accessor: "variety" },
       { Header: "Country/origin", accessor: "country" },
@@ -104,6 +101,7 @@ const In = ({ setTab, users }) => {
     ],
     []
   );
+  
   const [timeoutId, setTimeoutId] = useState(null);
   const handleSearch = (term) => {
     if (timeoutId) {
@@ -190,14 +188,14 @@ const In = ({ setTab, users }) => {
                           <>
                             <p
                               onClick={() => {
-                                setDesc(item.item_name);
+                                setDesc(item.article_name);
                                 setDropdown(false);
-                                setItemDesc(item.item_name);
-                                fetchTableData(item.item_name);
+                                setItemDesc(item.article_name);
+                                fetchTableData(item.article_name);
                               }}
                               key={index}
                             >
-                              {item.item_name}
+                              {item.article_name}
                             </p>
                           </>
                         );

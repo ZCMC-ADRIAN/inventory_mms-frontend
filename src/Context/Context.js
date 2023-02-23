@@ -169,7 +169,7 @@ export const Context = ({ children }) => {
     setexpiration(null);
   };
 
-  const postInventory = async () => {
+  const postInventory = async (itemtobe) => {
     if (locValue.length < 1) {
       toast({
         title: `please select Location`,
@@ -186,26 +186,18 @@ export const Context = ({ children }) => {
       });
       return;
     }
-    // if (deliveryD === "" || deliveryD === null) {
-    //   toast({
-    //     title: `please select Delivery Date`,
-    //     status: "error",
-    //     isClosable: true,
-    //   });
-    //   return;
-    // }
-    // if (quantity === "" || quantity === null) {
-    //   toast({
-    //     title: `please enter quantity`,
-    //     status: "error",
-    //     isClosable: true,
-    //   });
-    //   return;
-    // }
+    if (!assocValue) {
+      toast({
+        title: `please select Associate or select none`,
+        status: "error",
+        isClosable: true,
+      });
+      return;
+    }
     try {
       const response = await api
         .post("/inv", {
-          itemId: itemId,
+          itemId: itemtobe || itemId,
           condition_id: selectedCond && selectedCond.Pk_conditionsId,
           location_id: selectedLoc && selectedLoc.Pk_locationId,
           assoc_id: selectedAssoc && selectedAssoc.Pk_assocId,
@@ -240,6 +232,7 @@ export const Context = ({ children }) => {
   return (
     <DataContext.Provider
       value={{
+        setItemId,
         clearAll,
         fetchcond,
         postInventory,

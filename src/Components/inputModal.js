@@ -214,30 +214,12 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
                       />
                     </FormControl>
                   </GridItem>
-                  {/* <GridItem colSpan={3} w="100%">
-                    <FormControl>
-                      <FormLabel>Loose</FormLabel>
-                      <Input
-                        onClick={() => {
-                          //fetchdat(null);
-                          //setVisible(!isVisible);
-                        }}
-                        //value={ }
-                        onChange={(e) => {
-                          setLoose(e.target.value);
-                        }}
-                      />
-                    </FormControl>
-                  </GridItem> */}
                   <GridItem colSpan={6} w="100%">
                     <FormControl>
                       <FormLabel>Remarks</FormLabel>
                       <Input
                         variant="flushed"
-                        onClick={() => {
-                          //fetchdat(null);
-                          //setVisible(!isVisible);
-                        }}
+                        onClick={() => {}}
                         //value={ }
                         onChange={(e) => {
                           setRemarks(e.target.value);
@@ -281,63 +263,6 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
 
                   {itemdetails != null &&
                     Object.keys(itemdetails[0]).map((e, i) => (
-                      //   if (e == "Variety") {
-                      //     return (<EditableDet
-                      //       key={i}
-                      //       bg={i % 2 == 0 && "#f3f7fa"}
-                      //       property={e}
-                      //       detail={itemdetails[0][e]}
-                      //       data={varietyDatas}
-                      //       propertyName={"variety"}
-                      //       fetchdat={fetchVar}
-                      //       setSelect={setSelectedVariety}
-                      //       isSelect={selectedVariety}
-                      //       setValue={setVarietyVal}
-                      //       valueD={varietyVal}
-                      //       isDrop={true}
-                      //       mode={"edit"}
-                      //     >
-                      //     </EditableDet>)
-                      //   } else if (e == "Country origin") {
-                      //     return (<EditableDet
-                      //       key={i}
-                      //       bg={i % 2 == 0 && "#f3f7fa"}
-                      //       property={e}
-                      //       detail={itemdetails[0][e]}
-                      //       data={countryDatas}
-                      //       propertyName={"country"}
-                      //       fetchdat={fetchCountry}
-                      //       setSelect={setSelectedCountry}
-                      //       isSelect={selectedCountry}
-                      //       setValue={setCountryValue}
-                      //       valueD={countryValue}
-                      //       isDrop={true}
-                      //       mode={"edit"}
-                      //     >
-                      //     </EditableDet>)
-                      //   } else {
-                      //     return (<EditableDet
-                      //       key={i}
-                      //       bg={i % 2 == 0 && "#f3f7fa"}
-                      //       property={e}
-                      //       detail={itemdetails[0][e]}
-                      //       data={countryDatas}
-                      //       propertyName={"country"}
-                      //       fetchdat={fetchCountry}
-                      //       setSelect={setSelectedCountry}
-                      //       isSelect={selectedCountry}
-                      //       setValue={setCountryValue}
-                      //       valueD={countryValue}
-                      //       isDrop={false}
-                      //       mode={"edit"}
-                      //       setdetails={setdetails}
-                      //       setwarranty={setwarranty}
-                      //       setacquisition={setacquisition}
-                      //       setexpiration={setexpiration}
-                      //     >
-                      //     </EditableDet>)
-                      //   }
-                      // }
                       <CardDet
                         key={i}
                         bg={i % 2 == 0 && "#f3f7fa"}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   FormControl,
   FormLabel,
@@ -6,17 +6,52 @@ import {
   Textarea,
   HStack,
   Select,
+  Grid,
+  GridItem,
   Button,
   useToast,
   InputLeftAddon,
   InputGroup,
   Stack,
   Box,
+  Divider,
 } from "@chakra-ui/react";
 import useAuth from "../../Hooks/useAuth";
 import localApi from "../../API/Api";
+import SearchSel from "../searchableSelect/searchSel";
+import DataContext from "../../Context/Context";
 
 const Equipment = ({ setTab }) => {
+  const {
+    itemdetails,
+    setdeliveryD,
+    setquantity,
+    setLoose,
+    setRemarks,
+    postInventory,
+    locDatas,
+    locValue,
+    setLocValue,
+    selectedLoc,
+    setSelectedLoc,
+    fetchLoc,
+    condDatas,
+    condItem,
+    setConItem,
+    selectedCond,
+    setSelectedCond,
+    fetchcond,
+    assocDatas,
+    assocValue,
+    setassocValue,
+    selectedAssoc,
+    setSelectedAssoc,
+    fetchAssoc,
+    setpropertyno,
+    setserial,
+    setItemId,
+    clearAll,
+  } = useContext(DataContext);
   const donors = [
     "doh",
     "department of health",
@@ -48,7 +83,7 @@ const Equipment = ({ setTab }) => {
   const [location, setLocation] = useState("");
   const [donor, setDonor] = useState("");
   const [donorOther, setDonorOther] = useState("");
-  const [remarks, setRemarks] = useState("");
+  const [remarkss, setRemarkss] = useState("");
   const [category, setCategory] = useState("");
   const [cost, setCost] = useState(0);
   const [accessories, setAccessories] = useState("");
@@ -71,6 +106,10 @@ const Equipment = ({ setTab }) => {
   const [getStatus, setGetStatus] = useState([]);
   const [getSupplier, setGetSupplier] = useState([]);
 
+  //
+  const [isIN, setIN] = useState(false);
+
+  //
   const fetchData = async () => {
     let responseArticle = await localApi.get("article");
     setGetArticle(responseArticle.data);
@@ -113,7 +152,7 @@ const Equipment = ({ setTab }) => {
     setUnit("");
     setLocation("");
     setDonor("");
-    setRemarks("");
+    setRemarkss("");
     setCost("");
     setExpiration("");
     setAccessories("");
@@ -144,46 +183,107 @@ const Equipment = ({ setTab }) => {
   const handleCreate = (e) => {
     e.preventDefault();
     setIsClick(true);
+    if (cost.length < 1 || cost == 0) {
+      toast({
+        title: `Cost cant be null`,
+        status: "error",
+        isClosable: true,
+      });
+      return;
+    }
     localApi
       .post("create", {
-        descOrig: descOrig,
-        article: article === "Other" ? articleOther : article,
-        type: type === "Other" ? typeOther : type,
-        status: itemStatus === "Other" ? itemStatusOther : itemStatus,
-        model: model,
-        variant: variant,
-        details: details,
-        other: other,
-        brand: brand,
-        manufacturer: manufacturer,
-        countries: origin,
-        serialNum: serialNum,
-        warranty: warranty,
-        acquisition: acquisition,
-        propertyNum: propertyNum,
-        unit: unit,
-        location: location,
-        acquisitionMode: acquiMode,
-        supplier: donor === "Other" ? donorOther : donor,
-        remarks: remarks,
-        expiration: expiration,
-        cost: cost,
-        category: category,
-        accessories: accessories,
+        isIN: isIN,
+        descOrig: descOrig || null,
+        article: article === "Other" ? articleOther : article || null,
+        type: type === "Other" ? typeOther : type || null,
+        status: itemStatus === "Other" ? itemStatusOther : itemStatus || null,
+        model: model || null,
+        variant: variant || null,
+        details: details || null,
+        other: other || null,
+        brand: brand || null,
+        manufacturer: manufacturer || null,
+        countries: origin || null,
+        serialNum: serialNum || null,
+        warranty: warranty || null,
+        acquisition: acquisition || null,
+        propertyNum: propertyNum || null,
+        unit: unit || null,
+        location: location || null,
+        acquisitionMode: acquiMode || null,
+        supplier: donor === "Other" ? donorOther : donor || null,
+        remarkss: remarkss || null,
+        expiration: expiration || null,
+        cost: cost || null,
+        category: category || null,
+        accessories: accessories || null,
       })
       .then(function (response) {
+        console.log(response);
         if (response.data.status === 1) {
-          setIsClick(false);
-          clearForm();
-          setAppState("Item Created");
-          setTimeout(() => setAppState(""), 500);
-          toast({
-            title: "Item Created",
-            description: "Added one (1) item to the database",
-            status: "success",
-            duration: 9000,
-            isClosable: true,
-          });
+          if (response.data.isIN === false) {
+            //clearForm();
+            setIsClick(false);
+            setAppState("Item Created");
+            setTimeout(() => setAppState(""), 500);
+            toast({
+              title: !response.data.isnew
+                ? "Item already exist"
+                : "Item Created",
+              description: !response.data.isnew
+                ? ""
+                : "Added one (1) item to the database",
+              status: "success",
+              duration: 9000,
+              isClosable: true,
+            });
+          } else {
+            postInventory(response.data["new item"]).then((e) => {
+              if (e.status == 500) {
+                console.log(e.status == 500);
+                toast({
+                  title: `please check your inputs`,
+                  status: "error",
+                  isClosable: true,
+                });
+              } else {
+                clearAll();
+                toast({
+                  title: `New inventory added`,
+                  status: "success",
+                  isClosable: true,
+                });
+                if (!selectedLoc) {
+                  toast({
+                    title: `New location created`,
+                    status: "success",
+                    isClosable: true,
+                  });
+                }
+                if (!selectedCond) {
+                  toast({
+                    title: `New Condition created`,
+                    status: "success",
+                    isClosable: true,
+                  });
+                }
+              }
+            });
+            setAppState("Item Created");
+            setTimeout(() => setAppState(""), 500);
+            toast({
+              title: response.data.isnew
+                ? "Item Created"
+                : "Item already exist",
+              description: response.data.isnew
+                ? "Added one (1) item to the database"
+                : "",
+              status: "success",
+              duration: 9000,
+              isClosable: true,
+            });
+          }
         }
       });
   };
@@ -536,11 +636,132 @@ const Equipment = ({ setTab }) => {
                   <FormControl>
                     <FormLabel>Remarks</FormLabel>
                     <Textarea
-                      value={remarks}
-                      onChange={(e) => setRemarks(e.target.value)}
+                      value={remarkss}
+                      onChange={(e) => setRemarkss(e.target.value)}
                     />
                   </FormControl>
                 </HStack>
+
+                <HStack
+                  display={"flex"}
+                  flexDirection={{ lg: "row", md: "column", sm: "column" }}
+                >
+                  <Divider border={4} />
+                  <Button
+                    padding={"0px 40px 0px 40px"}
+                    colorScheme="blue"
+                    onClick={() => {
+                      setIN(!isIN);
+                      clearAll();
+                    }}
+                  >
+                    {isIN ? "Cancel IN" : "Make IN"}
+                  </Button>
+                  <Divider border={4} />
+                </HStack>
+
+                {isIN && (
+                  <Box flex={8} alignSelf={"center"}>
+                    <Grid
+                      alignItems={"center"}
+                      templateColumns="repeat(6, 1fr)"
+                      gap={6}
+                      paddingEnd={5}
+                    >
+                      <GridItem colSpan={3} w="100%">
+                        <Box>
+                          <SearchSel
+                            name={"Locations"}
+                            data={locDatas}
+                            propertyName={"location_name"}
+                            fetchdat={fetchLoc}
+                            setSelect={setSelectedLoc}
+                            isSelect={selectedLoc}
+                            setValue={setLocValue}
+                            valueD={locValue}
+                          />
+                        </Box>
+                      </GridItem>
+
+                      <GridItem colSpan={3} w="100%">
+                        <Box>
+                          <SearchSel
+                            name={"Associate"}
+                            data={assocDatas}
+                            propertyName={"person_name"}
+                            fetchdat={fetchAssoc}
+                            setSelect={setSelectedAssoc}
+                            isSelect={selectedAssoc}
+                            setValue={setassocValue}
+                            valueD={assocValue}
+                          />
+                        </Box>
+                      </GridItem>
+                      <GridItem colSpan={3} w="100%">
+                        <Box>
+                          <SearchSel
+                            name={"Condition"}
+                            data={condDatas}
+                            propertyName={"conditions_name"}
+                            fetchdat={fetchcond}
+                            setSelect={setSelectedCond}
+                            isSelect={selectedCond}
+                            setValue={setConItem}
+                            valueD={condItem}
+                          />
+                        </Box>
+                      </GridItem>
+                      <GridItem colSpan={3}>
+                        <FormControl>
+                          <FormLabel>Delivery Date</FormLabel>
+                          <Input
+                            onChange={(e) => {
+                              setdeliveryD(e.target.value);
+                              //console.log(e.target.value);
+                            }}
+                            type="date"
+                          />
+                        </FormControl>
+                      </GridItem>
+                      <GridItem colSpan={3} w="100%">
+                        <FormControl>
+                          <FormLabel>Property No.</FormLabel>
+                          <Input
+                            onClick={() => {}}
+                            //value={ }
+                            onChange={(e) => {
+                              setpropertyno(e.target.value);
+                            }}
+                          />
+                        </FormControl>
+                      </GridItem>
+                      <GridItem colSpan={3} w="100%">
+                        <FormControl>
+                          <FormLabel>Serial</FormLabel>
+                          <Input
+                            onClick={() => {}}
+                            onChange={(e) => {
+                              setserial(e.target.value);
+                            }}
+                          />
+                        </FormControl>
+                      </GridItem>
+                      <GridItem colSpan={6} w="100%">
+                        <FormControl>
+                          <FormLabel>Remarks</FormLabel>
+                          <Input
+                            variant="flushed"
+                            onClick={() => {}}
+                            //value={ }
+                            onChange={(e) => {
+                              setRemarkss(e.target.value);
+                            }}
+                          />
+                        </FormControl>
+                      </GridItem>
+                    </Grid>
+                  </Box>
+                )}
 
                 <HStack
                   marginTop={5}
@@ -553,7 +774,7 @@ const Equipment = ({ setTab }) => {
                   <Button onClick={() => setTab("inItem")}>Cancel</Button>
                   <Button
                     color="#fff"
-                    isLoading={isClick ? true : false}
+                    // isLoading={isClick ? true : false}
                     colorScheme="teal"
                     loadingText="Creating Item"
                     type="submit"

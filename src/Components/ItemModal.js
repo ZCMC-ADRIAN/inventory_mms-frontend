@@ -335,7 +335,7 @@ const  ItemModal = ({ isOpen, onClose, details, header, child, item }) => {
                           return (
                             <Tr 
                             onClick={()=>{modal.onOpen(); setInventoryId(row.original.Pk_inventoryId)}}
-                            className="td" {...row.getRowProps()}>
+                            className="td" {...row.getRowProps()} whiteSpace='pre-line'>
                               {row.cells.map((cell) => {
                                 return (
                                   <Td {...cell.getCellProps()}>

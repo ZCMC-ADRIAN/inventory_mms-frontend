@@ -52,7 +52,7 @@ const DetailsModal = ({ isOpen, onClose, inventoryId }) => {
           return (
             <ModalContent key={key}>
               <ModalHeader>
-                <Badge colorScheme="blue">{data.desc}</Badge>
+                <Badge colorScheme="blue" whiteSpace='pre-line'>{data.desc}</Badge>
               </ModalHeader>
               <ModalCloseButton />
               <ModalBody p={10}>

@@ -1,6 +1,5 @@
 import { useTable, usePagination } from "react-table";
 import InventoryModal from "./InventoryModal";
-import DetailsModal from "./ItemModal";
 import { useClickOutside } from "./useClickOutside";
 import { HiSearch } from "react-icons/hi";
 import localApi from "../API/Api";
@@ -51,9 +50,11 @@ import {
 import { FaClipboardList } from "react-icons/fa";
 
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import ItemModal from "./ItemModal";
 
 const InventoryTable = ({ title, columns, child }) => {
+  const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const tryin = new useDisclosure();
   const [itemId, setItemId] = useState([]);
@@ -144,9 +145,6 @@ const InventoryTable = ({ title, columns, child }) => {
 
     setTimeoutId(
       setTimeout(() => {
-        // fetch data from database using the search term
-        // fetchdat(term);
-
         fetchlocation(term.target.value);
       }, 500)
     );
@@ -249,27 +247,20 @@ const InventoryTable = ({ title, columns, child }) => {
             >
               <CloseIcon fontSize={12} color="gray" />
             </Button>
-
-            {/* <GridItem colSpan={[6, 2]}>
-              <FormControl>
-                <FormLabel>Category</FormLabel>
-                <Select
-                  placeholder=" - Select Category -"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                >
-                  <option>Medical Equipment</option>
-                  <option>Janitotrial Equipment</option>
-                  <option>Office</option>
-                  <option>Furniture</option>
-                  <option>Other</option>
-                </Select>
-              </FormControl>
-            </GridItem> */}
-            
           </SimpleGrid>
+
           <Box>
             <Flex columnGap={3} justifyContent={"end"}>
+              <Button
+                mt={"75px"}
+                fontSize={13}
+                bg="green.200"
+                _hover={{ bg: "green.300", transition: "ease-in-out" }}
+                onClick={()=>navigate('/mass-print')}
+              >
+                Generate QR Code
+              </Button>
+
               {child !== null ? child : null}
               <Select
                 w={32}
@@ -293,6 +284,7 @@ const InventoryTable = ({ title, columns, child }) => {
           </Box>
         </Flex>
       </Box>
+
       <TableContainer w={"100%"}>
         <Table
           mt={5}

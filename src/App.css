@@ -178,13 +178,7 @@ div.select-dropdown p.no-data {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-left: 250px;
-}
-
-@media (width < 580px) {
-  .component-wrapper {
-    padding-left: 0px;
-  }
+  transition: ease-in-out 0.5s;
 }
 
 .h1-header {

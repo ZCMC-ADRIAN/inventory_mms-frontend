@@ -1,128 +1,244 @@
-.sidebar {
-  width: 250px;
-  height: 100vh;
-  background: rgb(255, 255, 255);
-  position: fixed;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 50px 10px;
-  overflow-y: auto;
+nav{
+	position:fixed;
+	display:flex;
+	flex-direction:column;
+	width:12.3%;
+	min-height: 100vh;
+	background: #71bfff;
+	padding: 50px 10px;
+	transition: transform 0.7s;
+	align-items: center;
+	z-index: 2;
 }
 
-.header {
-  border-bottom: 1px solid #dddddd;
-  height: auto;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding-bottom: 20px;
+.navbar{
+	transform: translateX(-100%);
 }
 
-.sidebar .avatar {
-  width: 75px;
-  height: 75px;
-  border-radius: 10px;
-  background: #eee;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-  border: 1px solid #e4e4e4;
-  margin-bottom: 20px;
+.nav-btn{
+	position: absolute;
+	transform: translateX(30px);
+	top: 20px;
+	right: 0;
+	width:30px;
+	height: 40px;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: #71bfff;
+	outline: none;
+	border: none;
+	font-size: 1rem;
+	padding: 5px 10px;
+	cursor: pointer;
+	color: #ffffff;
 }
 
-.sidebar h1 {
-  font-weight: 600;
-  color: #272727;
-  font-size: 18px;
+.logo{
+	display: block;
+	width: 100px;
+	margin: auto;
+	background:transparent;
 }
 
-.sidebar h2 {
-  font-size: 14px;
-  color: #808080;
+.logo img{
+	display: block;
+	width: 100%;
+	height: 100%;
 }
 
-.sidebar h2 span {
-  color: rgb(255, 75, 75);
-  font-weight: 500;
-  cursor: pointer;
+.nav-link{
+	display: flex;
+	align-items: center;
+	color: #000000;
+	text-decoration: none;
+	padding: 10px 1rem;
+	border-radius: 5px;
+	margin-bottom: 5px;
 }
 
-.sidebar h2 span:hover {
-  text-decoration: underline;
+.nav-link:hover{
+	background-color:#AFB4FF;
+	color: #4e4e4e;
+}
+
+.nav-link span{
+	margin-left: 10px;
+}
+
+.nav-top{
+	margin-top: 10rem;
+}
+
+.mobile-nav{
+	background: rgb(255, 255, 255);
+	width: 100%;
+	height:40px;
+	display: none;
+}
+
+.header{
+	border-bottom: 1px solid #dddddd;
+    height: auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 20px;
+}
+
+.avatar{
+	width: 75px;
+    height: 75px;
+    border-radius: 10px;
+    background: #eee;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    border: 1px solid #e4e4e4;
+    margin-bottom: 20px;
+}
+
+.name{
+	font-weight: 500;
+	color: #ffffff;
 }
 
 .navigation {
-  width: 100%;
-  background: #f3f7fa;
-
-  margin-top: 20px;
-  height: auto;
-  border-radius: 10px;
-  padding: 10px;
-}
-
-.navigation label {
-  font-size: 12px;
-  letter-spacing: 1px;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: #272727;
-}
-
-.navigation ul {
-  list-style: none;
-  margin-top: 10px;
-}
-
-.navigation ul li {
-  width: 100%;
-  font-weight: 400;
-  color: #696969;
-  height: 35px;
-  display: flex;
-  align-items: center;
-  padding: 0px 10px;
-  cursor: pointer;
-  position: relative;
-  font-size: 14px;
-  border-radius: 8px;
-}
-
-.navigation ul li p {
-  display: flex;
-  margin-right: 10px;
-  font-size: 18px;
-}
-
-.navigation ul li:hover {
-  background: rgb(232, 245, 255);
-  color: rgb(37, 131, 207);
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
-    rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
-  font-weight: 500;
-}
-
-.navigation ul li.active {
-  background: rgb(232, 245, 255);
-  color: rgb(37, 131, 207);
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
-    rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
-  font-weight: 500;
-}
-
-.navigation ul li.active::after {
-  content: "";
-  width: 2px;
-  height: 20px;
-  position: absolute;
-  right: 6px;
-  background: rgb(37, 131, 207);
-  border-radius: 100px;
-}
-
-@media (width < 580px) {
-  .sidebar {
-    display: none;
+    width: 100%;
+    background: #f3f7fa60;
+    height: auto;
+    border-radius: 10px;
+    padding: 10px;
+	margin-top: 20px;
   }
+  
+  .navigation label {
+    font-size: 12px;
+    letter-spacing: 1px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #ffffff;
+  }
+  
+  .navigation ul {
+    list-style: none;
+    margin-top: 10px;
+  }
+  
+  .navigation ul li {
+    width: 100%;
+    font-weight: 400;
+    color: #ffffff;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    padding: 0px 10px;
+    cursor: pointer;
+    position: relative;
+    font-size: 14px;
+    border-radius: 8px;
+  }
+  
+  .navigation ul li p {
+    display: flex;
+    margin-right: 10px;
+    font-size: 18px;
+  }
+  
+  .navigation ul li:hover {
+    background: rgb(232, 245, 255);
+    color: rgb(37, 131, 207);
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
+      rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+    font-weight: 500;
+  }
+  
+  .navigation ul li.active {
+    background: rgb(232, 245, 255);
+    color: rgb(37, 131, 207);
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
+      rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+    font-weight: 500;
+  }
+  
+  .navigation ul li.active::after {
+    content: "";
+    width: 2px;
+    height: 20px;
+    position: absolute;
+    right: 6px;
+    background: rgb(37, 131, 207);
+    border-radius: 100px;
+  }
+
+  .office-label{
+	color: #ffffff;
+  }
+
+  .logout{
+	color: rgb(141, 56, 56);
+	font-weight: 500;
+	cursor: pointer;
+  }
+
+.mobile-nav-btn{
+	color: #000000;
+	background: transparent;
+	outline: none;
+	border: none;
+	margin: 0 10px;
+}
+
+@media only screen and (max-width: 1629px){
+	nav{
+		width: 14%;
+	}
+}
+
+@media only screen and (max-width: 1500px){
+	nav{
+		width: 15%;
+	}
+}
+
+@media only screen and (max-width: 1350px){
+	nav{
+		width: 17%;
+	}
+}
+
+@media only screen and (max-width: 1100px){
+	nav{
+		width: 20%;
+	}
+}
+
+@media only screen and (max-width: 768px){
+	nav{
+		width: 40%;
+	}
+}
+
+@media only screen and (max-width: 680px){
+	.mobile-nav{
+		display: flex;
+		align-items: center;
+	}
+	nav{
+		width: 40%;
+		top: 38px;
+		min-height: calc(100vh - 38px);
+	}
+
+	.nav-btn{
+		display: none;
+	}
+
+	@media (width < 600px){
+		nav{
+			width: 60%;
+		}
+	}
 }

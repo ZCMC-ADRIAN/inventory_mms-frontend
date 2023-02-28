@@ -189,8 +189,30 @@ const Equipment = ({ setTab }) => {
     e && e.preventDefault();
     setIsClick(true);
     if (cost.length < 1 || cost == 0) {
+      onClose();
+      setIsClick(false);
       toast({
         title: `Cost cant be null`,
+        status: "error",
+        isClosable: true,
+      });
+      return;
+    }
+    if (!category) {
+      onClose();
+      setIsClick(false);
+      toast({
+        title: `Please Select Category`,
+        status: "error",
+        isClosable: true,
+      });
+      return;
+    }
+    if (!article) {
+      onClose();
+      setIsClick(false);
+      toast({
+        title: `Please Select Article`,
         status: "error",
         isClosable: true,
       });
@@ -621,24 +643,27 @@ const Equipment = ({ setTab }) => {
             isClick={isClick}
           ></VerticallyCenter>
 
-          <HStack
-            display={"flex"}
-            flexDirection={{ lg: "row", md: "column", sm: "column" }}
-          >
-            <Divider border={4} />
-            <Button
-              padding={"0px 40px 0px 40px"}
-              colorScheme="blue"
-              onClick={() => {
-                // setIN(!isIN);
-                // clearAll();
-                onOpen();
-              }}
+          <GridItem colSpan={6}>
+            <HStack
+              display={"flex"}
+              flexDirection={{ lg: "row", md: "column", sm: "column" }}
             >
-              {"Make IN"}
-            </Button>
-            <Divider border={4} />
-          </HStack>
+              <Divider border={4} />
+              <Button
+                padding={"0px 40px 0px 40px"}
+                colorScheme="blue"
+                onClick={() => {
+                  // setIN(!isIN);
+                  // clearAll();
+                  onOpen();
+                }}
+              >
+                {"Make IN"}
+              </Button>
+              <Divider border={4} />
+            </HStack>
+          </GridItem>
+
           {/*
           {isIN && (
             <Box flex={8} alignSelf={"center"}>

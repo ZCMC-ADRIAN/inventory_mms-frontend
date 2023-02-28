@@ -1,31 +1,42 @@
 import React, { useState, useEffect } from "react";
 import html2canvas from "html2canvas";
+import { QRCodeCanvas } from "qrcode.react";
 import { jsPDF } from "jspdf";
-import QRCode from "qrcode.react";
 import localApi from "../../API/Api";
-import { Button, SimpleGrid, GridItem } from "@chakra-ui/react";
+import "../QRCode.css";
+import {
+  Button,
+  SimpleGrid,
+  GridItem,
+} from "@chakra-ui/react";
 import Select from "react-select";
 
 const MassPrinting = () => {
   const [selectLoc, setSelectLoc] = useState("");
   const [location, setLocation] = useState([]);
+  const [id, setId] = useState([]);
 
   const fetchData = async () => {
     let responseLocation = await localApi.get("locations");
     setLocation(responseLocation.data);
+
+    let responseId = await localApi.get("qr", {
+      params: { location: selectLoc },
+    });
+    setId(responseId.data);
   };
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [selectLoc]);
 
   const download_pdf = () => {
-    html2canvas(document.getElementById("generate"), { scale: 2 }).then(
+    html2canvas(document.getElementById("generate"), { scale: 3 }).then(
       (canvas) => {
         const image = { type: "png", quality: 5 };
         const margin = [0.2, 0.2];
 
-        var imgWidth = 15.4;
+        var imgWidth = 10.3;
         var pageHeight = 10.7;
 
         var innerPageWidth = imgWidth - margin[0] * 2;
@@ -79,10 +90,43 @@ const MassPrinting = () => {
 
   return (
     <div>
-      <SimpleGrid columns={4} columnGap={3}>
-        <GridItem colSpan={2}>
+      <SimpleGrid columns={6} columnGap={3} p={10}>
+        <GridItem colSpan={1}>
+          <Select
+            class="select"
+            options={location.map((det) => {
+              return { value: det.location_name, label: det.location_name };
+            })}
+            onChange={(e) => setSelectLoc(e.label, e.value)}
+            placeholder="Select Location"
+          />
+        </GridItem>
+        <GridItem colSpan={1}>
+          <Button
+            bg="blue.200"
+            _hover={{ bg: "blue.300 " }}
+            onClick={download_pdf}
+          >
+            Generate
+          </Button>
         </GridItem>
       </SimpleGrid>
+
+      <div id="generate" className="qr-container">
+        {id.map((data) => {
+          return (
+            <div className="qr-code">
+              <QRCodeCanvas
+                id="qrCode"
+                value={data.Pk_inventoryId.toString()}
+                size={270}
+                bgColor={"#fff"}
+                level={"H"}
+              />
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

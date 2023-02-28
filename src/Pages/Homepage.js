@@ -5,6 +5,7 @@ import In from "../Components/In";
 import Sidebar from "../Components/Sidebar";
 import InventoryTable from "../Components/InventoryTable";
 import InTable from "../Components/InTable";
+import QRScanner from "../Components/QRScanner";
 
 const Homepage = () => {
   const [tab, setTab] = useState("inItem");
@@ -38,10 +39,6 @@ const Homepage = () => {
         accessor: "total_qty",
       },
       {
-        Header: "Location",
-        accessor: "location_name"
-      },
-      {
         Header: "Category",
         accessor: "itemCateg_name"
       },
@@ -64,6 +61,7 @@ const Homepage = () => {
             <InventoryTable title={title} fetch={fetch} columns={column} />
           )}
           {tab === "listIn" && <InTable />}
+          {tab === "scanner" && <QRScanner setTab={setTab}/>}
         </div>
       </div>
     </>

@@ -7,7 +7,6 @@ import {
   GridItem,
   Select,
   Grid,
-  GridItem,
   Button,
   useToast,
   InputLeftAddon,
@@ -16,7 +15,6 @@ import {
   Box,
   Divider,
   SimpleGrid,
-  Grid,
 } from "@chakra-ui/react";
 import useAuth from "../../Hooks/useAuth";
 import localApi from "../../API/Api";
@@ -43,6 +41,7 @@ const Equipment = ({ setTab }) => {
     selectedCond,
     setSelectedCond,
     fetchcond,
+    remarks,
     assocDatas,
     assocValue,
     setassocValue,

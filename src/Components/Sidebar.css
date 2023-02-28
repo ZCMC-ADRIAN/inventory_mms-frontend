@@ -43,6 +43,10 @@ nav{
 	background:transparent;
 }
 
+.sidebar-icon{
+	color: #2a87d3;
+}
+
 .logo img{
 	display: block;
 	width: 100%;
@@ -77,6 +81,8 @@ nav{
 	width: 100%;
 	height:40px;
 	display: none;
+	position: fixed;
+	z-index: 1;
 }
 
 .header{

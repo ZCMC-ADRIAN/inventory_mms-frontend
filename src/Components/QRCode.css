@@ -1,0 +1,10 @@
+.qr-container{
+    margin-left: 40px;
+    width: 60%;
+}
+
+.qr-code{
+    display: inline-flex;
+    margin-right: 30px;
+    margin-bottom: 30px;
+}

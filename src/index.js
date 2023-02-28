@@ -17,3 +17,7 @@ root.render(
     </DataProvider>
   </ChakraProvider>
 );
+
+// if (window.location.protocol !== 'https:') {
+//   window.location.href = 'https://' + window.location.hostname;
+// }

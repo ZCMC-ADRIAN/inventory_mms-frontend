@@ -1,21 +1,12 @@
-import React from "react";
+import React, {useRef} from "react";
 import { useNavigate } from "react-router-dom";
 import localApi from "../API/Api";
 import "./Sidebar.css";
 import Nouser from "../Assets/nouser.png";
 import useAuth from "../Hooks/useAuth";
 import { useClickOutside } from "./useClickOutside";
-import {
-  FaAngleRight,
-  FaAngleLeft,
-  FaBars,
-} from "react-icons/fa";
-import {
-  FcDocument,
-  FcRight,
-} from "react-icons/fc";
-
-const ICON_SIZE = 20;
+import { FaAngleRight, FaAngleLeft, FaBars } from "react-icons/fa";
+import { MdQrCodeScanner, MdInventory, MdOutlineLogin } from "react-icons/md";
 
 function Sidebar({ visible, show, tab, setTab }) {
   const navigate = useNavigate();
@@ -63,9 +54,12 @@ function Sidebar({ visible, show, tab, setTab }) {
             <img src={Nouser} alt="Avatar Profile" />
           </div>
           <h1 className="name">{user?.firstname + " " + user?.lastname}</h1>
-		  <h2 className="office-label">
-              MMS | <span className="logout" onClick={logout}>Logout</span>
-            </h2>
+          <h2 className="office-label">
+            MMS |{" "}
+            <span className="logout" onClick={logout}>
+              Logout
+            </span>
+          </h2>
         </div>
 
         <div className="navigation">
@@ -75,8 +69,8 @@ function Sidebar({ visible, show, tab, setTab }) {
               onClick={() => setTab("inItem")}
               className={tab === "inItem" || tab === "create" ? "active" : ""}
             >
-              <p>
-                <FcRight />
+              <p className="sidebar-icon">
+                <MdOutlineLogin />
               </p>
               <text>In Item</text>
             </li>
@@ -88,10 +82,22 @@ function Sidebar({ visible, show, tab, setTab }) {
               onClick={() => setTab("inventory")}
               className={tab === "inventory" ? "active" : ""}
             >
-              <p>
-                <FcDocument />
+              <p className="sidebar-icon">
+                <MdInventory />
               </p>
               <text>Inventory</text>
+            </li>
+          </ul>
+
+          <ul>
+            <li
+            onClick={() => {setTab("scanner")}}
+            className={tab === "scanner" ? "active" : ""}
+            >
+              <p className="sidebar-icon">
+                <MdQrCodeScanner />
+              </p>
+              <text>QR Scanner</text>
             </li>
           </ul>
         </div>

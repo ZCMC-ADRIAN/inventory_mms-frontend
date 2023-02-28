@@ -35,12 +35,18 @@ import SearchSel from "./searchableSelect/searchSel";
 import { EditIcon, CloseIcon } from "@chakra-ui/icons";
 import EditableDet from "./EditableDet";
 
-export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
+export const VerticallyCenter = ({
+  title,
+  children,
+  isOpen,
+  onClose,
+  isItemInserted,
+  post,
+  isClick,
+}) => {
   const {
     itemdetails,
     setdeliveryD,
-    setquantity,
-    setLoose,
     setRemarks,
     postInventory,
     locDatas,
@@ -64,26 +70,6 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
     fetchAssoc,
     setpropertyno,
     setserial,
-    varietyDatas,
-    varietyVal,
-    setVarietyVal,
-    selectedVariety,
-    setSelectedVariety,
-    fetchVar,
-    countryDatas,
-    countryValue,
-    setCountryValue,
-    selectedCountry,
-    setSelectedCountry,
-    fetchCountry,
-    details,
-    setdetails,
-    warranty,
-    setwarranty,
-    acquisition,
-    setacquisition,
-    expiration,
-    setexpiration,
   } = useContext(DataContext);
   const toast = useToast();
 
@@ -230,90 +216,139 @@ export const VerticallyCenter = ({ title, children, isOpen, onClose }) => {
                 </Grid>
               </Box>
 
-              <Divider orientation="vertical"></Divider>
-              <Box flex="6" overflowY={"auto"} paddingRight={2}>
-                <Stack gap={0} style={{ padding: "15px 15px" }}>
-                  <Heading
-                    color={"blackAlpha.600"}
-                    style={{ fontFamily: "poppins" }}
-                    fontWeight={"regular"}
-                    fontSize={"30"}
-                  >
-                    Items Description
-                  </Heading>
-                  <Box
-                    fontSize={15}
-                    color={"blackAlpha.600"}
-                    w={"100%"}
-                    h={"auto"}
-                  >
-                    <Divider orientation="horizontal" />
-                    <Flex flexDirection={"row"} gap={5}>
-                      <Text flex={1} fontWeight={"500"}>
-                        Item Image
-                      </Text>
-                      <Image
-                        boxSize="300px"
-                        objectFit="cover"
-                        src="https://cdn-icons-png.flaticon.com/128/1160/1160358.png"
-                        alt="Dan Abramov"
-                      ></Image>
-                    </Flex>
-                  </Box>
+              {!isItemInserted && (
+                <>
+                  <Divider orientation="vertical"></Divider>
+                  <Box flex="6" overflowY={"auto"} paddingRight={2}>
+                    <Stack gap={0} style={{ padding: "15px 15px" }}>
+                      <Heading
+                        color={"blackAlpha.600"}
+                        style={{ fontFamily: "poppins" }}
+                        fontWeight={"regular"}
+                        fontSize={"30"}
+                      >
+                        Items Description
+                      </Heading>
+                      <Box
+                        fontSize={15}
+                        color={"blackAlpha.600"}
+                        w={"100%"}
+                        h={"auto"}
+                      >
+                        <Divider orientation="horizontal" />
+                        <Flex flexDirection={"row"} gap={5}>
+                          <Text flex={1} fontWeight={"500"}>
+                            Item Image
+                          </Text>
+                          <Image
+                            boxSize="300px"
+                            objectFit="cover"
+                            src="https://cdn-icons-png.flaticon.com/128/1160/1160358.png"
+                            alt="Dan Abramov"
+                          ></Image>
+                        </Flex>
+                      </Box>
 
-                  {itemdetails != null &&
-                    Object.keys(itemdetails[0]).map((e, i) => (
-                      <CardDet
-                        key={i}
-                        bg={i % 2 == 0 && "#f3f7fa"}
-                        property={e}
-                        detail={itemdetails[0][e]}
-                      />
-                    ))}
-                </Stack>
-              </Box>
+                      {itemdetails != null &&
+                        Object.keys(itemdetails[0]).map((e, i) => (
+                          <CardDet
+                            key={i}
+                            bg={i % 2 == 0 && "#f3f7fa"}
+                            property={e}
+                            detail={itemdetails[0][e]}
+                          />
+                        ))}
+                    </Stack>
+                  </Box>
+                </>
+              )}
             </Flex>
           </ModalBody>
           <ModalFooter>
-            <Button
-              colorScheme={"teal"}
-              onClick={() => {
-                postInventory().then((e) => {
-                  if (e.status == 500) {
-                    console.log(e.status == 500);
-                    toast({
-                      title: `please check your inputs`,
-                      status: "error",
-                      isClosable: true,
-                    });
-                  } else {
-                    clearAll();
-                    onClose();
-                    toast({
-                      title: `New inventory added`,
-                      status: "success",
-                      isClosable: true,
-                    });
-                    if (!selectedLoc) {
+            {isItemInserted ? (
+              <Button
+                colorScheme={"blue"}
+                isLoading={isClick}
+                onClick={() => {
+                  console.log("aa");
+                  post();
+                  // postInventory().then((e) => {
+                  //   if (e.status == 500) {
+                  //     console.log(e.status == 500);
+                  //     toast({
+                  //       title: `please check your inputs`,
+                  //       status: "error",
+                  //       isClosable: true,
+                  //     });
+                  //   } else {
+                  //     clearAll();
+                  //     onClose();
+                  //     toast({
+                  //       title: `New inventory added`,
+                  //       status: "success",
+                  //       isClosable: true,
+                  //     });
+                  //     if (!selectedLoc) {
+                  //       toast({
+                  //         title: `New location created`,
+                  //         status: "success",
+                  //         isClosable: true,
+                  //       });
+                  //     }
+                  //     if (!selectedCond) {
+                  //       toast({
+                  //         title: `New Condition created`,
+                  //         status: "success",
+                  //         isClosable: true,
+                  //       });
+                  //     }
+                  //   }
+                  // });
+                }}
+              >
+                Create Item & IN
+              </Button>
+            ) : (
+              <Button
+                colorScheme={"teal"}
+                onClick={() => {
+                  postInventory().then((e) => {
+                    if (e.status == 500) {
+                      console.log(e.status == 500);
                       toast({
-                        title: `New location created`,
+                        title: `please check your inputs`,
+                        status: "error",
+                        isClosable: true,
+                      });
+                    } else {
+                      clearAll();
+                      onClose();
+                      toast({
+                        title: `New inventory added`,
                         status: "success",
                         isClosable: true,
                       });
+                      if (!selectedLoc) {
+                        toast({
+                          title: `New location created`,
+                          status: "success",
+                          isClosable: true,
+                        });
+                      }
+                      if (!selectedCond) {
+                        toast({
+                          title: `New Condition created`,
+                          status: "success",
+                          isClosable: true,
+                        });
+                      }
                     }
-                    if (!selectedCond) {
-                      toast({
-                        title: `New Condition created`,
-                        status: "success",
-                        isClosable: true,
-                      });
-                    }
-                  }
-                });
-              }}
-            >
-              Submit
-            </Button>
+                  });
+                }}
+              >
+                Submit
+              </Button>
+            )}
           </ModalFooter>
         </ModalContent>
       </Modal>

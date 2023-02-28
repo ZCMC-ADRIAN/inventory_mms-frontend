@@ -15,11 +15,14 @@ import {
   Box,
   Divider,
   SimpleGrid,
+  HStack,
+  useDisclosure,
 } from "@chakra-ui/react";
 import useAuth from "../../Hooks/useAuth";
 import localApi from "../../API/Api";
 import SearchSel from "../searchableSelect/searchSel";
 import DataContext from "../../Context/Context";
+import { VerticallyCenter } from "../inputModal";
 
 const Equipment = ({ setTab }) => {
   const {
@@ -28,6 +31,7 @@ const Equipment = ({ setTab }) => {
     setquantity,
     setLoose,
     setRemarks,
+    remarks,
     postInventory,
     locDatas,
     locValue,
@@ -41,7 +45,6 @@ const Equipment = ({ setTab }) => {
     selectedCond,
     setSelectedCond,
     fetchcond,
-    remarks,
     assocDatas,
     assocValue,
     setassocValue,
@@ -109,6 +112,7 @@ const Equipment = ({ setTab }) => {
 
   //
   const [isIN, setIN] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   //
   const fetchData = async () => {
@@ -182,9 +186,11 @@ const Equipment = ({ setTab }) => {
   }, [article, articleOther, type, typeOther, model, variant, details, other]);
 
   const handleCreate = (e) => {
-    e.preventDefault();
+    e && e.preventDefault();
     setIsClick(true);
     if (cost.length < 1 || cost == 0) {
+      onClose();
+      setIsClick(false);
       toast({
         title: `Cost cant be null`,
         status: "error",
@@ -192,9 +198,29 @@ const Equipment = ({ setTab }) => {
       });
       return;
     }
+    if (!category) {
+      onClose();
+      setIsClick(false);
+      toast({
+        title: `Please Select Category`,
+        status: "error",
+        isClosable: true,
+      });
+      return;
+    }
+    if (!article) {
+      onClose();
+      setIsClick(false);
+      toast({
+        title: `Please Select Article`,
+        status: "error",
+        isClosable: true,
+      });
+      return;
+    }
     localApi
       .post("create", {
-        isIN: isIN,
+        isIN: isOpen,
         descOrig: descOrig || null,
         article: article === "Other" ? articleOther : article || null,
         type: type === "Other" ? typeOther : type || null,
@@ -240,6 +266,7 @@ const Equipment = ({ setTab }) => {
               isClosable: true,
             });
           } else {
+            setIsClick(false);
             postInventory(response.data["new item"]).then((e) => {
               if (e.status == 500) {
                 console.log(e.status == 500);
@@ -606,6 +633,140 @@ const Equipment = ({ setTab }) => {
               />
             </FormControl>
           </GridItem>
+
+          <VerticallyCenter
+            isOpen={isOpen}
+            onOpen={onOpen}
+            onClose={onClose}
+            isItemInserted={true}
+            post={handleCreate}
+            isClick={isClick}
+          ></VerticallyCenter>
+
+          <GridItem colSpan={6}>
+            <HStack
+              display={"flex"}
+              flexDirection={{ lg: "row", md: "column", sm: "column" }}
+            >
+              <Divider border={4} />
+              <Button
+                padding={"0px 40px 0px 40px"}
+                colorScheme="blue"
+                onClick={() => {
+                  // setIN(!isIN);
+                  // clearAll();
+                  onOpen();
+                }}
+              >
+                {"Make IN"}
+              </Button>
+              <Divider border={4} />
+            </HStack>
+          </GridItem>
+
+          {/*
+          {isIN && (
+            <Box flex={8} alignSelf={"center"}>
+              <Grid
+                alignItems={"center"}
+                templateColumns="repeat(6, 1fr)"
+                gap={6}
+                paddingEnd={5}
+              >
+                <GridItem colSpan={3} w="100%">
+                  <Box>
+                    <SearchSel
+                      name={"Locations"}
+                      data={locDatas}
+                      propertyName={"location_name"}
+                      fetchdat={fetchLoc}
+                      setSelect={setSelectedLoc}
+                      isSelect={selectedLoc}
+                      setValue={setLocValue}
+                      valueD={locValue}
+                    />
+                  </Box>
+                </GridItem>
+
+                <GridItem colSpan={3} w="100%">
+                  <Box>
+                    <SearchSel
+                      name={"Associate"}
+                      data={assocDatas}
+                      propertyName={"person_name"}
+                      fetchdat={fetchAssoc}
+                      setSelect={setSelectedAssoc}
+                      isSelect={selectedAssoc}
+                      setValue={setassocValue}
+                      valueD={assocValue}
+                    />
+                  </Box>
+                </GridItem>
+                <GridItem colSpan={3} w="100%">
+                  <Box>
+                    <SearchSel
+                      name={"Condition"}
+                      data={condDatas}
+                      propertyName={"conditions_name"}
+                      fetchdat={fetchcond}
+                      setSelect={setSelectedCond}
+                      isSelect={selectedCond}
+                      setValue={setConItem}
+                      valueD={condItem}
+                    />
+                  </Box>
+                </GridItem>
+                <GridItem colSpan={3}>
+                  <FormControl>
+                    <FormLabel>Delivery Date</FormLabel>
+                    <Input
+                      onChange={(e) => {
+                        setdeliveryD(e.target.value);
+                        //console.log(e.target.value);
+                      }}
+                      type="date"
+                    />
+                  </FormControl>
+                </GridItem>
+                <GridItem colSpan={3} w="100%">
+                  <FormControl>
+                    <FormLabel>Property No.</FormLabel>
+                    <Input
+                      onClick={() => {}}
+                      //value={ }
+                      onChange={(e) => {
+                        setpropertyno(e.target.value);
+                      }}
+                    />
+                  </FormControl>
+                </GridItem>
+                <GridItem colSpan={3} w="100%">
+                  <FormControl>
+                    <FormLabel>Serial</FormLabel>
+                    <Input
+                      onClick={() => {}}
+                      onChange={(e) => {
+                        setserial(e.target.value);
+                      }}
+                    />
+                  </FormControl>
+                </GridItem>
+                <GridItem colSpan={6} w="100%">
+                  <FormControl>
+                    <FormLabel>Remarks</FormLabel>
+                    <Input
+                      variant="flushed"
+                      onClick={() => {}}
+                      //value={ }
+                      onChange={(e) => {
+                        setRemarkss(e.target.value);
+                      }}
+                    />
+                  </FormControl>
+                </GridItem>
+              </Grid>
+            </Box>
+          )} */}
 
           <GridItem
             display="flex"

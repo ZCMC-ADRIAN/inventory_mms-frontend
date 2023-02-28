@@ -36,7 +36,7 @@ const SearchSel = ({
   const ref = useClickOutside(() => {
     setVisible(false);
   });
-  const [isVisible, setVisible] = useState();
+  const [isVisible, setVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [timeoutId, setTimeoutId] = useState(null);
   const handleKeyDown = (ev, opt) => {
@@ -151,7 +151,7 @@ const SearchSel = ({
                   style={{ cursor: "pointer" }}
                   boxSize={2.5}
                   onClick={() => {
-                    console.log("details undedited")
+                    console.log("details undedited");
                     setModEdit(false);
                     setValue(null);
                   }}

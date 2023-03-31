@@ -1,0 +1,55 @@
+.report-table, .report-header th, .report-data td{
+    border: 1px solid black;
+    padding: 7px;
+    margin-left: 15px;
+}
+
+.report-header th{
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.report-data td{
+    font-size: 15px;
+}
+.location{
+    margin-left: 15px;
+    margin-bottom: 10px;
+    background-color: rgb(110, 202, 255);
+    width: 200px;
+    padding: 5px;
+    text-align: center;
+}
+
+.loc-text{
+    margin-bottom: 15px;
+}
+
+.tag-container{
+    width: 100%;
+}
+
+.tag{
+    margin-left: 40px;
+    padding: 15px;
+    border: 1px black solid;
+    width: 35%;
+    margin-bottom: 10px;
+}
+
+.tag-head{
+    text-align: center;
+    font-weight: 600;
+}
+
+.tag-content{
+    display: flex;
+    position: inherit;
+}
+
+.tag-image{
+    width: 140px;
+    height: 230px;
+    margin-top: 40px;
+    position: relative;
+}

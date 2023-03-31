@@ -3,6 +3,7 @@ import localApi from "../API/Api";
 import { HiSearch } from "react-icons/hi";
 import { useTable, usePagination } from "react-table";
 import DetailsModal from "./DetailsModal";
+import Details2Modal from "./Details2Modal";
 import { useClickOutside } from "./useClickOutside";
 import {
   Modal,
@@ -35,7 +36,7 @@ import {
   GridItem,
   Button,
   Box,
-  useDisclosure
+  useDisclosure,
 } from "@chakra-ui/react";
 import {
   ArrowRightIcon,
@@ -44,9 +45,13 @@ import {
   ChevronLeftIcon,
   CloseIcon,
 } from "@chakra-ui/icons";
+import { FaClipboardList } from "react-icons/fa";
+import { AiFillEdit } from "react-icons/ai";
+import { HiTrash } from "react-icons/hi";
 
-const  ItemModal = ({ isOpen, onClose, details, header, child, item }) => {
+const ItemModal = ({ isOpen, onClose, details, header, child, item }) => {
   const modal = new useDisclosure();
+  const edit = new useDisclosure();
   const [location, setLocation] = useState("");
   const [searchTerm, setSearchterm] = useState([]);
   const [term, setTerm] = useState("");
@@ -105,7 +110,11 @@ const  ItemModal = ({ isOpen, onClose, details, header, child, item }) => {
       {
         Header: "Assigned Person",
         accessor: "person_name",
-      }
+      },
+      {
+        Header: "ACTION",
+        accessor: "action",
+      },
     ],
     []
   );
@@ -333,14 +342,60 @@ const  ItemModal = ({ isOpen, onClose, details, header, child, item }) => {
                         page.map((row, i) => {
                           prepareRow(row);
                           return (
-                            <Tr 
-                            onClick={()=>{modal.onOpen(); setInventoryId(row.original.Pk_inventoryId)}}
-                            className="td" {...row.getRowProps()} whiteSpace='pre-line'>
+                            <Tr
+                              // onClick={() => {
+                              //   modal.onOpen();
+                              //   setInventoryId(row.original.Pk_inventoryId);
+                              // }}
+                              className="td"
+                              {...row.getRowProps()}
+                              whiteSpace="pre-line"
+                            >
                               {row.cells.map((cell) => {
                                 return (
                                   <Td {...cell.getCellProps()}>
                                     {cell.column.id === "action" ? (
                                       <Flex columnGap={1}>
+                                        <Button
+                                          _hover={{
+                                            bg: "#BEEFDA",
+                                            boxShadow: "lg",
+                                            transform: "scale(1.2,1.2)",
+                                            transition: "0.3s",
+                                          }}
+                                          onClick={()=>{
+                                            modal.onOpen();
+                                            setInventoryId(row.original.Pk_inventoryId)
+                                          }}
+                                        >
+                                          <FaClipboardList color="teal" />
+                                        </Button>
+
+                                        <Button
+                                          _hover={{
+                                            bg: "lightgray",
+                                            boxShadow: "lg",
+                                            transform: "scale(1.2,1.2)",
+                                            transition: "0.3s",
+                                          }}
+                                          onClick={()=>{
+                                            edit.onOpen();
+                                            setInventoryId(row.original.Pk_inventoryId)
+                                          }}
+                                        >
+                                          <AiFillEdit color="grey" />
+                                        </Button>
+
+                                        {/* <Button
+                                          _hover={{
+                                            bg: "#FCD299",
+                                            boxShadow: "lg",
+                                            transform: "scale(1.2,1.2)",
+                                            transition: "0.3s",
+                                          }}
+                                        >
+                                          <HiTrash color="darkorange" />
+                                        </Button> */}
                                       </Flex>
                                     ) : cell.column.id === "dept" ? (
                                       <Text
@@ -379,7 +434,13 @@ const  ItemModal = ({ isOpen, onClose, details, header, child, item }) => {
                   </Table>
                 </TableContainer>
 
-                <DetailsModal isOpen={modal.isOpen} onClose={modal.onClose} inventoryId={inventoryId}/>
+                <DetailsModal
+                  isOpen={modal.isOpen}
+                  onClose={modal.onClose}
+                  inventoryId={inventoryId}
+                />
+
+                <Details2Modal isOpen={edit.isOpen} onClose={edit.onClose}/>
 
                 {page.length >= 1 ? (
                   <Flex justifyContent={"end"} mt={5}>
@@ -454,4 +515,4 @@ const  ItemModal = ({ isOpen, onClose, details, header, child, item }) => {
   );
 };
 
-export default  ItemModal;
+export default ItemModal;

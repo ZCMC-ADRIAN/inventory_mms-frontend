@@ -13,6 +13,8 @@ import Homepage from "./Pages/Homepage";
 import BinCard from "./Pages/BinCard";
 import Inventory from "./Pages/Inventory";
 import PrivateRoutes from "./Authentication/Outlet";
+import Report from "./Components/Printable/Report";
+import PropertyTag from "./Components/Printable/PropertyTag";
 
 const App = () => {
   return (
@@ -25,8 +27,9 @@ const App = () => {
           <Route element={<PrivateRoutes />}>
             <Route path="/home" element={<Homepage />} />
             <Route path="/mass-print" element={<MassPrinting />} />
-            <Route path="bin-card" element={<BinCard />} />
+            <Route path="/report" element={<Report />} />
             <Route path="inventory" element={<Inventory />} />
+            <Route path="tag" element={<PropertyTag />} />
           </Route>
         </Routes>
       </Router>

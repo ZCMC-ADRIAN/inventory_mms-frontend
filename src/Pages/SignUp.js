@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import './Login.css'
+import "./Login.css";
+import inventory from "../Assets/inventory.png";
 import {
   Box,
   Button,
@@ -18,6 +19,8 @@ import {
   InputLeftElement,
   InputRightElement,
   useToast,
+  SimpleGrid,
+  GridItem,
 } from "@chakra-ui/react";
 import { BiUser, BiLockAlt } from "react-icons/bi";
 import { AiOutlineMail } from "react-icons/ai";
@@ -32,25 +35,22 @@ const SignUp = () => {
   const toast = useToast();
 
   function clearForm() {
-    setFname('');
-    setLname('');
-    setEmail('');
-    setPassword('');
+    setFname("");
+    setLname("");
+    setEmail("");
+    setPassword("");
   }
 
   const handleSubmit = (e) => {
     e.preventDefault();
     let cancel = true;
     const loadData = async () => {
-      const response = await localApi.post(
-        "signup",
-        {
-          fname: fname,
-          lname: lname,
-          email: email,
-          password: password,
-        }
-      );
+      const response = await localApi.post("signup", {
+        fname: fname,
+        lname: lname,
+        email: email,
+        password: password,
+      });
       if (cancel) {
         if (response.data.status === 1) {
           toast({
@@ -61,7 +61,7 @@ const SignUp = () => {
             isClosable: true,
           });
           clearForm();
-        } else if(response.data.status === 2){
+        } else if (response.data.status === 2) {
           toast({
             position: "top",
             title: "Account already exist!",
@@ -81,140 +81,132 @@ const SignUp = () => {
   return (
     <div className="login-container">
       <Container
-        maxW={600}
-        py={{ base: "4", md: "4" }}
-        px={{ base: "4", sm: "8" }}
+        maxW="5xl"
+        py={[2, 8, 12, 24]} px={{ base: "4", sm: "8" }}
       >
-        <Stack spacing="3">
+        <form onSubmit={handleSubmit}>
           <Box
-            py={{ base: "4", sm: "8" }}
-            px={{ base: "4", sm: "10" }}
             bg={useBreakpointValue({ base: "white", sm: "white" })}
             boxShadow={{ base: "none", sm: useColorModeValue("md", "md-dark") }}
-            borderRadius={{ base: "xl", sm: "xl" }}
           >
-            <Stack>
-              <Text
-                textAlign="center"
-                fontSize="3xl"
-                fontWeight="600"
-                color="green.600"
-              >
-                Sign Up
-              </Text>
-            </Stack>
-            <form onSubmit={handleSubmit}>
-              <Stack spacing="4" mt={6}>
-                <Stack spacing="4">
-                  <HStack
-                    display={"flex"}
-                    flexDirection={{ base: "column", sm: "row" }}
-                  >
-                    <FormControl>
-                      <FormLabel>First Name</FormLabel>
-                      <InputGroup size="md">
-                        <InputLeftElement
-                          pointerEvents="none"
-                          children={<BiUser color="#276749" />}
-                        />
-                        <Input
-                          type="text"
-                          placeholder="First Name"
-                          focusBorderColor="green.700"
-                          value={fname}
-                          onChange={(e) => setFname(e.target.value)}
-                          required
-                        />
-                      </InputGroup>
-                    </FormControl>
+            <SimpleGrid columns={4} display={["contents", "contents", "grid", "grid"]}>
+              <GridItem colSpan={2} bg="blue.100" p={5}>
+                <Text
+                  textAlign="center"
+                  mt={2}
+                  fontSize={[22,24,26,27]}
+                  fontWeight="bold"
+                  color="blue.400"
+                >
+                  Inventory Management System
+                </Text>
+                <img src={inventory} />
+              </GridItem>
 
-                    <FormControl pt={{ base: "3", sm: "0" }}>
-                      <FormLabel>Last Name</FormLabel>
-                      <InputGroup size="md">
-                        <InputLeftElement
-                          pointerEvents="none"
-                          children={<BiUser color="#276749" />}
-                        />
-                        <Input
-                          type="text"
-                          placeholder="Last Name"
-                          focusBorderColor="green.700"
-                          value={lname}
-                          onChange={(e) => setLname(e.target.value)}
-                          required
-                        />
-                      </InputGroup>
-                    </FormControl>
-                  </HStack>
+              <GridItem colSpan={2} p={[4, 5, 8, 12]} mt={[1, 5, 7, 10]}>
+                <FormControl>
+                  <FormLabel display={["none", "grid", "grid", "grid"]}>First Name</FormLabel>
+                  <InputGroup size="md">
+                    <InputLeftElement
+                      pointerEvents="none"
+                      children={<BiUser color="#4299E1" />}
+                    />
+                    <Input
+                      type="text"
+                      placeholder="First Name"
+                      focusBorderColor="blue.200"
+                      value={fname}
+                      onChange={(e) => setFname(e.target.value)}
+                      required
+                    />
+                  </InputGroup>
+                </FormControl>
 
-                  <FormControl>
-                    <FormLabel>Email</FormLabel>
-                    <InputGroup size="md">
-                      <InputLeftElement
-                        pointerEvents="none"
-                        children={<AiOutlineMail color="#276749" />}
-                      />
-                      <Input
-                        type="email"
-                        placeholder="Email"
-                        focusBorderColor="green.700"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                      />
-                    </InputGroup>
-                  </FormControl>
+                <FormControl mt={5}>
+                  <FormLabel display={["none", "grid", "grid", "grid"]}>Last Name</FormLabel>
+                  <InputGroup size="md">
+                    <InputLeftElement
+                      pointerEvents="none"
+                      children={<BiUser color="#4299E1" />}
+                    />
+                    <Input
+                      type="text"
+                      placeholder="Last Name"
+                      focusBorderColor="blue.200"
+                      value={lname}
+                      onChange={(e) => setLname(e.target.value)}
+                      required
+                    />
+                  </InputGroup>
+                </FormControl>
 
-                  <FormControl>
-                    <FormLabel>Password</FormLabel>
-                    <InputGroup size="md">
-                      <InputLeftElement
-                        pointerEvents="none"
-                        children={<BiLockAlt color="#276749" />}
-                      />
-                      <Input
-                        pr="4.5rem"
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Password"
-                        focusBorderColor="green.700"
-                        fontSize="15px"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                      />
-                      <InputRightElement>
-                        <Button
-                          color="gray.500"
-                          variant={"ghost"}
-                          onClick={() =>
-                            setShowPassword((showPassword) => !showPassword)
-                          }
-                        >
-                          {showPassword ? <ViewIcon /> : <ViewOffIcon />}
-                        </Button>
-                      </InputRightElement>
-                    </InputGroup>
-                  </FormControl>
-                </Stack>
+                <FormControl mt={5}>
+                  <FormLabel display={["none", "grid", "grid", "grid"]}>Email</FormLabel>
+                  <InputGroup size="md">
+                    <InputLeftElement
+                      pointerEvents="none"
+                      children={<AiOutlineMail color="#4299E1" />}
+                    />
+                    <Input
+                      type="email"
+                      placeholder="Email"
+                      focusBorderColor="blue.200"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
+                  </InputGroup>
+                </FormControl>
+
+                <FormControl mt={5}>
+                  <FormLabel display={["none", "grid", "grid", "grid"]}>Password</FormLabel>
+                  <InputGroup size="md">
+                    <InputLeftElement
+                      pointerEvents="none"
+                      children={<BiLockAlt color="#4299E1" />}
+                    />
+                    <Input
+                      pr="4.5rem"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Password"
+                      focusBorderColor="blue.200"
+                      fontSize="15px"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                    <InputRightElement>
+                      <Button
+                        color="gray.500"
+                        variant={"ghost"}
+                        onClick={() =>
+                          setShowPassword((showPassword) => !showPassword)
+                        }
+                      >
+                        {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                      </Button>
+                    </InputRightElement>
+                  </InputGroup>
+                </FormControl>
 
                 <Center>
-                  <Button mt={6} colorScheme="green" width="50%" type="submit">
+                  <Button mt={10} colorScheme="blue" width="50%" type="submit">
                     Sign Up
                   </Button>
                 </Center>
 
-                <Stack>
-                  <Text align={"center"} mt={6} fontSize="sm">
+                <Center>
+                  <Text align={"center"} mt={10} fontSize="sm">
                     Already a user?{" "}
-                    <Link color={"green.600"} href="/">
+                    <Link color={"blue.400"} fontWeight="medium" href="/">
                       Sign In
                     </Link>
                   </Text>
-                </Stack>
-              </Stack>
-            </form>
+                </Center>
+              </GridItem>
+            </SimpleGrid>
           </Box>
-        </Stack>
+        </form>
       </Container>
     </div>
   );

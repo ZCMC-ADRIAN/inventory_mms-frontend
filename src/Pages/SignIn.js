@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
+import inventory from "../Assets/inventory.png";
 import {
   Box,
   Button,
@@ -18,6 +19,8 @@ import {
   InputLeftElement,
   InputRightElement,
   useToast,
+  SimpleGrid,
+  GridItem,
 } from "@chakra-ui/react";
 import { BiLockAlt } from "react-icons/bi";
 import { AiOutlineMail } from "react-icons/ai";
@@ -41,7 +44,7 @@ const SignIn = () => {
       .then(function (response) {
         if (response.data.status === 2) {
           sessionStorage.setItem("Authorization", response.data.token);
-          window.location.replace('/home');
+          window.location.replace("/home");
         } else if (response.data.status === 1) {
           toast({
             position: "top",
@@ -50,8 +53,7 @@ const SignIn = () => {
             duration: 2000,
             isClosable: true,
           });
-        }
-        else {
+        } else {
           toast({
             position: "top",
             title: "Email does not exist",
@@ -65,101 +67,108 @@ const SignIn = () => {
 
   return (
     <div className="login-container">
-      <Container
-        maxW="lg"
-        py={{ base: "12", md: "24" }}
-        px={{ base: "4", sm: "8" }}
-      >
-        <Stack spacing="8">
+      <Container maxW="5xl" py={[2, 8, 12, 24]} px={{ base: "4", sm: "8" }}>
+        <form onSubmit={handleSubmit}>
           <Box
-            py={{ base: "4", sm: "8" }}
-            px={{ base: "4", sm: "10" }}
             bg={useBreakpointValue({ base: "white", sm: "white" })}
             boxShadow={{ base: "none", sm: useColorModeValue("md", "md-dark") }}
-            borderRadius={{ base: "xl", sm: "xl" }}
           >
-            <Stack>
-              <Text
-                textAlign="center"
-                fontSize="3xl"
-                fontWeight="600"
-                color="green.600"
-              >
-                Sign In
-              </Text>
-            </Stack>
+            <SimpleGrid
+              columns={4}
+              display={["contents", "contents", "grid", "grid"]}
+            >
+              <GridItem colSpan={2} bg="blue.100" p={5}>
+                <Text
+                  textAlign="center"
+                  mt={2}
+                  fontSize={[20,24,26,27]}
+                  fontWeight="bold"
+                  color="blue.400"
+                >
+                  Inventory Management System
+                </Text>
+                <img src={inventory} />
+              </GridItem>
 
-            <form onSubmit={handleSubmit}>
-              <Stack spacing="4" mt={5}>
-                <Stack spacing="4">
-                  <FormControl>
-                    <FormLabel htmlFor="email">Email</FormLabel>
-                    <InputGroup size="md">
-                      <InputLeftElement
-                        pointerEvents="none"
-                        children={<AiOutlineMail color="#276749" />}
-                      />
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        focusBorderColor="green.700"
-                        required
-                      />
-                    </InputGroup>
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel htmlFor="password">Password</FormLabel>
-                    <InputGroup size="md">
-                      <InputLeftElement
-                        pointerEvents="none"
-                        children={<BiLockAlt color="#276749" />}
-                      />
-                      <Input
-                        pr="4.5rem"
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Password"
-                        focusBorderColor="green.700"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        fontSize="15px"
-                        required
-                      />
-                      <InputRightElement>
-                        <Button
-                          color="gray.500"
-                          variant={"ghost"}
-                          onClick={() =>
-                            setShowPassword((showPassword) => !showPassword)
-                          }
-                        >
-                          {showPassword ? <ViewIcon /> : <ViewOffIcon />}
-                        </Button>
-                      </InputRightElement>
-                    </InputGroup>
-                  </FormControl>
-                </Stack>
+              <GridItem colSpan={2} p={[4, 5, 8, 12]} mt={[1, 5, 7, 10]}>
+                <FormControl>
+                  <FormLabel
+                    htmlFor="email"
+                    display={["none", "grid", "grid", "grid"]}
+                  >
+                    Email
+                  </FormLabel>
+                  <InputGroup size="md">
+                    <InputLeftElement
+                      pointerEvents="none"
+                      children={<AiOutlineMail color="#4299E1" />}
+                    />
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="Email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      focusBorderColor="blue.200"
+                      required
+                    />
+                  </InputGroup>
+                </FormControl>
+
+                <FormControl mt={[5, 5, 7, 8]}>
+                  <FormLabel
+                    htmlFor="password"
+                    display={["none", "grid", "grid", "grid"]}
+                  >
+                    Password
+                  </FormLabel>
+                  <InputGroup size="md">
+                    <InputLeftElement
+                      pointerEvents="none"
+                      children={<BiLockAlt color="#4299E1" />}
+                    />
+                    <Input
+                      pr="4.5rem"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Password"
+                      focusBorderColor="blue.200"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      fontSize="15px"
+                      required
+                    />
+                    <InputRightElement>
+                      <Button
+                        color="gray.500"
+                        variant={"ghost"}
+                        onClick={() =>
+                          setShowPassword((showPassword) => !showPassword)
+                        }
+                      >
+                        {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                      </Button>
+                    </InputRightElement>
+                  </InputGroup>
+                </FormControl>
 
                 <Center>
-                  <Button mt={6} colorScheme="green" width="50%" type="submit">
+                  <Button mt={10} colorScheme="blue" width="50%" type="submit">
                     Sign in
                   </Button>
                 </Center>
 
-                <Stack>
-                  <Text align={"center"} mt={6} fontSize="sm">
+                <Center>
+                  <Text align={"center"} mt={10} fontSize="sm">
                     Not registered yet?{" "}
-                    <Link color={"green.600"} href="/signup">
+                    <Link color={"blue.400"} fontWeight="medium" href="/signup">
                       Sign Up
                     </Link>
                   </Text>
-                </Stack>
-              </Stack>
-            </form>
+                </Center>
+              </GridItem>
+            </SimpleGrid>
           </Box>
-        </Stack>
+        </form>
       </Container>
     </div>
   );

@@ -258,6 +258,8 @@ export const Context = ({ children }) => {
         quantity,
         loose,
         remarks,
+        propertyno,
+        serial,
         //setters
 
         setCondDatas,

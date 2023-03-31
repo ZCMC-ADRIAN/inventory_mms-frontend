@@ -250,7 +250,7 @@ const Equipment = ({ setTab }) => {
         console.log(response);
         if (response.data.status === 1) {
           if (response.data.isIN === false) {
-            //clearForm();
+            // clearForm();
             setIsClick(false);
             setAppState("Item Created");
             setTimeout(() => setAppState(""), 500);
@@ -344,6 +344,7 @@ const Equipment = ({ setTab }) => {
                 <option>Medical Equipment</option>
                 <option>Janitorial Equipment</option>
                 <option>Office Equipment</option>
+                <option>IT</option>
                 <option>Furniture</option>
                 <option>Other</option>
               </Select>

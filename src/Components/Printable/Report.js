@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
-import html2canvas from "html2canvas";
-import { QRCodeCanvas } from "qrcode.react";
 import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
+import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
 import localApi from "../../API/Api";
-import "../QRCode.css";
 import { Button, SimpleGrid, GridItem } from "@chakra-ui/react";
+import "./Report.css";
 import Select from "react-select";
-import zcmc_logo from '../../Assets/zcmc_logo.png';
 
-const MassPrinting = () => {
+const Report = () => {
   const [selectLoc, setSelectLoc] = useState("");
   const [location, setLocation] = useState([]);
   const [data, setData] = useState([]);
@@ -17,7 +16,7 @@ const MassPrinting = () => {
     let responseLocation = await localApi.get("locations");
     setLocation(responseLocation.data);
 
-    let responseId = await localApi.get("qr", {
+    let responseId = await localApi.get("report", {
       params: { location: selectLoc },
     });
     setData(responseId.data);
@@ -33,8 +32,8 @@ const MassPrinting = () => {
         const image = { type: "png", quality: 5 };
         const margin = [0.2, 0.2];
 
-        var imgWidth = 10.3;
-        var pageHeight = 10.7;
+        var imgWidth = 12.5;
+        var pageHeight = 7.5;
 
         var innerPageWidth = imgWidth - margin[0] * 2;
         var innerPageHeight = pageHeight - margin[1] * 2;
@@ -53,7 +52,7 @@ const MassPrinting = () => {
         pageCanvas.height = pxPageHeight;
 
         // Initialize the PDF.
-        var pdf = new jsPDF("portrait", "in", "a4");
+        var pdf = new jsPDF("landscape", "in", "a4");
 
         for (var page = 0; page < nPages; page++) {
           // Display the page.
@@ -109,23 +108,55 @@ const MassPrinting = () => {
         </GridItem>
       </SimpleGrid>
 
-      <div id="generate" className="qr-container">
-        {data.map((data) => {
-          return (
-            <div className="qr-code">
-              <QRCodeCanvas
-                id="qrCode"
-                value={`Equipment: ${data.desc.toString()}\n\nProperty No: ${data.property_no != null ? data.property_no.toString() : 'None'}\n\nSerial No: ${data.serial != null ? data.serial.toString() : 'None'}\n\nClassification: ${data.itemCateg_name != null ? data.itemCateg_name.toString() : 'None'}\n\nDate Acquired: ${data.Delivery_date != null ? data.Delivery_date.toString() : 'None'}\n\nSection Assigned: ${data.location_name != null ? data.location_name.toString() : 'None'}`}
-                size={270}
-                bgColor={"#fff"}
-                level={"L"}
-              />
-            </div>
-          );
-        })}
+      <div id='generate'>
+        <div className="location">
+          <p className="loc-text">{selectLoc}</p>
+        </div>
+        <table className="report-table">
+          <tr className="report-header">
+            <th>No</th>
+            <th>Article</th>
+            <th>Description</th>
+            <th>Property No</th>
+            <th>Qty</th>
+            <th>Unit</th>
+            <th>Unit Value</th>
+            <th>Total Value</th>
+            <th>Date Acquired</th>
+            <th>Location</th>
+            <th>Person Responsible</th>
+            <th>Date Repaired</th>
+            <th>Date Returned</th>
+            <th>REMARKS</th>
+          </tr>
+
+          {data.map((item, index) => {
+            const num = index + 1;
+            return (
+              <tr className="report-data">
+                <td>{num}</td>
+                <td>{item.article}</td>
+                <td style={{width : '220px'}}>{item.desc}</td>
+                {item.property.map((det) => {
+                  return <td style={{width: '200px'}}>{det.property_no}</td>;
+                })}
+                <td>{item.qty}</td>
+                <td>{item.unit}</td>
+                <td>{item.cost}</td>
+                <td>{item.total}</td>
+                <td>{item.Delivery_date}</td>
+                <td>{item.location}</td>
+                <td>{item.person}</td>
+                <td></td>
+                <td></td>
+                <td>{item.remarks}</td>
+              </tr>
+            );
+          })}
+        </table>
       </div>
     </div>
   );
 };
 
-export default MassPrinting;
+export default Report;

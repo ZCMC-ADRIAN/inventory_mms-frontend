@@ -36,6 +36,11 @@
   background-blend-mode: normal, color-burn;
 }
 
+.swal2-container {
+  z-index: 20000 !important;
+}
+
+
 .bin-card {
   background: #1cb45d;
   border-radius: 100px;

@@ -76,10 +76,10 @@ const In = ({ setTab, users }) => {
         Header: "Brand",
         accessor: "brand_name",
       },
-      {
-        Header: "manufacturer",
-        accessor: "manu_name",
-      },
+      // {
+      //   Header: "manufacturer",
+      //   accessor: "manu_name",
+      // },
       {
         Header: "Type",
         accessor: "type_name",
@@ -89,14 +89,18 @@ const In = ({ setTab, users }) => {
         accessor: "article name",
       },
       { Header: "Variety", accessor: "variety" },
-      { Header: "Country/origin", accessor: "country" },
+      // { Header: "Country/origin", accessor: "country" },
       { Header: "Detail", accessor: "details2" },
       { Header: "Warranty", accessor: "warranty" },
       { Header: "Acquisition Date", accessor: "acquisition_date" },
-      { Header: "Expiration", accessor: "expiration" },
+      // { Header: "Expiration", accessor: "expiration" },
       {
         Header: "Remarks",
         accessor: "remarks",
+      },
+      {
+        Header: "ACTION",
+        accessor: "action",
       },
     ],
     []

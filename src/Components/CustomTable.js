@@ -1,5 +1,4 @@
 import { useTable, usePagination } from "react-table";
-import { IoAddCircleOutline } from "react-icons/io5";
 import {
   Table,
   Thead,
@@ -13,15 +12,10 @@ import {
   Tooltip,
   Select,
   Box,
-  Center,
   Button,
   TableContainer,
   Heading,
   useDisclosure,
-  SimpleGrid,
-  GridItem,
-  FormControl,
-  FormLabel,
 } from "@chakra-ui/react";
 
 import "./Table.css";
@@ -32,54 +26,15 @@ import {
   ChevronRightIcon,
   ChevronLeftIcon,
 } from "@chakra-ui/icons";
-import { BsFillCloudDownloadFill } from "react-icons/bs";
+import { FaClipboardList } from "react-icons/fa";
 
 import { AiOutlineFolderView, AiFillEdit } from "react-icons/ai";
 import { HiTrash } from "react-icons/hi";
 
-import moment from "moment/moment";
 import { Children, useContext, useEffect, useState } from "react";
-import VerificationModal from "./VerificationModal";
 import { VerticallyCenter } from "./inputModal";
-import SearchSel from "./searchableSelect/searchSel";
+import EditModal from "./EditModal";
 import DataContext from "../Context/Context";
-
-const ActionsBtn = () => {
-  return (
-    <Flex columnGap={1}>
-      <Button
-        _hover={{
-          bg: "#BEEFDA",
-          boxShadow: "lg",
-          transform: "scale(1.2,1.2)",
-          transition: "0.3s",
-        }}
-      >
-        <AiOutlineFolderView color="teal" />
-      </Button>
-      <Button
-        _hover={{
-          bg: "lightgray",
-          boxShadow: "lg",
-          transform: "scale(1.2,1.2)",
-          transition: "0.3s",
-        }}
-      >
-        <AiFillEdit color="grey" />
-      </Button>
-      <Button
-        _hover={{
-          bg: "#FCD299",
-          boxShadow: "lg",
-          transform: "scale(1.2,1.2)",
-          transition: "0.3s",
-        }}
-      >
-        <HiTrash color="darkorange" />
-      </Button>
-    </Flex>
-  );
-};
 
 const CustomTable = ({ title, columns, data, child, children }) => {
   const { fetchItem } = useContext(DataContext);
@@ -108,7 +63,9 @@ const CustomTable = ({ title, columns, data, child, children }) => {
   );
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const editModal = new useDisclosure();
   const [id, setid] = useState(null);
+  const [itemId, setItemId] = useState([]);
 
   const CustomBtnTheme = {
     backgroundColor: "#9AE6B4",
@@ -124,7 +81,14 @@ const CustomTable = ({ title, columns, data, child, children }) => {
         onOpen={onOpen}
         onClose={onClose}
         id={id}
-      ></VerticallyCenter>
+      />
+
+      <EditModal
+        isOpen={editModal.isOpen}
+        onOpen={editModal.onOpen}
+        onClose={editModal.onClose}
+        itemId={itemId}
+      />
       <Box w={"100%"}>
         <Flex flexDirection={["column", "column", "row", "row"]}>
           <Box w={"100%"}>
@@ -193,18 +157,61 @@ const CustomTable = ({ title, columns, data, child, children }) => {
               page.map((row, i) => {
                 prepareRow(row);
                 return (
-                  <Tr
-                    onClick={() => {
-                      onOpen();
-                      // console.log(fetchItem(row.original.Pk_itemId));
-                      fetchItem(row.original.Pk_itemId);
-                    }}
-                    className="td"
-                    {...row.getRowProps()}
-                  >
+                  <Tr className="td" {...row.getRowProps()}>
                     {row.cells.map((cell) => {
                       return (
-                        <Td {...cell.getCellProps()}>{cell.render("Cell")}</Td>
+                        <Td {...cell.getCellProps()} whiteSpace="pre-line">
+                          {cell.column.id === "action" ? (
+                            <Flex columnGap={2}>
+                              <Button
+                                _hover={{
+                                  bg: "#BEEFDA",
+                                  boxShadow: "lg",
+                                  transform: "scale(1.2,1.2)",
+                                  transition: "0.3s",
+                                }}
+                                onClick={() => {
+                                  onOpen();
+                                  fetchItem(row.original.Pk_itemId);
+                                }}
+                              >
+                                <FaClipboardList color="teal" />
+                              </Button>
+
+                              <Button
+                                _hover={{
+                                  bg: "lightgray",
+                                  boxShadow: "lg",
+                                  transform: "scale(1.2,1.2)",
+                                  transition: "0.3s",
+                                }}
+                                onClick={() => {
+                                  editModal.onOpen(row.original.Pk_itemId);
+                                  setItemId(row.original.Pk_itemId)
+                                }}
+                              >
+                                <AiFillEdit color="grey" />
+                              </Button>
+
+                              {/* <Button
+                                _hover={{
+                                  bg: "#FCD299",
+                                  boxShadow: "lg",
+                                  transform: "scale(1.2,1.2)",
+                                  transition: "0.3s",
+                                }}
+                              >
+                                <HiTrash color="darkorange" />
+                              </Button> */}
+                            </Flex>
+                          ) : cell.column.Header === "No" ? (
+                            <Text fontWeight={"bold"} color={"green.600"}>
+                              {pageIndex * 10 + ++i}
+                            </Text>
+                          ) : (
+                            cell.render("Cell")
+                          )}
+                        </Td>
                       );
                     })}
                   </Tr>

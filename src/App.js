@@ -10,11 +10,12 @@ import SignUp from "./Pages/SignUp";
 import SignIn from "./Pages/SignIn";
 import MassPrinting from "./Components/Printable/MassPrinting";
 import Homepage from "./Pages/Homepage";
-import BinCard from "./Pages/BinCard";
 import Inventory from "./Pages/Inventory";
 import PrivateRoutes from "./Authentication/Outlet";
-import Report from "./Components/Printable/Report";
+import ReportArea from "./Components/Printable/ReportArea";
+import MyDocument from "./Components/Printable/Sample";
 import PropertyTag from "./Components/Printable/PropertyTag";
+import ReportPerson from "./Components/Printable/ReportPerson";
 
 const App = () => {
   return (
@@ -27,7 +28,9 @@ const App = () => {
           <Route element={<PrivateRoutes />}>
             <Route path="/home" element={<Homepage />} />
             <Route path="/mass-print" element={<MassPrinting />} />
-            <Route path="/report" element={<Report />} />
+            <Route path="/report/area" element={<ReportArea />} />
+            <Route path="/report/person" element={<ReportPerson />} />
+            <Route path="/sample" element={<MyDocument />} />
             <Route path="inventory" element={<Inventory />} />
             <Route path="tag" element={<PropertyTag />} />
           </Route>

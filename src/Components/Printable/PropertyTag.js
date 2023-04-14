@@ -71,7 +71,6 @@ const PropertyTag = () => {
 
           // Add the page to the PDF.
           if (page > 0) pdf.addPage();
-          debugger;
           var imgData = pageCanvas.toDataURL(
             "image/base64" + image.type,
             image.quality
@@ -87,6 +86,7 @@ const PropertyTag = () => {
         }
 
         window.open(pdf.output("bloburl"));
+        // pdf.save();
       }
     );
   };

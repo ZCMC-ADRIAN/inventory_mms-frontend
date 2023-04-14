@@ -6,7 +6,7 @@ import Nouser from "../Assets/nouser.png";
 import useAuth from "../Hooks/useAuth";
 import { useClickOutside } from "./useClickOutside";
 import { FaAngleRight, FaAngleLeft, FaBars } from "react-icons/fa";
-import { MdQrCodeScanner, MdInventory, MdOutlineLogin } from "react-icons/md";
+import { MdQrCodeScanner, MdInventory, MdOutlineLogin, MdArticle } from "react-icons/md";
 
 function Sidebar({ visible, show, tab, setTab }) {
   const navigate = useNavigate();
@@ -89,7 +89,7 @@ function Sidebar({ visible, show, tab, setTab }) {
             </li>
           </ul>
 
-          <ul>
+          <ul style={{ marginBottom: "40px" }}>
             <li
             onClick={() => {setTab("scanner")}}
             className={tab === "scanner" ? "active" : ""}
@@ -98,6 +98,19 @@ function Sidebar({ visible, show, tab, setTab }) {
                 <MdQrCodeScanner />
               </p>
               <text>QR Scanner</text>
+            </li>
+          </ul>
+
+          <label>Generate</label>
+          <ul>
+            <li
+              onClick={() => setTab("report")}
+              className={tab === "report" ? "active" : ""}
+            >
+              <p className="sidebar-icon">
+                <MdArticle />
+              </p>
+              <text>Report</text>
             </li>
           </ul>
         </div>

@@ -1,28 +1,41 @@
 .report-table, .report-header th, .report-data td{
-    border: 1px solid black;
+    border: none;
     padding: 7px;
     margin-left: 15px;
+}
+
+.report-table{
+    margin-left: 40px;
 }
 
 .report-header th{
     font-weight: 600;
     font-size: 15px;
+    padding: 14px;
+    background-color: #91C788;
+    color: #fff;
 }
 
 .report-data td{
     font-size: 15px;
-}
-.location{
-    margin-left: 15px;
-    margin-bottom: 10px;
-    background-color: rgb(110, 202, 255);
-    width: 200px;
-    padding: 5px;
     text-align: center;
+}
+.report-data:nth-child(even){
+    background-color: rgb(240, 243, 247);
+}
+
+.location{
+    margin-left: 40px;
+    margin-bottom: 12px;
+    background-color: #91C788;
+    width: 200px;
+    text-align: center;
+    color: #fff;
 }
 
 .loc-text{
     margin-bottom: 15px;
+    padding: 10px;
 }
 
 .tag-container{

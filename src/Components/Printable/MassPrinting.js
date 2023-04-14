@@ -33,8 +33,8 @@ const MassPrinting = () => {
         const image = { type: "png", quality: 5 };
         const margin = [0.2, 0.2];
 
-        var imgWidth = 10.3;
-        var pageHeight = 10.7;
+        var imgWidth = 9.7;
+        var pageHeight = 10;
 
         var innerPageWidth = imgWidth - margin[0] * 2;
         var innerPageHeight = pageHeight - margin[1] * 2;
@@ -116,7 +116,7 @@ const MassPrinting = () => {
               <QRCodeCanvas
                 id="qrCode"
                 value={`Equipment: ${data.desc.toString()}\n\nProperty No: ${data.property_no != null ? data.property_no.toString() : 'None'}\n\nSerial No: ${data.serial != null ? data.serial.toString() : 'None'}\n\nClassification: ${data.itemCateg_name != null ? data.itemCateg_name.toString() : 'None'}\n\nDate Acquired: ${data.Delivery_date != null ? data.Delivery_date.toString() : 'None'}\n\nSection Assigned: ${data.location_name != null ? data.location_name.toString() : 'None'}`}
-                size={270}
+                size={170}
                 bgColor={"#fff"}
                 level={"L"}
               />

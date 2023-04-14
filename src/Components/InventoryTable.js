@@ -266,9 +266,28 @@ const InventoryTable = ({ title, columns, child }) => {
                     Generate
                   </MenuButton>
                   <MenuList>
-                    <MenuItem onClick={() => navigate("/report")}>Printable Report</MenuItem>
-                    <MenuItem onClick={() => navigate("/mass-print")}>QR Code</MenuItem>
-                    <MenuItem onClick={() => navigate("/tag")}>Property Tag</MenuItem>
+                    <Menu>
+                      <MenuButton
+                        ml={3.5}
+                        rightIcon={<ChevronDownIcon />}
+                      >
+                        Report
+                      </MenuButton>
+                      <MenuList>
+                        <MenuItem onClick={() => navigate("/report/area")}>
+                          Area
+                        </MenuItem>
+                        <MenuItem onClick={() => navigate("/report/person")}>
+                          Assigned Person
+                        </MenuItem>
+                      </MenuList>
+                    </Menu>
+                    <MenuItem onClick={() => navigate("/mass-print")}>
+                      QR Code
+                    </MenuItem>
+                    <MenuItem onClick={() => navigate("/tag")}>
+                      Property Tag
+                    </MenuItem>
                   </MenuList>
                 </Menu>
 
@@ -332,18 +351,19 @@ const InventoryTable = ({ title, columns, child }) => {
                 page.map((row, i) => {
                   prepareRow(row);
                   return (
-                    <Tr 
-                    onClick={()=>{
-                      tryin.onOpen(row.original.Pk_inventoryId);
-                      setDetails(row.original.desc)
-                    }}
-                    className="td" {...row.getRowProps()}>
+                    <Tr
+                      onClick={() => {
+                        tryin.onOpen(row.original.Pk_inventoryId);
+                        setDetails(row.original.desc);
+                      }}
+                      className="td"
+                      {...row.getRowProps()}
+                    >
                       {row.cells.map((cell) => {
                         return (
                           <Td {...cell.getCellProps()} whiteSpace="pre-line">
                             {cell.column.id === "action" ? (
-                              <Flex columnGap={2}>
-                              </Flex>
+                              <Flex columnGap={2}></Flex>
                             ) : cell.column.Header === "No" ? (
                               <Text fontWeight={"bold"} color={"green.600"}>
                                 {pageIndex * 10 + ++i}

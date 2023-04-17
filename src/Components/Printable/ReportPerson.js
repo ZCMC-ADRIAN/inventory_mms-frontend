@@ -41,7 +41,6 @@ function ReportPerson() {
       "Total Value",
       "Date Acquired",
       "Location",
-      "Person Responsible",
       "Date Repaired",
       "Date Returned",
       "Remarks",
@@ -79,7 +78,6 @@ function ReportPerson() {
         item.total,
         item.Delivery_date,
         item.location,
-        item.person,
       ];
     });
 
@@ -143,7 +141,7 @@ function ReportPerson() {
           <th>Total Value</th>
           <th>Date Acquired</th>
           <th>Location</th>
-          <th>Person Responsible</th>
+          {/* <th>Person Responsible</th> */}
           <th>Date Repaired</th>
           <th>Date Returned</th>
           <th>REMARKS</th>
@@ -165,7 +163,7 @@ function ReportPerson() {
               <td>{item.total}</td>
               <td>{item.Delivery_date}</td>
               <td>{item.location}</td>
-              <td>{item.person}</td>
+              {/* <td>{item.person}</td> */}
               <td></td>
               <td></td>
               <td>{item.remarks}</td>

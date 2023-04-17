@@ -113,7 +113,7 @@ function ReportArea() {
               return { value: det.location_name, label: det.location_name };
             })}
             onChange={(e) => setSelectLoc(e.label, e.value)}
-            placeholder="Select Location"
+            placeholder="Select Area"
           />
         </GridItem>
         <GridItem colSpan={1}>

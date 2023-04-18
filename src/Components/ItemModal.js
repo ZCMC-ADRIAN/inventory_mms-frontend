@@ -440,7 +440,7 @@ const ItemModal = ({ isOpen, onClose, details, header, child, item }) => {
                   inventoryId={inventoryId}
                 />
 
-                <Details2Modal isOpen={edit.isOpen} onClose={edit.onClose}/>
+                <Details2Modal isOpen={edit.isOpen} onClose={edit.onClose} inventoryId={inventoryId}/>
 
                 {page.length >= 1 ? (
                   <Flex justifyContent={"end"} mt={5}>

@@ -23,7 +23,8 @@ import {
 import SearchSel from "./searchableSelect/searchSel";
 import DataContext from "../Context/Context";
 
-const Details2Modal = ({ isOpen, onClose }) => {
+const Details2Modal = ({ isOpen, onClose, inventoryId }) => {
+
   const {
     locDatas,
     fetchLoc,
@@ -62,17 +63,21 @@ const Details2Modal = ({ isOpen, onClose }) => {
     }).then((result) => {
       if (result.isConfirmed) {
         localApi
-          .post("edit-location", {
-            location: locValue,
-            assoc: assocValue,
-            condition: condItem,
-            delivery: deliveryD,
-            property: propertyno,
+          .post("save-location", {
+            inventoryId: inventoryId,
+            condition_id: selectedCond && selectedCond.Pk_conditionsId,
+            location_id: selectedLoc && selectedLoc.Pk_locationId,
+            assoc_id: selectedAssoc && selectedAssoc.Pk_assocId,
+            newcondition_name: condItem,
+            newlocation_name: locValue,
+            newAssoc_name: assocValue,
+            delivery_date: deliveryD,
+            property_no: propertyno,
             serial: serial,
             remarks: remarks,
           })
           .then(function (response) {
-            if (response.data.status === 1) {
+            if (response.data.message === 'Inventory created successfully') {
               Swal.fire("Saved!", "", "success");
             }
           });

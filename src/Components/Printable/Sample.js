@@ -10,8 +10,7 @@ export default function App() {
   const [selectLoc, setSelectLoc] = useState("");
   const [location, setLocation] = useState([]);
   const [data, setData] = useState([]);
-
-  console.log(data.length)
+  const [pdfGenerated, setPdfGenerated] = useState(false); // Added state for PDF generation
 
   const fetchData = async () => {
     let responseLocation = await localApi.get("locations");
@@ -28,19 +27,22 @@ export default function App() {
   }, [selectLoc]);
 
   const SIZE = "300x300";
-
-  // Default export is a4 paper, portrait, using millimeters for units
   const doc = new jsPDF();
 
   const getImageSrc = (data) => {
-    const content = `Equipment: ${data.desc}\nProperty No: ${data.property_no != null ? data.property_no : 'None'}`;
+    const content = `Equipment: ${
+      data.desc
+    }\nProperty No: ${data.property_no != null ? data.property_no : "None"}`;
     const URL = `https://chart.googleapis.com/chart?chs=${SIZE}&cht=qr&chl=${content}&choe=UTF-8`;
     return URL;
   };
 
   const handleDownload = () => {
-    renderImagesPDF();
-    doc.save("a4.pdf");
+    if (!pdfGenerated) { // Check if PDF is not generated already
+      renderImagesPDF();
+      doc.save("a4.pdf");
+      setPdfGenerated(true); // Update state to mark PDF as generated
+    }
   };
 
   const renderImagesPDF = () => {
@@ -50,15 +52,13 @@ export default function App() {
     let k = 0;
     let items = 0;
     const qrSize = 70;
-    const A4pageWidth = 210; // 210mm
-    const A4pageHeight = 297; // 297mm
+    const A4pageWidth = 210;
+    const A4pageHeight = 297;
     const vPadding = 10;
-  
+
     for (let i = 0; i < data.length; ++i) {
       if (items >= 12) {
-        if (doc.getNumberOfPages() > 0) {
-          doc.addPage();
-        }
+        doc.addPage();
         x = 0;
         y = 10;
         j = 0;
@@ -79,7 +79,6 @@ export default function App() {
       }
     }
   };
-  
 
   const renderImagesScreen = () => {
     return data.map((tag) => (

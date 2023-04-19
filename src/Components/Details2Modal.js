@@ -77,7 +77,7 @@ const Details2Modal = ({ isOpen, onClose, inventoryId }) => {
             remarks: remarks,
           })
           .then(function (response) {
-            if (response.data.message === 'Inventory created successfully') {
+            if (response.data.status === 1) {
               Swal.fire("Saved!", "", "success");
             }
           });

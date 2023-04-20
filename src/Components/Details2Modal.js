@@ -52,7 +52,12 @@ const Details2Modal = ({ isOpen, onClose, inventoryId }) => {
     serial,
     setRemarks,
     remarks,
+    clearAll
   } = useContext(DataContext);
+
+  const handleClearData = () => {
+    clearAll();
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -79,6 +84,7 @@ const Details2Modal = ({ isOpen, onClose, inventoryId }) => {
           .then(function (response) {
             if (response.data.status === 1) {
               Swal.fire("Saved!", "", "success");
+              handleClearData();
             }
           });
       }
@@ -144,6 +150,7 @@ const Details2Modal = ({ isOpen, onClose, inventoryId }) => {
                   <FormControl>
                     <FormLabel>Delivery Date</FormLabel>
                     <Input
+                      value={deliveryD}
                       onChange={(e) => {
                         setdeliveryD(e.target.value);
                       }}
@@ -156,6 +163,7 @@ const Details2Modal = ({ isOpen, onClose, inventoryId }) => {
                   <FormControl>
                     <FormLabel>Property No.</FormLabel>
                     <Input
+                      value={propertyno}
                       onClick={() => {}}
                       onChange={(e) => {
                         setpropertyno(e.target.value);
@@ -168,6 +176,7 @@ const Details2Modal = ({ isOpen, onClose, inventoryId }) => {
                   <FormControl>
                     <FormLabel>Serial</FormLabel>
                     <Input
+                      value={serial}
                       onClick={() => {}}
                       onChange={(e) => {
                         setserial(e.target.value);
@@ -180,6 +189,7 @@ const Details2Modal = ({ isOpen, onClose, inventoryId }) => {
                   <FormControl>
                     <FormLabel>Remarks</FormLabel>
                     <Textarea
+                      value={remarks}
                       onClick={() => {}}
                       onChange={(e) => {
                         setRemarks(e.target.value);

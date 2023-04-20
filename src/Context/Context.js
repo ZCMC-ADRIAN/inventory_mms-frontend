@@ -250,6 +250,7 @@ export const Context = ({ children }) => {
         setserial,
         tableData,
         fetchTableData,
+        clearAll,
 
         condDatas,
         condItem,

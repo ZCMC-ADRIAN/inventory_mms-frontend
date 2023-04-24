@@ -27,37 +27,33 @@ export default function App() {
   }, [selectLoc]);
 
   const SIZE = "300x300";
-  const doc = new jsPDF();
 
   const getImageSrc = (data) => {
-    const content = `Equipment: ${
-      data.desc
-    }\nProperty No: ${data.property_no != null ? data.property_no : "None"}`;
+    const content = `Equipment: ${data.desc}\nProperty No: ${
+      data.property_no != null ? data.property_no : "None"
+    }`;
     const URL = `https://chart.googleapis.com/chart?chs=${SIZE}&cht=qr&chl=${content}&choe=UTF-8`;
     return URL;
   };
 
   const handleDownload = () => {
-    if (!pdfGenerated) { // Check if PDF is not generated already
-      renderImagesPDF();
-      doc.save("a4.pdf");
-      setPdfGenerated(true); // Update state to mark PDF as generated
-    }
+    renderImagesPDF();
   };
 
   const renderImagesPDF = () => {
+    const doc = new jsPDF(); // Create a new instance of jsPDF for each PDF generation
     let x = 0;
     let y = 10;
     let j = 0;
     let k = 0;
     let items = 0;
-    const qrSize = 70;
+    const qrSize = 30;
     const A4pageWidth = 210;
     const A4pageHeight = 297;
     const vPadding = 10;
 
     for (let i = 0; i < data.length; ++i) {
-      if (items >= 12) {
+      if (items >= 63) {
         doc.addPage();
         x = 0;
         y = 10;
@@ -78,11 +74,18 @@ export default function App() {
         x = ++k * qrSize;
       }
     }
+
+    doc.save("a4.pdf");
   };
 
   const renderImagesScreen = () => {
     return data.map((tag) => (
-      <img key={tag.Pk_inventoryId} alt={tag.Pk_inventoryId} src={getImageSrc(tag)} />
+      <img
+        key={tag.Pk_inventoryId}
+        alt={tag.Pk_inventoryId}
+        src={getImageSrc(tag)}
+        className="qr"
+      />
     ));
   };
 
@@ -102,7 +105,7 @@ export default function App() {
         <GridItem colSpan={1}>
           <Button
             bg="#91C788"
-            color='#fff'
+            color="#fff"
             _hover={{ bg: "#74b369" }}
             onClick={handleDownload}
           >
@@ -110,7 +113,9 @@ export default function App() {
           </Button>
         </GridItem>
       </SimpleGrid>
-      <>{renderImagesScreen()}</>
+      <div className="qr-container">
+        <div className="qr-code">{renderImagesScreen()}</div>
+      </div>
     </div>
   );
 }

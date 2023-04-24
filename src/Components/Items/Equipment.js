@@ -188,16 +188,16 @@ const Equipment = ({ setTab }) => {
   const handleCreate = (e) => {
     e && e.preventDefault();
     setIsClick(true);
-    if (cost.length < 1 || cost == 0) {
-      onClose();
-      setIsClick(false);
-      toast({
-        title: `Cost cant be null`,
-        status: "error",
-        isClosable: true,
-      });
-      return;
-    }
+    // if (cost.length < 1 || cost == 0) {
+    //   onClose();
+    //   setIsClick(false);
+    //   toast({
+    //     title: `Cost cant be null`,
+    //     status: "error",
+    //     isClosable: true,
+    //   });
+    //   return;
+    // }
     if (!category) {
       onClose();
       setIsClick(false);

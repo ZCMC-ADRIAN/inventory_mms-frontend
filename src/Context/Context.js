@@ -154,10 +154,10 @@ export const Context = ({ children }) => {
     setLocValue([]);
     setassocValue([]);
     setdeliveryD("");
-    setpropertyno("");
-    setserial("");
     setquantity("");
     setLoose("");
+    setpropertyno("");
+    setserial("");
     setRemarks("");
     setCountryValue([]);
     setSelectedCountry(null);

@@ -131,8 +131,9 @@ const PropertyTag = () => {
                     <Text
                       fontWeight={600}
                       borderBottom="1px solid black"
+                      boxSizing="border-box"
                       paddingBottom={2}
-                      w={"62%"}
+                      w={300}
                     >
                       {item.desc}
                     </Text>

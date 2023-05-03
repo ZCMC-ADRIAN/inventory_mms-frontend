@@ -2,44 +2,37 @@ import React, { useState, useEffect } from "react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import localApi from "../../API/Api";
-import { Button, SimpleGrid, GridItem, theme, color } from "@chakra-ui/react";
+import { Button, SimpleGrid, GridItem } from "@chakra-ui/react";
 import "./Report.css";
 import Select from "react-select";
 
-function ReportArea() {
-  const [selectLoc, setSelectLoc] = useState("");
-  const [location, setLocation] = useState([]);
+const Conditions = () => {
   const [data, setData] = useState([]);
+  console.log(data)
 
   const fetchData = async () => {
-    let responseLocation = await localApi.get("locations");
-    setLocation(responseLocation.data);
-
-    let responseId = await localApi.get("report", {
-      params: { location: selectLoc },
-    });
-    setData(responseId.data);
+    let responseData = await localApi.get("report/not-found");
+    setData(responseData.data);
   };
 
   useEffect(() => {
     fetchData();
-  }, [selectLoc]);
+  },[]);
 
   const generatePDF = () => {
-    // create a new PDF instance
     const doc = new jsPDF("landscape", "in", "a4");
 
-    // define the columns for the table
     const columns = [
       "No",
       "Article",
-      "Descrtiption",
+      "Description",
       "Property No",
       "Qty",
       "Unit",
       "Unit Value",
       "Total Value",
       "Date Acquired",
+      "Location",
       "Person Responsible",
       "Date Repaired",
       "Date Returned",
@@ -47,18 +40,16 @@ function ReportArea() {
     ];
 
     const headStyles = {
-      fontSize: 9,
+      fontSize: 8,
       halign: "center",
-      fillColor: '#fff',
-      textColor: '#000'
-     };
+      fillColor: "#fff",
+      textColor: "#000",
+    };
 
-    // Define the table options
     var tableOptions = {
       startY: 1,
     };
 
-    // map through the data and extract the values for each row
     const rows = data.map((item, index) => {
       const num = index + 1;
       let temp = "";
@@ -77,12 +68,12 @@ function ReportArea() {
         item.cost,
         item.total,
         item.Delivery_date,
+        item.location,
         item.person,
       ];
     });
 
-    // add the table to the PDF document
-    doc.text(0.6, 0.6, selectLoc);
+    doc.text(0.6, 0.6, 'Not Found Items');
 
     doc.autoTable({
       head: [columns],
@@ -90,14 +81,14 @@ function ReportArea() {
       headStyles: headStyles,
       startY: tableOptions.startY,
       styles: {
-        halign: 'center',
+        halign: "center",
         lineWidth: 0.01,
         lineColor: [0, 0, 0],
-        textColor: '#000'
-      }
+        textColor: "#000",
+        fontSize: 8
+      },
     });
-  
-    // save the PDF document
+
     window.open(doc.output("bloburl"));
   };
 
@@ -105,20 +96,10 @@ function ReportArea() {
     <div>
       <SimpleGrid columns={6} columnGap={3} p={10}>
         <GridItem colSpan={1}>
-          <Select
-            class="select"
-            options={location.map((det) => {
-              return { value: det.location_name, label: det.location_name };
-            })}
-            onChange={(e) => setSelectLoc(e.label, e.value)}
-            placeholder="Select Area"
-          />
-        </GridItem>
-        <GridItem colSpan={1}>
           <Button
             bg="#91C788"
-            color='#fff'
-            _hover={{ bg: "#74b369" }}
+            color="#fff"
+            _hover={{ bg: "#74B369" }}
             onClick={generatePDF}
           >
             Generate
@@ -126,9 +107,6 @@ function ReportArea() {
         </GridItem>
       </SimpleGrid>
 
-      <div className="location">
-        <p className="loc-text">{selectLoc}</p>
-      </div>
       <table className="report-table">
         <tr className="report-header">
           <th>No</th>
@@ -140,6 +118,7 @@ function ReportArea() {
           <th>Unit Value</th>
           <th>Total Value</th>
           <th>Date Acquired</th>
+          <th>Location</th>
           <th>Person Responsible</th>
           <th>Date Repaired</th>
           <th>Date Returned</th>
@@ -161,6 +140,7 @@ function ReportArea() {
               <td>{item.cost}</td>
               <td>{item.total}</td>
               <td>{item.Delivery_date}</td>
+              <td>{item.location}</td>
               <td>{item.person}</td>
               <td></td>
               <td></td>
@@ -171,6 +151,6 @@ function ReportArea() {
       </table>
     </div>
   );
-}
+};
 
-export default ReportArea;
+export default Conditions;

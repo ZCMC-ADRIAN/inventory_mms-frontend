@@ -280,6 +280,9 @@ const InventoryTable = ({ title, columns, child }) => {
                         <MenuItem onClick={() => navigate("/report/person")}>
                           Assigned Person
                         </MenuItem>
+                        <MenuItem onClick={() => navigate("/report/not-found")}>
+                          Not Found Items
+                        </MenuItem>
                       </MenuList>
                     </Menu>
                     <MenuItem onClick={() => navigate("/mass-print")}>

@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
-import html2canvas from "html2canvas";
-import { QRCodeCanvas } from "qrcode.react";
-import { jsPDF } from "jspdf";
 import localApi from "../../API/Api";
+import { jsPDF } from "jspdf";
+import { QRCodeCanvas } from "qrcode.react";
 import "../QRCode.css";
-import { Button, SimpleGrid, GridItem } from "@chakra-ui/react";
+import { Button, SimpleGrid, GridItem, theme, color } from "@chakra-ui/react";
 import Select from "react-select";
-import zcmc_logo from '../../Assets/zcmc_logo.png';
 
-const MassPrinting = () => {
+export default function MassPrinting() {
   const [selectLoc, setSelectLoc] = useState("");
   const [location, setLocation] = useState([]);
   const [data, setData] = useState([]);
+  const [pdfGenerated, setPdfGenerated] = useState(false); // Added state for PDF generation
 
   const fetchData = async () => {
     let responseLocation = await localApi.get("locations");
@@ -27,62 +26,68 @@ const MassPrinting = () => {
     fetchData();
   }, [selectLoc]);
 
-  const download_pdf = () => {
-    html2canvas(document.getElementById("generate"), { scale: 2 }).then(
-      (canvas) => {
-        const image = { type: "png", quality: 5 };
-        const margin = [0.2, 0.2];
+  const SIZE = "300x300";
 
-        var imgWidth = 9.7;
-        var pageHeight = 10;
+  const getImageSrc = (data) => {
+    const content = `Equipment:${data.desc}%0AProperty No:${
+      data.property_no != null ? data.property_no : "None"}%0ASerial No: ${data.serial != null ? data.serial.toString() : 'None'}%0AClassification: ${data.itemCateg_name != null ? data.itemCateg_name.toString() : 'None'}%0ADate Acquired: ${data.Delivery_date != null ? data.Delivery_date.toString() : 'None'}%0ASection Assigned: ${data.location_name != null ? data.location_name.toString() : 'None'}`;
 
-        var innerPageWidth = imgWidth - margin[0] * 2;
-        var innerPageHeight = pageHeight - margin[1] * 2;
+    const URL = `https://chart.googleapis.com/chart?chs=${SIZE}&cht=qr&chl=${content}&choe=UTF-8`;
+    return URL;
+  };
+  
 
-        // Calculate the pages.
-        var pxFullHeight = canvas.height;
-        var pxPageHeight = Math.floor(canvas.width * (pageHeight / imgWidth));
-        var nPages = Math.ceil(pxFullHeight / pxPageHeight);
+  const handleDownload = () => {
+    renderImagesPDF();
+  };
 
-        var pageHeight = innerPageHeight;
+  const renderImagesPDF = () => {
+    const doc = new jsPDF(); // Create a new instance of jsPDF for each PDF generation
+    let x = 0;
+    let y = 10;
+    let j = 0;
+    let k = 0;
+    let items = 0;
+    const qrSize = 30;
+    const A4pageWidth = 210;
+    const A4pageHeight = 297;
+    const vPadding = 10;
 
-        // Create a one-page canvas to split up the full image.
-        var pageCanvas = document.createElement("canvas");
-        var pageCtx = pageCanvas.getContext("2d");
-        pageCanvas.width = canvas.width;
-        pageCanvas.height = pxPageHeight;
-
-        // Initialize the PDF.
-        var pdf = new jsPDF("portrait", "in", "a4");
-
-        for (var page = 0; page < nPages; page++) {
-          // Display the page.
-          var w = pageCanvas.width;
-          var h = pageCanvas.height;
-          pageCtx.fillStyle = "white";
-          pageCtx.fillRect(0, 0, w, h);
-          pageCtx.drawImage(canvas, 0, page * pxPageHeight, w, h, 0, 0, w, h);
-
-          // Add the page to the PDF.
-          if (page > 0) pdf.addPage();
-          debugger;
-          var imgData = pageCanvas.toDataURL(
-            "image/base64" + image.type,
-            image.quality
-          );
-          pdf.addImage(
-            imgData,
-            image.type,
-            margin[1],
-            0.5,
-            innerPageWidth,
-            pageHeight
-          );
-        }
-
-        window.open(pdf.output("bloburl"));
+    for (let i = 0; i < data.length; ++i) {
+      if (items >= 63) {
+        doc.addPage();
+        x = 0;
+        y = 10;
+        j = 0;
+        k = 0;
+        items = 0;
       }
-    );
+      let imageData = new Image(300, 300);
+      imageData.src = getImageSrc(data[i]);
+      doc.addImage(imageData, "PNG", x, y, qrSize, qrSize);
+      doc.setFontSize(16);
+      items++;
+      if (x >= A4pageWidth - qrSize) {
+        x = 0;
+        k = 0;
+        y = ++j * qrSize + vPadding;
+      } else {
+        x = ++k * qrSize;
+      }
+    }
+
+    doc.save(`${selectLoc} - QR.pdf`);
+  };
+
+  const renderImagesScreen = () => {
+    return data.map((tag) => (
+      <img
+        key={tag.Pk_inventoryId}
+        alt={tag.Pk_inventoryId}
+        src={getImageSrc(tag)}
+        className="qr"
+      />
+    ));
   };
 
   return (
@@ -95,37 +100,23 @@ const MassPrinting = () => {
               return { value: det.location_name, label: det.location_name };
             })}
             onChange={(e) => setSelectLoc(e.label, e.value)}
-            placeholder="Select Location"
+            placeholder="Select Area"
           />
         </GridItem>
         <GridItem colSpan={1}>
           <Button
-            bg="blue.200"
-            _hover={{ bg: "blue.300 " }}
-            onClick={download_pdf}
+            bg="#91C788"
+            color="#fff"
+            _hover={{ bg: "#74b369" }}
+            onClick={handleDownload}
           >
             Generate
           </Button>
         </GridItem>
       </SimpleGrid>
-
-      <div id="generate" className="qr-container">
-        {data.map((data) => {
-          return (
-            <div className="qr-code">
-              <QRCodeCanvas
-                id="qrCode"
-                value={`Equipment: ${data.desc.toString()}\n\nProperty No: ${data.property_no != null ? data.property_no.toString() : 'None'}\n\nSerial No: ${data.serial != null ? data.serial.toString() : 'None'}\n\nClassification: ${data.itemCateg_name != null ? data.itemCateg_name.toString() : 'None'}\n\nDate Acquired: ${data.Delivery_date != null ? data.Delivery_date.toString() : 'None'}\n\nSection Assigned: ${data.location_name != null ? data.location_name.toString() : 'None'}`}
-                size={170}
-                bgColor={"#fff"}
-                level={"L"}
-              />
-            </div>
-          );
-        })}
+      <div className="qr-container">
+        <div className="qr-code">{renderImagesScreen()}</div>
       </div>
     </div>
   );
-};
-
-export default MassPrinting;
+}

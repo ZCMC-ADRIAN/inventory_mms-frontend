@@ -148,6 +148,7 @@ const EditModal = ({ isOpen, onClose, itemId }) => {
             expiration: expiration,
             details: details,
             remarks: remarks,
+            accessories: accessories
           })
           .then(function (response) {
             if (response.data.status === 1) {

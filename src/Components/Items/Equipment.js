@@ -92,6 +92,7 @@ const Equipment = ({ setTab }) => {
   const [cost, setCost] = useState("");
   const [accessories, setAccessories] = useState("");
   const [acquiMode, setAcquiMode] = useState("");
+  const [barcode, setBarcode] = useState("");
   const { user } = useAuth();
 
   //Utilities State
@@ -137,6 +138,27 @@ const Equipment = ({ setTab }) => {
     fetchData();
   }, [type, article, acquiMode]);
 
+
+  //Bar Code
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      const barcodeRegex = /^[0-9]+$/; // only allow digits in barcode
+      const pressedKey = event.key;
+      const isBarcode = barcodeRegex.test(pressedKey);
+
+      if (isBarcode) {
+        setBarcode((prevBarcode) => prevBarcode + pressedKey);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, []);
+
+  //Clear Form
   const clearForm = () => {
     setArticle("");
     setArticleOther("");
@@ -179,9 +201,7 @@ const Equipment = ({ setTab }) => {
         " " +
         variant +
         " " +
-        details +
-        " " +
-        other
+        details
     );
   }, [article, articleOther, type, typeOther, model, variant, details, other]);
 
@@ -245,9 +265,10 @@ const Equipment = ({ setTab }) => {
         cost: cost || null,
         category: category || null,
         accessories: accessories || null,
+        barcode: barcode || null,
+        userId: user.userId || null,
       })
       .then(function (response) {
-        console.log(response);
         if (response.data.status === 1) {
           if (response.data.isIN === false) {
             // clearForm();
@@ -349,6 +370,11 @@ const Equipment = ({ setTab }) => {
                 <option>Other</option>
               </Select>
             </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={[6, 3, 3, 3]}> 
+          <FormLabel>Bar Code Number</FormLabel>
+            <Input isDisabled value={barcode} onChange={(e)=>setBarcode(e.target.value)}/>
           </GridItem>
 
           <GridItem colSpan={6}>
@@ -494,7 +520,7 @@ const Equipment = ({ setTab }) => {
           <GridItem colSpan={[6, 6, 2, 2]}>
             <FormControl>
               <FormLabel>Other</FormLabel>
-              <Input value={other} onChange={(e) => setOther(e.target.value)} />
+              <Textarea value={other} onChange={(e) => setOther(e.target.value)} />
             </FormControl>
           </GridItem>
 

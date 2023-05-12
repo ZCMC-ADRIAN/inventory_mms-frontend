@@ -106,6 +106,7 @@ export const Context = ({ children }) => {
   const [expiration, setexpiration] = useState(null);
 
   const [tableData, setTableData] = useState([]);
+
   const fetchTableData = async (value) => {
     const result = await api.get(`/itemtable`, {
       params: {

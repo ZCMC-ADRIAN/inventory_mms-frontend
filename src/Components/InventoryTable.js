@@ -49,8 +49,6 @@ import {
   ChevronDownIcon,
 } from "@chakra-ui/icons";
 
-import { FaClipboardList } from "react-icons/fa";
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ItemModal from "./ItemModal";
@@ -86,8 +84,7 @@ const InventoryTable = ({ title, columns, child }) => {
   const fetchTableData = async (value) => {
     const result = await localApi.get(`data-table`, {
       params: {
-        q: value ? value : "",
-        desc: item,
+        q: value ? value : ""
       },
     });
     setTableData(result.data);
@@ -175,8 +172,7 @@ const InventoryTable = ({ title, columns, child }) => {
               flexDirection="column"
             >
               <GridItem colSpan={[6, 2]}>
-                <FormControl>
-                  <FormLabel>Location</FormLabel>
+                <FormControl mt={5}>
                   <div
                     ref={domNod}
                     onClick={() => {
@@ -186,7 +182,7 @@ const InventoryTable = ({ title, columns, child }) => {
                     }}
                     className="custom-select"
                   >
-                    <p>{location === "" ? "- Select Location -" : location}</p>
+                    <p>{location === "" ? "Search here...." : location}</p>
                     {dropdown && (
                       <div
                         onClick={(e) => e.stopPropagation()}
@@ -218,14 +214,14 @@ const InventoryTable = ({ title, columns, child }) => {
                             <>
                               <p
                                 onClick={() => {
-                                  setDesc(item.location_name);
+                                  setDesc(item.property_no);
                                   setDropdown(false);
-                                  setLocation(item.location_name);
-                                  fetchTableData(item.location_name);
+                                  setLocation(item.property_no);
+                                  fetchTableData(item.property_no);
                                 }}
                                 key={index}
                               >
-                                {item.location_name}
+                                {item.property_no}
                               </p>
                             </>
                           );
@@ -237,7 +233,7 @@ const InventoryTable = ({ title, columns, child }) => {
               </GridItem>
               <Button
                 w={12}
-                mt={8}
+                mt={5}
                 display={close}
                 bg="blue.100"
                 _hover={{ bg: "blue.200" }}
@@ -245,7 +241,7 @@ const InventoryTable = ({ title, columns, child }) => {
                   setLocation([]);
                   fetchTableData([]);
                   setClose("none");
-                  setLocation("- Select Location -");
+                  setLocation("Search here....");
                 }}
               >
                 <CloseIcon fontSize={12} color="gray" />

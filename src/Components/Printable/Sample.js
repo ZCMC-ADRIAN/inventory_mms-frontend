@@ -33,23 +33,24 @@ const PDFGenerator = () => {
   }, [selectLoc]);
   const customHtmlRef = useRef(null); // Ref for custom HTML element
 
+  const tagClassCounter = 0; // Declare the variable outside the function
+
   const generatePDF = () => {
     const doc = new jsPDF("p", "mm", "a4");
     const element = customHtmlRef.current;
-    let tagClassCounter = 0; // Counter for the target tag class
     const options = {
       margin: [10, 10, 10, 10],
       html2canvas: {
         scale: 0.17
       },
-      // Function to be executed before a new page is added
       beforeAddPage: function(page) {
-        const targetClass = "tag"; // Replace with your target tag class
-        const targetElements = page.querySelectorAll(`.${targetClass}`);
+        const targetClass = "tag";
+        const targetElements = page.querySelectorAll(targetClass);
         if (targetElements.length > 4) {
-          tagClassCounter = 0; // Reset the counter
-          return true; // Add a new page
+          tagClassCounter = 4;
+          return true;
         }
+        tagClassCounter = targetElements.length; // Update the counter
       },
       callback: function (doc) {
         window.open(doc.output("bloburl"));
@@ -58,8 +59,6 @@ const PDFGenerator = () => {
     doc.html(element, options);
   };
   
-  
-
   return (
     <div>
       <SimpleGrid columns={6} columnGap={3} p={10}>

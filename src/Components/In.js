@@ -38,6 +38,8 @@ const In = ({ setTab, users }) => {
   const [searchTerm, setSearchterm] = useState([]);
   const [term, setTerm] = useState("");
 
+  console.log(searchTerm)
+
   useEffect(() => {
     fetchTableData();
   }, []);
@@ -76,10 +78,6 @@ const In = ({ setTab, users }) => {
         Header: "Brand",
         accessor: "brand_name",
       },
-      // {
-      //   Header: "manufacturer",
-      //   accessor: "manu_name",
-      // },
       {
         Header: "Type",
         accessor: "type_name",
@@ -89,15 +87,8 @@ const In = ({ setTab, users }) => {
         accessor: "article name",
       },
       { Header: "Variety", accessor: "variety" },
-      // { Header: "Country/origin", accessor: "country" },
       { Header: "Detail", accessor: "details2" },
-      { Header: "Warranty", accessor: "warranty" },
-      { Header: "Acquisition Date", accessor: "acquisition_date" },
-      // { Header: "Expiration", accessor: "expiration" },
-      {
-        Header: "Remarks",
-        accessor: "remarks",
-      },
+      { Header: "Property", accessor: "property_no" },
       {
         Header: "ACTION",
         accessor: "action",
@@ -105,6 +96,8 @@ const In = ({ setTab, users }) => {
     ],
     []
   );
+
+  console.log(columns)
   
   const [timeoutId, setTimeoutId] = useState(null);
   const handleSearch = (term) => {

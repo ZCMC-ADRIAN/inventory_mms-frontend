@@ -189,6 +189,7 @@ const Details2Modal = ({ isOpen, onClose, inventoryId }) => {
                   <FormControl>
                     <FormLabel>Remarks</FormLabel>
                     <Textarea
+                      type='text'
                       value={remarks}
                       onClick={() => {}}
                       onChange={(e) => {

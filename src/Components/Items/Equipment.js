@@ -26,45 +26,13 @@ import { VerticallyCenter } from "../inputModal";
 
 const Equipment = ({ setTab }) => {
   const {
-    itemdetails,
-    setdeliveryD,
-    setquantity,
-    setLoose,
     setRemarks,
     remarks,
     postInventory,
-    locDatas,
-    locValue,
-    setLocValue,
     selectedLoc,
-    setSelectedLoc,
-    fetchLoc,
-    condDatas,
-    condItem,
-    setConItem,
     selectedCond,
-    setSelectedCond,
-    fetchcond,
-    assocDatas,
-    assocValue,
-    setassocValue,
-    selectedAssoc,
-    setSelectedAssoc,
-    fetchAssoc,
-    setpropertyno,
-    setserial,
-    setItemId,
     clearAll,
   } = useContext(DataContext);
-  const donors = [
-    "doh",
-    "department of health",
-    "icrc",
-    "international committee of the red cross",
-    "biatf",
-    "who",
-    "world health organization",
-  ];
 
   const [article, setArticle] = useState("");
   const [articleOther, setArticleOther] = useState("");

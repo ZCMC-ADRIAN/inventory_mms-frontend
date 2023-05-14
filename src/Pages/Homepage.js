@@ -3,7 +3,7 @@ import CreateItem from "../Components/CreateItem";
 
 import In from "../Components/In";
 import Sidebar from "../Components/Sidebar";
-import InventoryTable from "../Components/InventoryTable";
+import Inventory from "../Components/Inventory";
 import InTable from "../Components/InTable";
 import QRScanner from "../Components/QRScanner";
 
@@ -24,32 +24,6 @@ const Homepage = () => {
     return () => window.removeEventListener("resize", updateMedia);
   });
 
-
-  const column = useMemo(
-    () => [
-      {
-        Header: "No",
-      },
-      {
-        Header: "Item Description",
-        accessor: "desc",
-      },
-      {
-        Header: "Quantity",
-        accessor: "total_qty",
-      },
-      {
-        Header: "Category",
-        accessor: "itemCateg_name"
-      },
-      {
-        Header: "ACTION",
-        accessor: "action",
-      },
-    ],
-    []
-  );
-
   return (
     <>
       <div className="container">
@@ -58,7 +32,7 @@ const Homepage = () => {
           {tab === "create" && <CreateItem setTab={setTab} />}
           {tab === "inItem" && <In setTab={setTab} />}
           {tab === "inventory" && (
-            <InventoryTable title={title} fetch={fetch} columns={column} />
+            <Inventory title={title} fetch={fetch}/>
           )}
           {tab === "listIn" && <InTable />}
           {tab === "scanner" && <QRScanner setTab={setTab}/>}

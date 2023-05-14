@@ -126,6 +126,16 @@ export const Context = ({ children }) => {
     });
     setTableData(result.data);
   };
+  const [inventoryData, setInventoryData] = useState([]);
+
+  const fetchInventoryData = async (value) => {
+    const result = await api.get(`/data-table`, {
+      params: {
+        q: value ? value : "",
+      },
+    });
+    setInventoryData(result.data);
+  };  
 
   {
     /*
@@ -306,6 +316,10 @@ export const Context = ({ children }) => {
         setacquisition,
         expiration,
         setexpiration,
+
+        //Inventory Table
+        inventoryData,
+        fetchInventoryData
       }}
     >
       {children}

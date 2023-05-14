@@ -111,6 +111,7 @@ function Sidebar({ visible, show, tab, setTab }) {
                 <MdArticle />
               </p>
               <text>Report</text>
+              
             </li>
           </ul>
         </div>

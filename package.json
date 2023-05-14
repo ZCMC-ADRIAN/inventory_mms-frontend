@@ -43,6 +43,8 @@
     "react-script": "^2.0.5",
     "react-scripts": "^5.0.1",
     "react-select": "^5.7.0",
+    "react-select-search": "^4.1.6",
+    "react-spinners": "^0.13.8",
     "react-table": "^7.8.0",
     "react-to-pdf": "^0.0.14",
     "sweetalert2": "^11.7.3",

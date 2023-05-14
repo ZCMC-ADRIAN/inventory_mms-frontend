@@ -531,7 +531,7 @@ button.gray:hover {
 }
 
 .dropdown {
-  background-color: #02bf7a;
+  background-color: #71bfff;
   display: flex;
   flex-direction: column;
   border: 1px solid rgb(214, 214, 214);
@@ -558,7 +558,7 @@ button.gray:hover {
 }
 
 .dropdown-row:hover {
-  background-color: #03af70;
+  background-color: #47a9f9;
   transition: 0.18s ease-in-out;
 }
 

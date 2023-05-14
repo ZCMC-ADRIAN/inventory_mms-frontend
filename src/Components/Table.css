@@ -11,7 +11,8 @@
     font-size: 14px;
     outline: 1px solid rgba(128, 128, 128, 0.24);
     border-radius: 10px;
-    padding:2;
+    padding: 2;
+    margin-bottom: 43px;
   }
   
   .thead {
@@ -87,4 +88,10 @@
     #searchfield {
       width: 100%;
     }
+  }
+
+  .spinner{
+    position: absolute;
+    margin-left: 500px;
+    margin-top: 10px;
   }

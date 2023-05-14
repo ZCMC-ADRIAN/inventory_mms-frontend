@@ -17,6 +17,7 @@ import {
   Heading,
   useDisclosure,
 } from "@chakra-ui/react";
+import { HashLoader } from "react-spinners";
 
 import "./Table.css";
 
@@ -68,7 +69,7 @@ const CustomTable = ({ title, columns, data, child, children }) => {
   const [itemId, setItemId] = useState([]);
 
   const CustomBtnTheme = {
-    backgroundColor: "#9AE6B4",
+    backgroundColor: "#2583CF",
     borderRadius: "52px",
     fontSize: "20px",
   };
@@ -93,7 +94,7 @@ const CustomTable = ({ title, columns, data, child, children }) => {
         <Flex flexDirection={["column", "column", "row", "row"]}>
           <Box w={"100%"}>
             <Flex justifyContent={"space-between"} alignItems={"end"}>
-              <Heading paddingLeft={"25px"} size="lg" color={"teal"}>
+              <Heading paddingLeft={"25px"} size="lg" color={"#2583CF"}>
                 {title}
               </Heading>
               {child !== null ? child : null}
@@ -122,12 +123,10 @@ const CustomTable = ({ title, columns, data, child, children }) => {
       <TableContainer w={"100%"}>
         <Table
           mt={5}
-          mb={5}
           bg={"white"}
           maxWidth={"100%"}
           className={"table"}
           variant="unstyled"
-          boxShadow={"2xl"}
           overflow="hidden"
           {...getTableProps()}
         >
@@ -192,17 +191,6 @@ const CustomTable = ({ title, columns, data, child, children }) => {
                               >
                                 <AiFillEdit color="grey" />
                               </Button>
-
-                              {/* <Button
-                                _hover={{
-                                  bg: "#FCD299",
-                                  boxShadow: "lg",
-                                  transform: "scale(1.2,1.2)",
-                                  transition: "0.3s",
-                                }}
-                              >
-                                <HiTrash color="darkorange" />
-                              </Button> */}
                             </Flex>
                           ) : cell.column.Header === "No" ? (
                             <Text fontWeight={"bold"} color={"green.600"}>
@@ -218,20 +206,22 @@ const CustomTable = ({ title, columns, data, child, children }) => {
                 );
               })
             ) : (
-              <Text>NO RECORD</Text>
+              <div className="spinner">
+                <HashLoader color="#71bfff" size={40} />
+              </div>
             )}
           </Tbody>
         </Table>
       </TableContainer>
       {page.length >= 1 ? (
-        <Flex justifyContent={"end"} bg={"rgba(0,0,0,0.05)"} mt={5}>
+        <Flex justifyContent={"end"} mt={5}>
           <div id="btnleft">
             <Tooltip label="First Page">
               <IconButton
                 style={CustomBtnTheme}
                 onClick={() => gotoPage(0)}
                 isDisabled={!canPreviousPage}
-                icon={<ArrowLeftIcon h={3} w={3} />}
+                icon={<ArrowLeftIcon h={3} w={3} color="white" />}
                 mr={4}
               />
             </Tooltip>
@@ -241,7 +231,7 @@ const CustomTable = ({ title, columns, data, child, children }) => {
                 className="paginationbtn"
                 onClick={previousPage}
                 isDisabled={!canPreviousPage}
-                icon={<ChevronLeftIcon h={6} w={6} />}
+                icon={<ChevronLeftIcon h={6} w={6} color="white" />}
               />
             </Tooltip>
           </div>
@@ -269,7 +259,7 @@ const CustomTable = ({ title, columns, data, child, children }) => {
                 className="paginationbtn"
                 onClick={nextPage}
                 isDisabled={!canNextPage}
-                icon={<ChevronRightIcon h={6} w={6} />}
+                icon={<ChevronRightIcon h={6} w={6} color="white" />}
               />
             </Tooltip>
             <Tooltip label="Last Page">
@@ -278,7 +268,7 @@ const CustomTable = ({ title, columns, data, child, children }) => {
                 className="paginationbtn"
                 onClick={() => gotoPage(pageCount - 1)}
                 isDisabled={!canNextPage}
-                icon={<ArrowRightIcon h={3} w={3} />}
+                icon={<ArrowRightIcon h={3} w={3} color="white" />}
                 ml={4}
               />
             </Tooltip>

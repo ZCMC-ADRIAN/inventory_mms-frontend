@@ -18,6 +18,7 @@ import PropertyTag from "./Components/Printable/PropertyTag";
 import ReportPerson from "./Components/Printable/ReportPerson";
 import Conditions from "./Components/Printable/Conditions";
 import BarCode from "./Components/Items/Sample";
+import NoProperty from "./Components/Printable/Sample";
 
 const App = () => {
   return (
@@ -36,6 +37,7 @@ const App = () => {
             <Route path="/barcode" element={<BarCode />} />
             <Route path="inventory" element={<Inventory />} />
             <Route path="tag" element={<PropertyTag />} />
+            <Route path="no" element={<NoProperty />} />
             <Route path="report/not-found" element={<Conditions />} />
           </Route>
         </Routes>

@@ -1,19 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
-import localApi from "../../API/Api";
-import Select from "react-select";
-import zcmc from "../../Assets/zcmc_logo.png";
-
-import {
-  Button,
-  SimpleGrid,
-  GridItem,
-  Container,
-  Text,
-} from "@chakra-ui/react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import jsPDF from "jspdf";
+import "jspdf-autotable";
+import localApi from "../../API/Api";
+import { Button, SimpleGrid, GridItem, theme, color } from "@chakra-ui/react";
 import "./Report.css";
+import Select from "react-select";
 
-const PDFGenerator = () => {
+function NoProperty() {
+  const navigate = useNavigate()
   const [selectLoc, setSelectLoc] = useState("");
   const [location, setLocation] = useState([]);
   const [data, setData] = useState([]);
@@ -22,7 +17,7 @@ const PDFGenerator = () => {
     let responseLocation = await localApi.get("locations");
     setLocation(responseLocation.data);
 
-    let responseId = await localApi.get("tags", {
+    let responseId = await localApi.get("no-property", {
       params: { location: selectLoc },
     });
     setData(responseId.data);
@@ -31,34 +26,7 @@ const PDFGenerator = () => {
   useEffect(() => {
     fetchData();
   }, [selectLoc]);
-  const customHtmlRef = useRef(null); // Ref for custom HTML element
 
-  const tagClassCounter = 0; // Declare the variable outside the function
-
-  const generatePDF = () => {
-    const doc = new jsPDF("p", "mm", "a4");
-    const element = customHtmlRef.current;
-    const options = {
-      margin: [10, 10, 10, 10],
-      html2canvas: {
-        scale: 0.17
-      },
-      beforeAddPage: function(page) {
-        const targetClass = "tag";
-        const targetElements = page.querySelectorAll(targetClass);
-        if (targetElements.length > 4) {
-          tagClassCounter = 4;
-          return true;
-        }
-        tagClassCounter = targetElements.length; // Update the counter
-      },
-      callback: function (doc) {
-        window.open(doc.output("bloburl"));
-      },
-    };
-    doc.html(element, options);
-  };
-  
   return (
     <div>
       <SimpleGrid columns={6} columnGap={3} p={10}>
@@ -69,104 +37,64 @@ const PDFGenerator = () => {
               return { value: det.location_name, label: det.location_name };
             })}
             onChange={(e) => setSelectLoc(e.label, e.value)}
-            placeholder="Select Location"
+            placeholder="Select Area"
           />
         </GridItem>
         <GridItem colSpan={1}>
           <Button
             bg="#91C788"
-            color="#fff"
+            color='#fff'
             _hover={{ bg: "#74b369" }}
-            onClick={generatePDF}
+            onClick={()=>navigate('/home')}
           >
-            Generate
+            Home
           </Button>
         </GridItem>
       </SimpleGrid>
-      <div ref={customHtmlRef} id="custom-html">
-        {data.map((item) => {
+
+      <div className="location">
+        <p className="loc-text">{selectLoc}</p>
+      </div>
+      <table className="report-table">
+        <tr className="report-header">
+          <th>No</th>
+          <th>Article</th>
+          <th>Description</th>
+          <th>Property No</th>
+          <th>Qty</th>
+          <th>Unit</th>
+          <th>Unit Value</th>
+          <th>Total Value</th>
+          <th>Date Acquired</th>
+          <th>Person Responsible</th>
+          <th>Date Repaired</th>
+          <th>Date Returned</th>
+          <th>REMARKS</th>
+        </tr>
+
+        {data.map((item, index) => {
+          const num = index + 1;
           return (
-            <div className="tag">
-              <div className="tag-head">
-                <Text>ZAMBOANGA CITY MEDICAL CENTER</Text>
-                <Text letterSpacing={3}>PROPERTY TAG</Text>
-              </div>
-
-              <div className="tag-content">
-                <SimpleGrid columns={3}>
-                  <GridItem colSpan={3} mt={5} display="flex">
-                    <Text className="tag-label">EQUIPMENT: </Text>
-                    <Text
-                    className='tag-data'
-                    >
-                      {item.desc}
-                    </Text>
-                  </GridItem>
-
-                  <GridItem colSpan={3} mt={2} display="flex">
-                    <Text className="tag-label">PROPERTY NO: </Text>
-                    <Text
-                    className='tag-data'
-                    >
-                      {item.property_no}
-                    </Text>
-                  </GridItem>
-
-                  <GridItem colSpan={3} mt={2} display="flex">
-                    <Text className="tag-label">SERIAL NO: </Text>
-                    <Text
-                    className='tag-data'
-                    >
-                      {item.serial}
-                    </Text>
-                  </GridItem>
-
-                  <GridItem colSpan={3} mt={2} display="flex">
-                    <Text className="tag-label">CLASSIFICATION: </Text>
-                    <Text
-                    className='tag-data'
-                    >
-                      {item.itemCateg_name}
-                    </Text>
-                  </GridItem>
-
-                  <GridItem colSpan={3} mt={2} display="flex">
-                    <Text className="tag-label">DATE ACQUIRED: </Text>
-                    <Text
-                    className='tag-data'
-                    >
-                      {item.Delivery_date}
-                    </Text>
-                  </GridItem>
-
-                  <GridItem colSpan={3} mt={2} display="flex">
-                    <Text className="tag-label">SECTION ASSIGNED: </Text>
-                    <Text
-                    className='tag-data'
-                    >
-                      {item.location_name}
-                    </Text>
-                  </GridItem>
-
-                  <GridItem colSpan={3} mt={2} display="flex">
-                    <Text className="tag-label">AMOUNT: </Text>
-                    <Text
-                    className='tag-data'
-                    >
-                      {item.costs}
-                    </Text>
-                  </GridItem>
-                </SimpleGrid>
-                <div>
-                  <img src={zcmc} className="tag-image" />
-                </div>
-              </div>
-            </div>
+            <tr className="report-data">
+              <td>{num}</td>
+              <td>{item.article}</td>
+              <td style={{ width: "220px" }}>{item.desc}</td>
+              <td>{item.property_no}</td>
+              <td>{item.qty}</td>
+              <td>{item.unit}</td>
+              <td>{item.cost}</td>
+              <td>{item.total}</td>
+              <td>{item.Delivery_date}</td>
+              <td>{item.person}</td>
+              <td></td>
+              <td></td>
+              <td>{item.remarks}</td>
+            </tr>
           );
         })}
-      </div>
+      </table>
     </div>
   );
-};
+}
 
-export default PDFGenerator;
+export default NoProperty;

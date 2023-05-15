@@ -36,6 +36,7 @@ const SearchSel = ({
   const ref = useClickOutside(() => {
     setVisible(false);
   });
+
   const [isVisible, setVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [timeoutId, setTimeoutId] = useState(null);

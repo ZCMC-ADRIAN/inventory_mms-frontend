@@ -58,6 +58,9 @@ const EditModal = ({ isOpen, onClose, itemId }) => {
   const [expiration, setExpiration] = useState("");
   const [remarks, setRemarks] = useState("");
 
+  console.log(article)
+
+
   //Fields
   const [getArticle, setGetArticle] = useState([]);
   const [getTypes, setGetTypes] = useState([]);

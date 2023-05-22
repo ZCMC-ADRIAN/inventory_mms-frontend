@@ -6,12 +6,10 @@ import {
   Textarea,
   GridItem,
   Select,
-  Grid,
   Button,
   useToast,
   InputLeftAddon,
   InputGroup,
-  Stack,
   Box,
   Divider,
   SimpleGrid,
@@ -20,8 +18,8 @@ import {
 } from "@chakra-ui/react";
 import useAuth from "../../Hooks/useAuth";
 import localApi from "../../API/Api";
-import SearchSel from "../searchableSelect/searchSel";
 import DataContext from "../../Context/Context";
+import PostContext from "../../Context/Posting";
 import { VerticallyCenter } from "../inputModal";
 
 const Equipment = ({ setTab }) => {
@@ -34,33 +32,65 @@ const Equipment = ({ setTab }) => {
     clearAll,
   } = useContext(DataContext);
 
-  const [article, setArticle] = useState("");
-  const [articleOther, setArticleOther] = useState("");
-  const [type, setType] = useState("");
-  const [typeOther, setTypeOther] = useState("");
-  const [descOrig, setDescOrig] = useState("");
-  const [desc, setDesc] = useState("");
-  const [model, setModel] = useState("");
-  const [variant, setVariant] = useState("");
-  const [details, setDetails] = useState("");
-  const [other, setOther] = useState("");
-  const [brand, setBrand] = useState("");
-  const [manufacturer, setManufacturer] = useState("");
-  const [origin, setOrigin] = useState("");
-  const [serialNum, setSerialNum] = useState("");
-  const [warranty, setWarranty] = useState("");
-  const [acquisition, setAcquisition] = useState("");
-  const [propertyNum, setPropertyNum] = useState("");
-  const [unit, setUnit] = useState("");
-  const [location, setLocation] = useState("");
-  const [donor, setDonor] = useState("");
-  const [donorOther, setDonorOther] = useState("");
-  const [remarkss, setRemarkss] = useState("");
-  const [category, setCategory] = useState("");
-  const [cost, setCost] = useState("");
-  const [accessories, setAccessories] = useState("");
-  const [acquiMode, setAcquiMode] = useState("");
-  const [barcode, setBarcode] = useState("");
+  const {
+    //Current State
+    article,
+    articleOther,
+    type,
+    typeOther,
+    descOrig,
+    desc,
+    model,
+    variant,
+    details,
+    other,
+    brand,
+    manufacturer,
+    origin,
+    serialNum,
+    warranty,
+    acquisition,
+    propertyNum,
+    unit,
+    location,
+    donor,
+    donorOther,
+    remarkss,
+    category,
+    cost,
+    accessories,
+    acquiMode,
+    barcode,
+
+    //Set States
+    setArticle,
+    setArticleOther,
+    setType,
+    setTypeOther,
+    setDescOrig,
+    setModel,
+    setVariant,
+    setDetails,
+    setOther,
+    setBrand,
+    setManufacturer,
+    setOrigin,
+    setSerialNum,
+    setWarranty,
+    setAcquisition,
+    setPropertyNum,
+    setUnit,
+    setLocation,
+    setDonor,
+    setDonorOther,
+    setRemarkss,
+    setCategory,
+    setCost,
+    setAccessories,
+    setAcquiMode,
+    setBarcode
+  } = useContext(PostContext)
+
   const { user } = useAuth();
 
   //Utilities State
@@ -115,14 +145,8 @@ const Equipment = ({ setTab }) => {
       const isBarcode = barcodeRegex.test(pressedKey);
 
       if (isBarcode) {
-        setBarcode((prevBarcode) => prevBarcode + pressedKey);
+        setBarcode((prevBarcode) => prevBarcode);
       }
-    };
-
-    window.addEventListener("keydown", handleKeyPress);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyPress);
     };
   }, []);
 
@@ -159,33 +183,9 @@ const Equipment = ({ setTab }) => {
 
   const { setAppState } = useAuth();
 
-  useEffect(() => {
-    setDesc(
-      (article === "Other" ? articleOther : article) +
-        " " +
-        (type === "Other" ? typeOther : type) +
-        " " +
-        model +
-        " " +
-        variant +
-        " " +
-        details
-    );
-  }, [article, articleOther, type, typeOther, model, variant, details, other]);
-
   const handleCreate = (e) => {
     e && e.preventDefault();
     setIsClick(true);
-    // if (cost.length < 1 || cost == 0) {
-    //   onClose();
-    //   setIsClick(false);
-    //   toast({
-    //     title: `Cost cant be null`,
-    //     status: "error",
-    //     isClosable: true,
-    //   });
-    //   return;
-    // }
     if (!category) {
       onClose();
       setIsClick(false);
@@ -329,12 +329,24 @@ const Equipment = ({ setTab }) => {
                 placeholder=" -- Select Category -- "
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
+                fontSize={15}
               >
-                <option>Medical Equipment</option>
-                <option>Janitorial Equipment</option>
+                <option>Machinery</option>
                 <option>Office Equipment</option>
-                <option>IT</option>
-                <option>Furniture</option>
+                <option>Informartion and Commumication Technology Equipment</option>
+                <option>Agricultural and Forestry</option>
+                <option>Marine and Fishery</option>
+                <option>Airport Equipment</option>
+                <option>Communication Equipment</option>
+                <option>Disaster Response and Rescue Equipment</option>
+                <option>Military Police and Security</option>
+                <option>Medical Equipment</option>
+                <option>Printing Equipment</option>
+                <option>Sports Equipment</option>
+                <option>Technincal and Scientific Equipment</option>
+                <option>Other Machinery and Equipment</option>
+                <option>Furnitures and Fixtures</option>
+                <option>Books</option>
                 <option>Other</option>
               </Select>
             </FormControl>
@@ -658,110 +670,6 @@ const Equipment = ({ setTab }) => {
               <Divider border={4} />
             </HStack>
           </GridItem>
-
-          {/*
-          {isIN && (
-            <Box flex={8} alignSelf={"center"}>
-              <Grid
-                alignItems={"center"}
-                templateColumns="repeat(6, 1fr)"
-                gap={6}
-                paddingEnd={5}
-              >
-                <GridItem colSpan={3} w="100%">
-                  <Box>
-                    <SearchSel
-                      name={"Locations"}
-                      data={locDatas}
-                      propertyName={"location_name"}
-                      fetchdat={fetchLoc}
-                      setSelect={setSelectedLoc}
-                      isSelect={selectedLoc}
-                      setValue={setLocValue}
-                      valueD={locValue}
-                    />
-                  </Box>
-                </GridItem>
-
-                <GridItem colSpan={3} w="100%">
-                  <Box>
-                    <SearchSel
-                      name={"Associate"}
-                      data={assocDatas}
-                      propertyName={"person_name"}
-                      fetchdat={fetchAssoc}
-                      setSelect={setSelectedAssoc}
-                      isSelect={selectedAssoc}
-                      setValue={setassocValue}
-                      valueD={assocValue}
-                    />
-                  </Box>
-                </GridItem>
-                <GridItem colSpan={3} w="100%">
-                  <Box>
-                    <SearchSel
-                      name={"Condition"}
-                      data={condDatas}
-                      propertyName={"conditions_name"}
-                      fetchdat={fetchcond}
-                      setSelect={setSelectedCond}
-                      isSelect={selectedCond}
-                      setValue={setConItem}
-                      valueD={condItem}
-                    />
-                  </Box>
-                </GridItem>
-                <GridItem colSpan={3}>
-                  <FormControl>
-                    <FormLabel>Delivery Date</FormLabel>
-                    <Input
-                      onChange={(e) => {
-                        setdeliveryD(e.target.value);
-                        //console.log(e.target.value);
-                      }}
-                      type="date"
-                    />
-                  </FormControl>
-                </GridItem>
-                <GridItem colSpan={3} w="100%">
-                  <FormControl>
-                    <FormLabel>Property No.</FormLabel>
-                    <Input
-                      onClick={() => {}}
-                      //value={ }
-                      onChange={(e) => {
-                        setpropertyno(e.target.value);
-                      }}
-                    />
-                  </FormControl>
-                </GridItem>
-                <GridItem colSpan={3} w="100%">
-                  <FormControl>
-                    <FormLabel>Serial</FormLabel>
-                    <Input
-                      onClick={() => {}}
-                      onChange={(e) => {
-                        setserial(e.target.value);
-                      }}
-                    />
-                  </FormControl>
-                </GridItem>
-                <GridItem colSpan={6} w="100%">
-                  <FormControl>
-                    <FormLabel>Remarks</FormLabel>
-                    <Input
-                      variant="flushed"
-                      onClick={() => {}}
-                      //value={ }
-                      onChange={(e) => {
-                        setRemarkss(e.target.value);
-                      }}
-                    />
-                  </FormControl>
-                </GridItem>
-              </Grid>
-            </Box>
-          )} */}
 
           <GridItem
             display="flex"

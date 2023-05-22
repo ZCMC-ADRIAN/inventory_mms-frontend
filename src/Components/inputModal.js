@@ -44,6 +44,7 @@ export const VerticallyCenter = ({
   post,
   isClick,
 }) => {
+
   const {
     itemdetails,
     setdeliveryD,
@@ -71,6 +72,7 @@ export const VerticallyCenter = ({
     setpropertyno,
     setserial,
   } = useContext(DataContext);
+  
   const toast = useToast();
 
   const CardDet = ({ property, detail, bg }) => {

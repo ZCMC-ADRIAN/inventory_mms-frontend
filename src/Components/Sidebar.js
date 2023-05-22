@@ -104,13 +104,13 @@ function Sidebar({ visible, show, tab, setTab }) {
           <label>Generate</label>
           <ul>
             <li
-              onClick={() => setTab("report")}
+              onClick={() => {setTab("report"); navigate('/no')}}
               className={tab === "report" ? "active" : ""}
             >
               <p className="sidebar-icon">
                 <MdArticle />
               </p>
-              <text>Report</text>
+              <text>No Property #</text>
               
             </li>
           </ul>

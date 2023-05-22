@@ -21,7 +21,7 @@ export const Context = ({ children }) => {
         response.data[0]["Expiration Date"]
       ).format("MMMM DD YYYY");
 
-      console.log(response.data);
+      // console.log(response.data);
       setItemDetails(response.data);
       return response.data;
     } catch (error) {

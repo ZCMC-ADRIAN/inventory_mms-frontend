@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import {
   FormControl,
   FormLabel,
@@ -6,10 +6,12 @@ import {
   Textarea,
   GridItem,
   Select,
+  Grid,
   Button,
   useToast,
   InputLeftAddon,
   InputGroup,
+  Stack,
   Box,
   Divider,
   SimpleGrid,
@@ -18,8 +20,8 @@ import {
 } from "@chakra-ui/react";
 import useAuth from "../../Hooks/useAuth";
 import localApi from "../../API/Api";
+import SearchSel from "../searchableSelect/searchSel";
 import DataContext from "../../Context/Context";
-import PostContext from "../../Context/Posting";
 import { VerticallyCenter } from "../inputModal";
 
 const Equipment = ({ setTab }) => {
@@ -32,66 +34,35 @@ const Equipment = ({ setTab }) => {
     clearAll,
   } = useContext(DataContext);
 
-  const {
-    //Current State
-    article,
-    articleOther,
-    type,
-    typeOther,
-    descOrig,
-    desc,
-    model,
-    variant,
-    details,
-    other,
-    brand,
-    manufacturer,
-    origin,
-    serialNum,
-    warranty,
-    acquisition,
-    propertyNum,
-    unit,
-    location,
-    donor,
-    donorOther,
-    remarkss,
-    category,
-    cost,
-    accessories,
-    acquiMode,
-    barcode,
-
-    //Set States
-    setArticle,
-    setArticleOther,
-    setType,
-    setTypeOther,
-    setDescOrig,
-    setModel,
-    setVariant,
-    setDetails,
-    setOther,
-    setBrand,
-    setManufacturer,
-    setOrigin,
-    setSerialNum,
-    setWarranty,
-    setAcquisition,
-    setPropertyNum,
-    setUnit,
-    setLocation,
-    setDonor,
-    setDonorOther,
-    setRemarkss,
-    setCategory,
-    setCost,
-    setAccessories,
-    setAcquiMode,
-    setBarcode
-  } = useContext(PostContext)
-
+  const [article, setArticle] = useState("");
+  const [articleOther, setArticleOther] = useState("");
+  const [type, setType] = useState("");
+  const [typeOther, setTypeOther] = useState("");
+  const [descOrig, setDescOrig] = useState("");
+  const [desc, setDesc] = useState("");
+  const [model, setModel] = useState("");
+  const [variant, setVariant] = useState("");
+  const [details, setDetails] = useState("");
+  const [other, setOther] = useState("");
+  const [brand, setBrand] = useState("");
+  const [manufacturer, setManufacturer] = useState("");
+  const [origin, setOrigin] = useState("");
+  const [serialNum, setSerialNum] = useState("");
+  const [warranty, setWarranty] = useState("");
+  const [acquisition, setAcquisition] = useState("");
+  const [propertyNum, setPropertyNum] = useState("");
+  const [unit, setUnit] = useState("");
+  const [location, setLocation] = useState("");
+  const [donor, setDonor] = useState("");
+  const [donorOther, setDonorOther] = useState("");
+  const [remarkss, setRemarkss] = useState("");
+  const [category, setCategory] = useState("");
+  const [cost, setCost] = useState("");
+  const [accessories, setAccessories] = useState("");
+  const [acquiMode, setAcquiMode] = useState("");
+  const [barcode, setBarcode] = useState("");
   const { user } = useAuth();
+  const barCodeRef = useRef(null);
 
   //Utilities State
   const todate = new Date();
@@ -136,19 +107,9 @@ const Equipment = ({ setTab }) => {
     fetchData();
   }, [type, article, acquiMode]);
 
-
-  //Bar Code
-  useEffect(() => {
-    const handleKeyPress = (event) => {
-      const barcodeRegex = /^[0-9]+$/; // only allow digits in barcode
-      const pressedKey = event.key;
-      const isBarcode = barcodeRegex.test(pressedKey);
-
-      if (isBarcode) {
-        setBarcode((prevBarcode) => prevBarcode);
-      }
-    };
-  }, []);
+  useEffect(()=>{
+    barCodeRef.current.focus();
+  }, [isOpen])
 
   //Clear Form
   const clearForm = () => {
@@ -182,6 +143,20 @@ const Equipment = ({ setTab }) => {
   };
 
   const { setAppState } = useAuth();
+
+  useEffect(() => {
+    setDesc(
+      (article === "Other" ? articleOther : article) +
+        " " +
+        (type === "Other" ? typeOther : type) +
+        " " +
+        model +
+        " " +
+        variant +
+        " " +
+        details
+    );
+  }, [article, articleOther, type, typeOther, model, variant, details, other]);
 
   const handleCreate = (e) => {
     e && e.preventDefault();
@@ -329,15 +304,11 @@ const Equipment = ({ setTab }) => {
                 placeholder=" -- Select Category -- "
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                fontSize={15}
               >
                 <option>Machinery</option>
                 <option>Office Equipment</option>
-                <option>Informartion and Commumication Technology Equipment</option>
+                <option>Informartion and Communication Technology Equipment</option>
                 <option>Agricultural and Forestry</option>
-                <option>Marine and Fishery</option>
-                <option>Airport Equipment</option>
-                <option>Communication Equipment</option>
                 <option>Disaster Response and Rescue Equipment</option>
                 <option>Military Police and Security</option>
                 <option>Medical Equipment</option>
@@ -347,14 +318,13 @@ const Equipment = ({ setTab }) => {
                 <option>Other Machinery and Equipment</option>
                 <option>Furnitures and Fixtures</option>
                 <option>Books</option>
-                <option>Other</option>
               </Select>
             </FormControl>
           </GridItem>
 
           <GridItem colSpan={[6, 3, 3, 3]}> 
           <FormLabel>Bar Code Number</FormLabel>
-            <Input isDisabled value={barcode} onChange={(e)=>setBarcode(e.target.value)}/>
+            <Input ref={barCodeRef} value={barcode} onChange={(e)=>setBarcode(e.target.value)}/>
           </GridItem>
 
           <GridItem colSpan={6}>
@@ -465,7 +435,7 @@ const Equipment = ({ setTab }) => {
             </FormControl>
           </GridItem>
 
-          <GridItem colSpan={[6, 6, 2, 2]}>
+          {/* <GridItem colSpan={[6, 6, 2, 2]}>
             <FormControl>
               <FormLabel>Status</FormLabel>
 
@@ -495,7 +465,7 @@ const Equipment = ({ setTab }) => {
                 />
               )}
             </FormControl>
-          </GridItem>
+          </GridItem> */}
 
           <GridItem colSpan={[6, 6, 2, 2]}>
             <FormControl>
@@ -555,7 +525,7 @@ const Equipment = ({ setTab }) => {
 
           <GridItem colSpan={[6, 6, 2, 2]}>
             <FormControl>
-              <FormLabel>Unit</FormLabel>
+              <FormLabel>Unit Name</FormLabel>
               <Input value={unit} onChange={(e) => setUnit(e.target.value)} />
             </FormControl>
           </GridItem>
@@ -631,16 +601,6 @@ const Equipment = ({ setTab }) => {
             </FormControl>
           </GridItem>
 
-          <GridItem colSpan={6}>
-            <FormControl>
-              <FormLabel>Remarks</FormLabel>
-              <Textarea
-                value={remarks}
-                onChange={(e) => setRemarks(e.target.value)}
-              />
-            </FormControl>
-          </GridItem>
-
           <VerticallyCenter
             isOpen={isOpen}
             onOpen={onOpen}
@@ -650,7 +610,7 @@ const Equipment = ({ setTab }) => {
             isClick={isClick}
           ></VerticallyCenter>
 
-          <GridItem colSpan={6}>
+          <GridItem colSpan={6} mt={20}>
             <HStack
               display={"flex"}
               flexDirection={{ lg: "row", md: "column", sm: "column" }}

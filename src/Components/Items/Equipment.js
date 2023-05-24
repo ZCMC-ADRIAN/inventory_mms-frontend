@@ -32,6 +32,7 @@ const Equipment = ({ setTab }) => {
     selectedLoc,
     selectedCond,
     clearAll,
+    propertyno
   } = useContext(DataContext);
 
   const [article, setArticle] = useState("");
@@ -113,33 +114,7 @@ const Equipment = ({ setTab }) => {
 
   //Clear Form
   const clearForm = () => {
-    setArticle("");
-    setArticleOther("");
-    setType("");
-    setTypeOther("");
-    setDescOrig("");
-    setModel("");
-    setVariant("");
-    setDetails("");
-    setOther("");
-    setBrand("");
-    setManufacturer("");
-    setOrigin("");
-    setSerialNum("");
-    setWarranty("");
-    setAcquisition("");
-    setPropertyNum("");
-    setUnit("");
-    setLocation("");
-    setDonor("");
-    setRemarkss("");
-    setCost("");
-    setExpiration("");
-    setAccessories("");
-    setItemStatus("");
-    setItemStatusOther("");
-    setAcquiMode("");
-    setCategory("");
+    setBarcode("");
   };
 
   const { setAppState } = useAuth();
@@ -161,16 +136,6 @@ const Equipment = ({ setTab }) => {
   const handleCreate = (e) => {
     e && e.preventDefault();
     setIsClick(true);
-    // if (cost.length < 1 || cost == 0) {
-    //   onClose();
-    //   setIsClick(false);
-    //   toast({
-    //     title: `Cost cant be null`,
-    //     status: "error",
-    //     isClosable: true,
-    //   });
-    //   return;
-    // }
     if (!category) {
       onClose();
       setIsClick(false);
@@ -219,12 +184,12 @@ const Equipment = ({ setTab }) => {
         category: category || null,
         accessories: accessories || null,
         barcode: barcode || null,
+        property_no: propertyno || null,
         userId: user.userId || null,
       })
       .then(function (response) {
         if (response.data.status === 1) {
           if (response.data.isIN === false) {
-            // clearForm();
             setIsClick(false);
             setAppState("Item Created");
             setTimeout(() => setAppState(""), 500);
@@ -251,6 +216,7 @@ const Equipment = ({ setTab }) => {
                 });
               } else {
                 clearAll();
+                clearForm();
                 toast({
                   title: `New inventory added`,
                   status: "success",
@@ -317,7 +283,7 @@ const Equipment = ({ setTab }) => {
               >
                 <option>Machinery</option>
                 <option>Office Equipment</option>
-                <option>Informartion and Communication Technology Equipment</option>
+                <option>Information and Communication Technology Equipment</option>
                 <option>Agricultural and Forestry</option>
                 <option>Disaster Response and Rescue Equipment</option>
                 <option>Military Police and Security</option>

@@ -64,7 +64,7 @@ function Sidebar({ visible, show, tab, setTab }) {
 
         <div className="navigation">
           <label>Manage</label>
-          <ul style={{ marginBottom: "40px" }}>
+          <ul>
             <li
               onClick={() => setTab("inItem")}
               className={tab === "inItem" || tab === "create" ? "active" : ""}
@@ -73,6 +73,18 @@ function Sidebar({ visible, show, tab, setTab }) {
                 <MdOutlineLogin />
               </p>
               <text>In Item</text>
+            </li>
+          </ul>
+
+          <ul style={{ marginBottom: "40px" }}>
+            <li
+              onClick={() => setTab("barcode")}
+              className={tab === "barcode" || tab === "barCode" ? "active" : ""}
+            >
+              <p className="sidebar-icon">
+                <MdOutlineLogin />
+              </p>
+              <text>In with Barcode</text>
             </li>
           </ul>
 

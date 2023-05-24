@@ -167,7 +167,7 @@ const DetailsModal = ({ isOpen, onClose, inventoryId }) => {
                       <Text mr={3} fontWeight={600} color="gray.500">
                         STATUS:
                       </Text>
-                      <Text>{data.status_name}</Text>
+                      <Text>{data.conditions_name}</Text>
                     </Flex>
 
                     <Flex mt={2}>

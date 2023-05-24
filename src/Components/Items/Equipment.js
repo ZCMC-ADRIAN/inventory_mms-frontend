@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import {
   FormControl,
   FormLabel,
@@ -62,6 +62,7 @@ const Equipment = ({ setTab }) => {
   const [acquiMode, setAcquiMode] = useState("");
   const [barcode, setBarcode] = useState("");
   const { user } = useAuth();
+  const barCodeRef = useRef(null);
 
   //Utilities State
   const todate = new Date();
@@ -106,25 +107,9 @@ const Equipment = ({ setTab }) => {
     fetchData();
   }, [type, article, acquiMode]);
 
-
-  //Bar Code
-  useEffect(() => {
-    const handleKeyPress = (event) => {
-      const barcodeRegex = /^[0-9]+$/; // only allow digits in barcode
-      const pressedKey = event.key;
-      const isBarcode = barcodeRegex.test(pressedKey);
-
-      if (isBarcode) {
-        setBarcode((prevBarcode) => prevBarcode + pressedKey);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyPress);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyPress);
-    };
-  }, []);
+  useEffect(()=>{
+    barCodeRef.current.focus();
+  }, [isOpen])
 
   //Clear Form
   const clearForm = () => {
@@ -332,11 +317,8 @@ const Equipment = ({ setTab }) => {
               >
                 <option>Machinery</option>
                 <option>Office Equipment</option>
-                <option>Informartion and Commumication Technology Equipment</option>
+                <option>Informartion and Communication Technology Equipment</option>
                 <option>Agricultural and Forestry</option>
-                <option>Marine and Fishery</option>
-                <option>Airport Equipment</option>
-                <option>Communication Equipment</option>
                 <option>Disaster Response and Rescue Equipment</option>
                 <option>Military Police and Security</option>
                 <option>Medical Equipment</option>
@@ -346,14 +328,13 @@ const Equipment = ({ setTab }) => {
                 <option>Other Machinery and Equipment</option>
                 <option>Furnitures and Fixtures</option>
                 <option>Books</option>
-                <option>Other</option>
               </Select>
             </FormControl>
           </GridItem>
 
           <GridItem colSpan={[6, 3, 3, 3]}> 
           <FormLabel>Bar Code Number</FormLabel>
-            <Input isDisabled value={barcode} onChange={(e)=>setBarcode(e.target.value)}/>
+            <Input ref={barCodeRef} value={barcode} onChange={(e)=>setBarcode(e.target.value)}/>
           </GridItem>
 
           <GridItem colSpan={6}>
@@ -464,7 +445,7 @@ const Equipment = ({ setTab }) => {
             </FormControl>
           </GridItem>
 
-          <GridItem colSpan={[6, 6, 2, 2]}>
+          {/* <GridItem colSpan={[6, 6, 2, 2]}>
             <FormControl>
               <FormLabel>Status</FormLabel>
 
@@ -494,7 +475,7 @@ const Equipment = ({ setTab }) => {
                 />
               )}
             </FormControl>
-          </GridItem>
+          </GridItem> */}
 
           <GridItem colSpan={[6, 6, 2, 2]}>
             <FormControl>
@@ -554,7 +535,7 @@ const Equipment = ({ setTab }) => {
 
           <GridItem colSpan={[6, 6, 2, 2]}>
             <FormControl>
-              <FormLabel>Unit</FormLabel>
+              <FormLabel>Unit Name</FormLabel>
               <Input value={unit} onChange={(e) => setUnit(e.target.value)} />
             </FormControl>
           </GridItem>
@@ -630,16 +611,6 @@ const Equipment = ({ setTab }) => {
             </FormControl>
           </GridItem>
 
-          <GridItem colSpan={6}>
-            <FormControl>
-              <FormLabel>Remarks</FormLabel>
-              <Textarea
-                value={remarks}
-                onChange={(e) => setRemarks(e.target.value)}
-              />
-            </FormControl>
-          </GridItem>
-
           <VerticallyCenter
             isOpen={isOpen}
             onOpen={onOpen}
@@ -649,7 +620,7 @@ const Equipment = ({ setTab }) => {
             isClick={isClick}
           ></VerticallyCenter>
 
-          <GridItem colSpan={6}>
+          <GridItem colSpan={6} mt={20}>
             <HStack
               display={"flex"}
               flexDirection={{ lg: "row", md: "column", sm: "column" }}

@@ -104,6 +104,10 @@ const ItemModal = ({ isOpen, onClose, details, header, child, item }) => {
         accessor: "serial",
       },
       {
+        Header: "Barcode",
+        accessor: "barcode"
+      },
+      {
         Header: "Location",
         accessor: "location_name",
       },

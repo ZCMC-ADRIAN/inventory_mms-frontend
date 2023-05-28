@@ -283,6 +283,7 @@ const Equipment = ({ setTab }) => {
               >
                 <option>Machinery</option>
                 <option>Office Equipment</option>
+                <option>Janitorial Equipment</option>
                 <option>Information and Communication Technology Equipment</option>
                 <option>Agricultural and Forestry</option>
                 <option>Disaster Response and Rescue Equipment</option>

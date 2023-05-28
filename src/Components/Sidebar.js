@@ -76,18 +76,6 @@ function Sidebar({ visible, show, tab, setTab }) {
             </li>
           </ul>
 
-          <ul style={{ marginBottom: "40px" }}>
-            <li
-              onClick={() => setTab("barcode")}
-              className={tab === "barcode" || tab === "barCode" ? "active" : ""}
-            >
-              <p className="sidebar-icon">
-                <MdOutlineLogin />
-              </p>
-              <text>In with Barcode</text>
-            </li>
-          </ul>
-
           <label>Monitor</label>
           <ul>
             <li

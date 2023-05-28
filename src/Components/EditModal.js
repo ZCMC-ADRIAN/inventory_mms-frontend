@@ -181,12 +181,20 @@ const EditModal = ({ isOpen, onClose, itemId }) => {
                       value={category}
                       onChange={(e) => setCategory(e.target.value)}
                     >
-                      <option>Medical Equipment</option>
-                      <option>Janitorial Equipment</option>
+                      <option>Machinery</option>
                       <option>Office Equipment</option>
-                      <option>Furniture</option>
-                      <option>IT</option>
-                      <option>Other</option>
+                      <option>Janitorial Equipment</option>
+                      <option>Information and Communication Technology Equipment</option>
+                      <option>Agricultural and Forestry</option>
+                      <option>Disaster Response and Rescue Equipment</option>
+                      <option>Military Police and Security</option>
+                      <option>Medical Equipment</option>
+                      <option>Printing Equipment</option>
+                      <option>Sports Equipment</option>
+                      <option>Technincal and Scientific Equipment</option>
+                      <option>Other Machinery and Equipment</option>
+                      <option>Furnitures and Fixtures</option>
+                      <option>Books</option>
                     </Select>
                   </FormControl>
                 </GridItem>
@@ -198,7 +206,7 @@ const EditModal = ({ isOpen, onClose, itemId }) => {
                       isReadOnly
                       background="#eee"
                       disabled
-                      // value={desc}
+                    // value={desc}
                     />
                   </FormControl>
                 </GridItem>

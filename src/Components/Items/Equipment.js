@@ -26,44 +26,68 @@ import { VerticallyCenter } from "../inputModal";
 
 const Equipment = ({ setTab }) => {
   const {
-    setRemarks,
-    remarks,
     postInventory,
     selectedLoc,
     selectedCond,
     clearAll,
-    propertyno
+    propertyno,
+    article,
+    articleOther,
+    type,
+    typeOther,
+    descOrig,
+    desc,
+    model,
+    variant,
+    detailss,
+    other,
+    brand,
+    manufacturer,
+    origin,
+    serialNum,
+    warrantyy,
+    acquisitions,
+    propertyNum,
+    unit,
+    location,
+    donor,
+    donorOther,
+    remarkss,
+    category,
+    cost,
+    accessories,
+    acquiMode,
+    barcode,
+    user, 
+    barCodeRef,
+    setArticle,     
+    setArticleOther,
+    setType,
+    setTypeOther,
+    setDesc,
+    setModel,
+    setVariant,
+    setDetails,
+    setOther,
+    setBrand,
+    setManufacturer,
+    setOrigin,
+    setWarranty,
+    setAcquisition,
+    setUnit,
+    setDonor,
+    setDonorOther,
+    setCategory,
+    setCost,
+    setAccessories,
+    setAcquiMode,
+    setBarcode,
+    setSeries,
+    setGetCateg,
+    newProp
   } = useContext(DataContext);
 
-  const [article, setArticle] = useState("");
-  const [articleOther, setArticleOther] = useState("");
-  const [type, setType] = useState("");
-  const [typeOther, setTypeOther] = useState("");
-  const [descOrig, setDescOrig] = useState("");
-  const [desc, setDesc] = useState("");
-  const [model, setModel] = useState("");
-  const [variant, setVariant] = useState("");
-  const [details, setDetails] = useState("");
-  const [other, setOther] = useState("");
-  const [brand, setBrand] = useState("");
-  const [manufacturer, setManufacturer] = useState("");
-  const [origin, setOrigin] = useState("");
-  const [serialNum, setSerialNum] = useState("");
-  const [warranty, setWarranty] = useState("");
-  const [acquisition, setAcquisition] = useState("");
-  const [propertyNum, setPropertyNum] = useState("");
-  const [unit, setUnit] = useState("");
-  const [location, setLocation] = useState("");
-  const [donor, setDonor] = useState("");
-  const [donorOther, setDonorOther] = useState("");
-  const [remarkss, setRemarkss] = useState("");
-  const [category, setCategory] = useState("");
-  const [cost, setCost] = useState("");
-  const [accessories, setAccessories] = useState("");
-  const [acquiMode, setAcquiMode] = useState("");
-  const [barcode, setBarcode] = useState("");
-  const { user } = useAuth();
-  const barCodeRef = useRef(null);
+  console.log(newProp)
 
   //Utilities State
   const todate = new Date();
@@ -87,6 +111,16 @@ const Equipment = ({ setTab }) => {
 
   //
   const fetchData = async () => {
+    let responseSeries = await localApi.get("series",{
+      params: {cost: cost},
+    });
+    setSeries(responseSeries.data);
+
+    let responseCateg = await localApi.get("code",{
+      params: {categ: category}
+    });
+    setGetCateg(responseCateg.data);
+
     let responseArticle = await localApi.get("article");
     setGetArticle(responseArticle.data);
 
@@ -106,7 +140,7 @@ const Equipment = ({ setTab }) => {
 
   useEffect(() => {
     fetchData();
-  }, [type, article, acquiMode]);
+  }, [type, article, acquiMode, cost, category]);
 
   useEffect(()=>{
     barCodeRef.current.focus();
@@ -129,9 +163,10 @@ const Equipment = ({ setTab }) => {
         " " +
         variant +
         " " +
-        details
+        detailss
     );
-  }, [article, articleOther, type, typeOther, model, variant, details, other]);
+  }, [article, articleOther, type, typeOther, model, variant, detailss, other]);
+
 
   const handleCreate = (e) => {
     e && e.preventDefault();
@@ -165,14 +200,14 @@ const Equipment = ({ setTab }) => {
         status: itemStatus === "Other" ? itemStatusOther : itemStatus || null,
         model: model || null,
         variant: variant || null,
-        details: details || null,
+        details: detailss || null,
         other: other || null,
         brand: brand || null,
         manufacturer: manufacturer || null,
         countries: origin || null,
         serialNum: serialNum || null,
-        warranty: warranty || null,
-        acquisition: acquisition || null,
+        warranty: warrantyy || null,
+        acquisition: acquisitions || null,
         propertyNum: propertyNum || null,
         unit: unit || null,
         location: location || null,
@@ -396,7 +431,7 @@ const Equipment = ({ setTab }) => {
             <FormControl>
               <FormLabel>Details2</FormLabel>
               <Textarea
-                value={details}
+                value={detailss}
                 onChange={(e) => setDetails(e.target.value)}
               />
             </FormControl>
@@ -482,7 +517,7 @@ const Equipment = ({ setTab }) => {
             <FormControl>
               <FormLabel>Warranty</FormLabel>
               <Input
-                value={warranty}
+                value={warrantyy}
                 onChange={(e) => setWarranty(e.target.value)}
                 type="date"
               />
@@ -493,7 +528,7 @@ const Equipment = ({ setTab }) => {
             <FormControl>
               <FormLabel>Acquisition Date</FormLabel>
               <Input
-                value={acquisition}
+                value={acquisitions}
                 onChange={(e) => setAcquisition(e.target.value)}
                 type="date"
               />

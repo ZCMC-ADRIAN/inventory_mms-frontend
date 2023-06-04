@@ -61,6 +61,7 @@ const ItemModal = ({ isOpen, onClose, details, header, child, item }) => {
   const [inventoryId, setInventoryId] = useState([]);
   const [data, setTableData] = useState([]);
 
+
   const fetchlocation = async (value) => {
     const result = await localApi.get(`location-name`, {
       params: {
@@ -105,7 +106,7 @@ const ItemModal = ({ isOpen, onClose, details, header, child, item }) => {
       },
       {
         Header: "Barcode",
-        accessor: "barcode"
+        accessor: "barcode",
       },
       {
         Header: "Location",

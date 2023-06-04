@@ -1,10 +1,42 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, useRef } from "react";
 import api from "../API/Api";
 import { useToast } from "@chakra-ui/react";
+import useAuth from "../Hooks/useAuth";
 const moment = require("moment");
 const DataContext = createContext({});
 
 export const Context = ({ children }) => {
+  // Create New Item
+  const [article, setArticle] = useState("");
+  const [articleOther, setArticleOther] = useState("");
+  const [type, setType] = useState("");
+  const [typeOther, setTypeOther] = useState("");
+  const [descOrig, setDescOrig] = useState("");
+  const [desc, setDesc] = useState("");
+  const [model, setModel] = useState("");
+  const [variant, setVariant] = useState("");
+  const [detailss, setDetails] = useState("");
+  const [other, setOther] = useState("");
+  const [brand, setBrand] = useState("");
+  const [manufacturer, setManufacturer] = useState("");
+  const [origin, setOrigin] = useState("");
+  const [serialNum, setSerialNum] = useState("");
+  const [warrantyy, setWarranty] = useState("");
+  const [acquisitions, setAcquisition] = useState("");
+  const [propertyNum, setPropertyNum] = useState("");
+  const [unit, setUnit] = useState("");
+  const [location, setLocation] = useState("");
+  const [donor, setDonor] = useState("");
+  const [donorOther, setDonorOther] = useState("");
+  const [remarkss, setRemarkss] = useState("");
+  const [category, setCategory] = useState("");
+  const [cost, setCost] = useState("");
+  const [accessories, setAccessories] = useState("");
+  const [acquiMode, setAcquiMode] = useState("");
+  const [barcode, setBarcode] = useState("");
+  const { user } = useAuth();
+  const barCodeRef = useRef(null);
+
   const toast = useToast();
 
   const fetchItem = async (value) => {
@@ -53,6 +85,19 @@ export const Context = ({ children }) => {
     });
     setLocDatas(result.data);
   };
+
+  const [series, setSeries] = useState([]);
+  const [getCateg, setGetCateg] = useState([]);
+  const [newProp, setNewProp] = useState("");
+
+  const categCode = getCateg.map(obj => obj.code);
+  const areaCode = locDatas.map(obj => obj.area_code);
+
+  useEffect(()=>{
+    setNewProp(
+      "2023" + "-" + categCode[0] + "-" + series + "-" + areaCode[0]
+    )
+  })
 
   const [assocDatas, setassocDatas] = useState([]);
   const [assocValue, setassocValue] = useState([]);
@@ -217,6 +262,7 @@ export const Context = ({ children }) => {
           newAssoc_name: assocValue,
           delivery_date: deliveryD,
           property_no: propertyno,
+          newProperty: newProp,
           serial: serial,
           quantity: 1,
           loose: loose,
@@ -319,7 +365,68 @@ export const Context = ({ children }) => {
 
         //Inventory Table
         inventoryData,
-        fetchInventoryData
+        fetchInventoryData,
+
+        //Create New Item
+        article,
+        articleOther,
+        type,
+        typeOther,
+        descOrig,
+        desc,
+        model,
+        variant,
+        detailss,
+        other,
+        brand,
+        manufacturer,
+        origin,
+        serialNum,
+        warrantyy,
+        acquisitions,
+        propertyNum,
+        unit,
+        location,
+        donor,
+        donorOther,
+        remarkss,
+        category,
+        cost,
+        accessories,
+        acquiMode,
+        barcode,
+        user,
+        barCodeRef,
+        setArticle,
+        setArticleOther,
+        setType,
+        setTypeOther,
+        setDescOrig,
+        setDesc,
+        setModel,
+        setVariant,
+        setDetails,
+        setOther,
+        setBrand,
+        setManufacturer,
+        setOrigin,
+        setSerialNum,
+        setWarranty,
+        setAcquisition,
+        setPropertyNum,
+        setUnit,
+        setLocation,
+        setDonor,
+        setDonorOther,
+        setRemarkss,
+        setCategory,
+        setCost,
+        setAccessories,
+        setAcquiMode,
+        setBarcode,
+        setSeries,
+        setGetCateg,
+        newProp
       }}
     >
       {children}

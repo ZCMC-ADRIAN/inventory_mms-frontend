@@ -32,6 +32,7 @@ import SearchSel from "./searchableSelect/searchSel";
 import { EditIcon, CloseIcon } from "@chakra-ui/icons";
 import EditableDet from "./EditableDet";
 import ICSTab from "./ICSTab";
+import PARTab from "./PARTab";
 
 export const VerticallyCenter = ({
   title,
@@ -71,6 +72,8 @@ export const VerticallyCenter = ({
     setInv,
   } = useContext(DataContext);
 
+  const [tab, setTab] = useState("");
+
   const toast = useToast();
 
   const CardDet = ({ property, detail, bg }) => {
@@ -108,9 +111,9 @@ export const VerticallyCenter = ({
         <ModalContent w={"60%"} minW={"60%"} margin={"100px"}>
           <Tabs isFitted variant="enclosed">
             <TabList>
-              <Tab _selected={{ color: "white", bg: "blue.500" }}>Default</Tab>
-              <Tab _selected={{ color: "white", bg: "blue.500" }}>ICS</Tab>
-              {/* <Tab _selected={{ color: "white", bg: "blue.500" }}>PAR</Tab> */}
+              <Tab _selected={{ color: "white", bg: "blue.500" }} onClick={() => setTab("default")}>Default</Tab>
+              <Tab _selected={{ color: "white", bg: "blue.500" }} onClick={() => setTab("ics")}>ICS</Tab>
+              <Tab _selected={{ color: "white", bg: "blue.500" }} onClick={() => setTab("par")}>PAR</Tab>
             </TabList>
             <TabPanels>
               <TabPanel>
@@ -148,7 +151,7 @@ export const VerticallyCenter = ({
                         <GridItem colSpan={3} w="100%">
                           <Box>
                             <SearchSel
-                              name={"Associate"}
+                              name={"Accountability Officer"}
                               data={assocDatas}
                               propertyName={"person_name"}
                               fetchdat={fetchAssoc}
@@ -213,7 +216,6 @@ export const VerticallyCenter = ({
                           <FormControl>
                             <FormLabel>Remarks</FormLabel>
                             <Textarea
-                              variant="flushed"
                               onClick={() => {}}
                               //value={ }
                               onChange={(e) => {
@@ -361,9 +363,11 @@ export const VerticallyCenter = ({
                 </ModalFooter>
               </TabPanel>
               <TabPanel>
-                <ICSTab isOpen={isOpen} post={post} isItemInserted={isItemInserted}/>
+                <ICSTab isOpen={isOpen} post={post} isItemInserted={isItemInserted} tab={tab} />
               </TabPanel>
-              <TabPanel>PAR</TabPanel>
+              <TabPanel>
+                <PARTab isOpen={isOpen} post={post} isItemInserted={isItemInserted} tab={tab} />
+              </TabPanel>
             </TabPanels>
           </Tabs>
         </ModalContent>

@@ -29,7 +29,7 @@ import {
   TabPanel,
 } from "@chakra-ui/react";
 
-const ICSTab = ({
+const PARTab = ({
   title,
   children,
   isOpen,
@@ -84,35 +84,21 @@ const ICSTab = ({
             >
               <GridItem colSpan={3}>
                 <FormControl>
-                  <FormLabel color={"blackAlpha.600"}>PO #</FormLabel>
+                  <FormLabel color={"blackAlpha.600"}>DRF #</FormLabel>
                   <Input />
                 </FormControl>
               </GridItem>
 
               <GridItem colSpan={3}>
                 <FormControl color={"blackAlpha.600"}>
-                  <FormLabel>PO Date</FormLabel>
+                  <FormLabel>DRF Date</FormLabel>
                   <Input type="date" />
                 </FormControl>
               </GridItem>
 
               <GridItem colSpan={3}>
                 <FormControl color={"blackAlpha.600"}>
-                  <FormLabel>Invoice #</FormLabel>
-                  <Input />
-                </FormControl>
-              </GridItem>
-
-              <GridItem colSpan={3}>
-                <FormControl color={"blackAlpha.600"}>
-                  <FormLabel>Invoice Date</FormLabel>
-                  <Input type="date" />
-                </FormControl>
-              </GridItem>
-
-              <GridItem colSpan={3}>
-                <FormControl color={"blackAlpha.600"}>
-                  <FormLabel>ORS/BURS #</FormLabel>
+                  <FormLabel>IAR #</FormLabel>
                   <Input />
                 </FormControl>
               </GridItem>
@@ -217,4 +203,4 @@ const ICSTab = ({
   );
 };
 
-export default ICSTab;
+export default PARTab;

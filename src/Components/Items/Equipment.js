@@ -516,11 +516,27 @@ const Equipment = ({ setTab }) => {
           <GridItem colSpan={[6, 6, 2, 2]}>
             <FormControl>
               <FormLabel>Warranty</FormLabel>
-              <Input
+              <Select
                 value={warrantyy}
                 onChange={(e) => setWarranty(e.target.value)}
-                type="date"
-              />
+                placeholder="- Select Warranty -"
+              >
+                <option>5 months</option>
+                <option>6 months</option>
+                <option>7 months</option>
+                <option>1 year</option>
+                <option>2 years</option>
+                <option>3 years</option>
+                <option>4 years</option>
+                <option>5 years</option>
+              </Select>
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={[6, 6, 2, 2]}>
+            <FormControl>
+              <FormLabel>Preventive Maintenance</FormLabel>
+              <Input />
             </FormControl>
           </GridItem>
 
@@ -550,7 +566,7 @@ const Equipment = ({ setTab }) => {
                 onChange={(e) => setAcquiMode(e.target.value)}
                 placeholder="- Select Acquisition Mode -"
               >
-                <option>Purchase</option>
+                <option>Regular</option>
                 <option>Donation</option>
               </Select>
             </FormControl>

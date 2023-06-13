@@ -38,7 +38,7 @@ import EditModal from "./EditModal";
 import DataContext from "../Context/Context";
 
 const CustomTable = ({ title, columns, data, child, children }) => {
-  const { fetchItem } = useContext(DataContext);
+  const { fetchItem, setInv } = useContext(DataContext);
   const {
     getTableProps,
     getTableBodyProps,
@@ -172,12 +172,13 @@ const CustomTable = ({ title, columns, data, child, children }) => {
                                 onClick={() => {
                                   onOpen();
                                   fetchItem(row.original.Pk_itemId);
+                                  setInv(true);
                                 }}
                               >
                                 <FaClipboardList color="teal" />
                               </Button>
 
-                              <Button
+                              {/* <Button
                                 _hover={{
                                   bg: "lightgray",
                                   boxShadow: "lg",
@@ -190,7 +191,7 @@ const CustomTable = ({ title, columns, data, child, children }) => {
                                 }}
                               >
                                 <AiFillEdit color="grey" />
-                              </Button>
+                              </Button> */}
                             </Flex>
                           ) : cell.column.Header === "No" ? (
                             <Text fontWeight={"bold"} color={"green.600"}>

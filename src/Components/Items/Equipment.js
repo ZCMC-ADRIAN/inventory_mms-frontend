@@ -84,10 +84,10 @@ const Equipment = ({ setTab }) => {
     setBarcode,
     setSeries,
     setGetCateg,
-    newProp
+    newProp,
+    itemId,
+    setPrev
   } = useContext(DataContext);
-
-  console.log(newProp)
 
   //Utilities State
   const todate = new Date();
@@ -111,6 +111,14 @@ const Equipment = ({ setTab }) => {
 
   //
   const fetchData = async () => {
+    let responseArticle = await localApi.get("article");
+    setGetArticle(responseArticle.data);
+
+    let responseTypes = await localApi.get("types", {
+      params: { article: article },
+    });
+    setGetTypes(responseTypes.data);
+    
     let responseSeries = await localApi.get("series",{
       params: {cost: cost},
     });
@@ -120,14 +128,6 @@ const Equipment = ({ setTab }) => {
       params: {categ: category}
     });
     setGetCateg(responseCateg.data);
-
-    let responseArticle = await localApi.get("article");
-    setGetArticle(responseArticle.data);
-
-    let responseTypes = await localApi.get("types", {
-      params: { article: article },
-    });
-    setGetTypes(responseTypes.data);
 
     let responseStatus = await localApi.get("status");
     setGetStatus(responseStatus.data);

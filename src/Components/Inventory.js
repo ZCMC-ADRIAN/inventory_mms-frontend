@@ -42,12 +42,7 @@ import {
 } from "@chakra-ui/react";
 
 import {
-  ArrowRightIcon,
-  ArrowLeftIcon,
-  ChevronRightIcon,
-  ChevronLeftIcon,
-  CloseIcon,
-  ChevronDownIcon,
+  CloseIcon,q
 } from "@chakra-ui/icons";
 
 const Inventory = () => {

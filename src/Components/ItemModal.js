@@ -97,8 +97,12 @@ const ItemModal = ({ isOpen, onClose, details, header, child, item }) => {
         accessor: "desc",
       },
       {
-        Header: "Property No",
+        Header: "Old Property No",
         accessor: "property_no",
+      },
+      {
+        Header: "New Property No",
+        accessor: "newProperty"
       },
       {
         Header: "Serial",
@@ -180,7 +184,7 @@ const ItemModal = ({ isOpen, onClose, details, header, child, item }) => {
           <ModalCloseButton bg="blue.300" _hover={{ bg: "blue.500" }} />
           <ModalBody className="item-modal" p={8}>
             <Center>
-              <Box w={"80%"} bg={"white"} padding={"30px"} mt={10}>
+              <Box w={"90%"} bg={"white"} padding={"30px"} mt={10}>
                 <Box w={"100%"}>
                   <Flex
                     justifyContent={"space-between"}
@@ -376,7 +380,7 @@ const ItemModal = ({ isOpen, onClose, details, header, child, item }) => {
                                           <FaClipboardList color="teal" />
                                         </Button>
 
-                                        <Button
+                                        {/* <Button
                                           _hover={{
                                             bg: "lightgray",
                                             boxShadow: "lg",
@@ -389,7 +393,7 @@ const ItemModal = ({ isOpen, onClose, details, header, child, item }) => {
                                           }}
                                         >
                                           <AiFillEdit color="grey" />
-                                        </Button>
+                                        </Button> */}
 
                                         {/* <Button
                                           _hover={{

@@ -2,7 +2,7 @@ import { createContext, useEffect, useState, useRef } from "react";
 import api from "../API/Api";
 import { useToast } from "@chakra-ui/react";
 import useAuth from "../Hooks/useAuth";
-const moment = require("moment");
+import moment from "moment/moment";
 const DataContext = createContext({});
 
 export const Context = ({ children }) => {
@@ -34,8 +34,15 @@ export const Context = ({ children }) => {
   const [accessories, setAccessories] = useState("");
   const [acquiMode, setAcquiMode] = useState("");
   const [barcode, setBarcode] = useState("");
+  const [inv, setInv] = useState(false);
   const { user } = useAuth();
   const barCodeRef = useRef(null);
+
+  const year = new Date();
+  const yearForm = moment(year).format("YYYY");
+
+  const month = new Date();
+  const monthForm = moment(month).format("MM");
 
   const toast = useToast();
 
@@ -76,6 +83,7 @@ export const Context = ({ children }) => {
   const [locDatas, setLocDatas] = useState([]);
   const [locValue, setLocValue] = useState([]);
   const [selectedLoc, setSelectedLoc] = useState();
+
   const fetchLoc = async (value) => {
     //http://127.0.0.1:8000/api/location
     const result = await api.get("/location", {
@@ -85,19 +93,6 @@ export const Context = ({ children }) => {
     });
     setLocDatas(result.data);
   };
-
-  const [series, setSeries] = useState([]);
-  const [getCateg, setGetCateg] = useState([]);
-  const [newProp, setNewProp] = useState("");
-
-  const categCode = getCateg.map(obj => obj.code);
-  const areaCode = locDatas.map(obj => obj.area_code);
-
-  useEffect(()=>{
-    setNewProp(
-      "2023" + "-" + categCode[0] + "-" + series + "-" + areaCode[0]
-    )
-  })
 
   const [assocDatas, setassocDatas] = useState([]);
   const [assocValue, setassocValue] = useState([]);
@@ -110,6 +105,57 @@ export const Context = ({ children }) => {
     );
     setassocDatas(result.data);
   };
+
+  const [series, setSeries] = useState([]);
+  const [getCateg, setGetCateg] = useState([]);
+  const [newProp, setNewProp] = useState("");
+  const [prev, setPrev] = useState([]);
+  const [areaCode, setAreaCode] = useState([]);
+  const [icsNumSeries, setICSNumSeries] = useState([]);
+  const [getCost, setGetCost] = useState([]);
+  const [icsNumber, setIcsNumber] = useState("");
+
+  const categCode = getCateg.map((obj) => obj.code);
+  const areaCodes = areaCode.map((obj) => obj.area_code);
+  const prevSeries = prev.map((obj) => obj.series);
+  const prevCode = prev.map((obj) => obj.code);
+  const itemCost = getCost.map((obj) => obj.cost);
+
+  // useEffect(() => {
+  //   if (cost >= 50000 || itemCost >= 50000) {
+  //     if (inv === true) {
+  //       setNewProp(
+  //         yearForm + "-" + prevCode + "-" + prevSeries + "-" + areaCodes[0]
+  //       );
+  //     } else {
+  //       setNewProp(
+  //         yearForm + "-" + categCode[0] + "-" + series + "-" + areaCodes[0]
+  //       );
+  //     }
+  //   } else if (cost >= 5000) {
+  //     setNewProp("SPHV" + "-" + yearForm + "-" + monthForm + "-" + series);
+  //   } else if (cost < 5000) {
+  //     setNewProp("SPLV" + "-" + yearForm + "-" + monthForm + "-" + series);
+  //   }
+  //   setIcsNumber(
+  //     yearForm + "-" + monthForm + "-" + icsNumSeries
+  //   );
+  // });
+
+  useEffect(() => {
+    if (cost >= 50000) {
+        setNewProp(
+          yearForm + "-" + categCode[0] + "-" + series + "-" + areaCodes[0]
+        );
+    } else if (cost >= 5000) {
+      setNewProp("SPHV" + "-" + yearForm + "-" + monthForm + "-" + series);
+    } else if (cost < 5000) {
+      setNewProp("SPLV" + "-" + yearForm + "-" + monthForm + "-" + series);
+    }
+    setIcsNumber(
+      yearForm + "-" + monthForm + "-" + icsNumSeries
+    );
+  });
 
   //modaldetails
   const [itemdetails, setItemDetails] = useState(null);
@@ -180,26 +226,42 @@ export const Context = ({ children }) => {
       },
     });
     setInventoryData(result.data);
-  };  
+  };
 
-  {
-    /*
-  response.data[0].Warranty = moment(response.data[0].Warranty).format(
-        "MMMM DD YYYY"
-      );
-      response.data[0]["Acquisition Date"] = moment(
-        response.data[0]["Acquisition Date"]
-      ).format("MMMM DD YYYY");
-      response.data[0]["Expiration Date"] = moment(
-        response.data[0]["Expiration Date"]
-      ).format("MMMM DD YYYY");
-*/
+  const fetchPrev = async (value) => {
+    let responsePrev = await api.get("/prev", {
+      params: { itemId: itemId },
+    });
+    setPrev(responsePrev.data);
+  };
+
+  const fetchAreaCode = async () => {
+    let responseAreaCode = await api.get("/locName", {
+      params: { locValue: locValue },
+    });
+    setAreaCode(responseAreaCode.data);
+  };
+
+  const fetchICSNumSeries = async () => {
+    let responseICSNum = await api.get("/icsnum");
+    setICSNumSeries(responseICSNum.data);
+  }
+
+  const fetchCost= async() => {
+    let responseCost = await api.get("/cost",{
+      params: {itemId: itemId}
+    });
+    setGetCost(responseCost.data);
   }
 
   useEffect(() => {
     setSelectedAssoc();
     setassocValue("");
-  }, [selectedLoc]);
+    fetchPrev();
+    fetchAreaCode();
+    fetchICSNumSeries();
+    fetchCost();
+  }, [selectedLoc, itemId, locValue]);
 
   const clearAll = () => {
     setItemId(null);
@@ -264,6 +326,7 @@ export const Context = ({ children }) => {
           property_no: propertyno,
           newProperty: newProp,
           serial: serial,
+          barcode: barcode,
           quantity: 1,
           loose: loose,
           remarks: remarks,
@@ -395,8 +458,10 @@ export const Context = ({ children }) => {
         accessories,
         acquiMode,
         barcode,
+        prev,
         user,
         barCodeRef,
+        itemCost,
         setArticle,
         setArticleOther,
         setType,
@@ -426,7 +491,9 @@ export const Context = ({ children }) => {
         setBarcode,
         setSeries,
         setGetCateg,
-        newProp
+        newProp,
+        setPrev,
+        setInv,
       }}
     >
       {children}

@@ -2,21 +2,16 @@ import { useContext, useEffect, useRef, useState } from "react";
 import DataContext from "../Context/Context";
 import {
   Modal,
-  ModalOverlay,
   ModalContent,
   ModalHeader,
   ModalFooter,
   ModalBody,
   ModalCloseButton,
   Button,
-  useDisclosure,
-  SimpleGrid,
   Grid,
   GridItem,
   Divider,
-  Center,
   Text,
-  Square,
   Flex,
   Stack,
   Box,
@@ -25,15 +20,18 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Textarea,
   useToast,
-  color,
-  InputRightElement,
-  InputGroup,
-  InputLeftElement,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
 } from "@chakra-ui/react";
 import SearchSel from "./searchableSelect/searchSel";
 import { EditIcon, CloseIcon } from "@chakra-ui/icons";
 import EditableDet from "./EditableDet";
+import ICSTab from "./ICSTab";
 
 export const VerticallyCenter = ({
   title,
@@ -44,7 +42,6 @@ export const VerticallyCenter = ({
   post,
   isClick,
 }) => {
-
   const {
     itemdetails,
     setdeliveryD,
@@ -71,8 +68,9 @@ export const VerticallyCenter = ({
     fetchAssoc,
     setpropertyno,
     setserial,
+    setInv,
   } = useContext(DataContext);
-  
+
   const toast = useToast();
 
   const CardDet = ({ property, detail, bg }) => {
@@ -101,137 +99,146 @@ export const VerticallyCenter = ({
         onClose={() => {
           onClose();
           clearAll();
+          setInv(false);
         }}
         size={"full"}
         isOpen={isOpen}
         isCentered
       >
         <ModalContent w={"60%"} minW={"60%"} margin={"100px"}>
-          <ModalHeader>
-            {title}
-            {/* {selectedLoc && selectedLoc.Pk_locationId}
+          <Tabs isFitted variant="enclosed">
+            <TabList>
+              <Tab _selected={{ color: "white", bg: "blue.500" }}>Default</Tab>
+              <Tab _selected={{ color: "white", bg: "blue.500" }}>ICS</Tab>
+              {/* <Tab _selected={{ color: "white", bg: "blue.500" }}>PAR</Tab> */}
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                <ModalHeader>
+                  {title}
+                  {/* {selectedLoc && selectedLoc.Pk_locationId}
             {selectedAssoc && selectedAssoc.Pk_assocId} */}
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            {/* {children} */}
-            <Flex color={"blackAlpha.600"} h={"70vh"}>
-              <Box flex={8} alignSelf={"center"}>
-                <Grid
-                  alignItems={"center"}
-                  templateColumns="repeat(6, 1fr)"
-                  gap={6}
-                  paddingEnd={5}
-                >
-                  <GridItem colSpan={3} w="100%">
-                    <Box>
-                      <SearchSel
-                        name={"Locations"}
-                        data={locDatas}
-                        propertyName={"location_name"}
-                        fetchdat={fetchLoc}
-                        setSelect={setSelectedLoc}
-                        isSelect={selectedLoc}
-                        setValue={setLocValue}
-                        valueD={locValue}
-                      />
-                    </Box>
-                  </GridItem>
-
-                  <GridItem colSpan={3} w="100%">
-                    <Box>
-                      <SearchSel
-                        name={"Associate"}
-                        data={assocDatas}
-                        propertyName={"person_name"}
-                        fetchdat={fetchAssoc}
-                        setSelect={setSelectedAssoc}
-                        isSelect={selectedAssoc}
-                        setValue={setassocValue}
-                        valueD={assocValue}
-                      />
-                    </Box>
-                  </GridItem>
-                  <GridItem colSpan={3} w="100%">
-                    <Box>
-                      <SearchSel
-                        name={"Condition"}
-                        data={condDatas}
-                        propertyName={"conditions_name"}
-                        fetchdat={fetchcond}
-                        setSelect={setSelectedCond}
-                        isSelect={selectedCond}
-                        setValue={setConItem}
-                        valueD={condItem}
-                      />
-                    </Box>
-                  </GridItem>
-                  <GridItem colSpan={3}>
-                    <FormControl>
-                      <FormLabel>Delivery Date</FormLabel>
-                      <Input
-                        // value={acquisition}
-                        onChange={(e) => {
-                          setdeliveryD(e.target.value);
-                          //console.log(e.target.value);
-                        }}
-                        type="date"
-                      />
-                    </FormControl>
-                  </GridItem>
-                  <GridItem colSpan={3} w="100%">
-                    <FormControl>
-                      <FormLabel>Property No.</FormLabel>
-                      <Input
-                        onClick={() => {}}
-                        //value={ }
-                        onChange={(e) => {
-                          setpropertyno(e.target.value);
-                        }}
-                      />
-                    </FormControl>
-                  </GridItem>
-                  <GridItem colSpan={3} w="100%">
-                    <FormControl>
-                      <FormLabel>Serial</FormLabel>
-                      <Input
-                        onClick={() => {}}
-                        onChange={(e) => {
-                          setserial(e.target.value);
-                        }}
-                      />
-                    </FormControl>
-                  </GridItem>
-                  <GridItem colSpan={6} w="100%">
-                    <FormControl>
-                      <FormLabel>Remarks</FormLabel>
-                      <Input
-                        variant="flushed"
-                        onClick={() => {}}
-                        //value={ }
-                        onChange={(e) => {
-                          setRemarks(e.target.value);
-                        }}
-                      />
-                    </FormControl>
-                  </GridItem>
-                </Grid>
-              </Box>
-
-              {!isItemInserted && (
-                <>
-                  <Divider orientation="vertical"></Divider>
-                  <Box flex="6" overflowY={"auto"} paddingRight={2}>
-                    <Stack gap={0} style={{ padding: "15px 15px" }}>
-                      <Heading
-                        color={"blackAlpha.600"}
-                        style={{ fontFamily: "poppins" }}
-                        fontWeight={"regular"}
-                        fontSize={"30"}
+                </ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  {/* {children} */}
+                  <Flex color={"blackAlpha.600"} h={"70vh"}>
+                    <Box flex={8} alignSelf={"center"}>
+                      <Grid
+                        alignItems={"center"}
+                        templateColumns="repeat(6, 1fr)"
+                        gap={6}
+                        paddingEnd={5}
                       >
-                        Items Description
-                      </Heading>
-                      <Box
+                        <GridItem colSpan={3} w="100%">
+                          <Box>
+                            <SearchSel
+                              name={"Locations"}
+                              data={locDatas}
+                              propertyName={"location_name"}
+                              fetchdat={fetchLoc}
+                              setSelect={setSelectedLoc}
+                              isSelect={selectedLoc}
+                              setValue={setLocValue}
+                              valueD={locValue}
+                            />
+                          </Box>
+                        </GridItem>
+
+                        <GridItem colSpan={3} w="100%">
+                          <Box>
+                            <SearchSel
+                              name={"Associate"}
+                              data={assocDatas}
+                              propertyName={"person_name"}
+                              fetchdat={fetchAssoc}
+                              setSelect={setSelectedAssoc}
+                              isSelect={selectedAssoc}
+                              setValue={setassocValue}
+                              valueD={assocValue}
+                            />
+                          </Box>
+                        </GridItem>
+                        <GridItem colSpan={3} w="100%">
+                          <Box>
+                            <SearchSel
+                              name={"Condition"}
+                              data={condDatas}
+                              propertyName={"conditions_name"}
+                              fetchdat={fetchcond}
+                              setSelect={setSelectedCond}
+                              isSelect={selectedCond}
+                              setValue={setConItem}
+                              valueD={condItem}
+                            />
+                          </Box>
+                        </GridItem>
+                        <GridItem colSpan={3}>
+                          <FormControl>
+                            <FormLabel>Delivery Date</FormLabel>
+                            <Input
+                              // value={acquisition}
+                              onChange={(e) => {
+                                setdeliveryD(e.target.value);
+                                //console.log(e.target.value);
+                              }}
+                              type="date"
+                            />
+                          </FormControl>
+                        </GridItem>
+                        <GridItem colSpan={3} w="100%">
+                          <FormControl>
+                            <FormLabel>Property No.</FormLabel>
+                            <Input
+                              onClick={() => {}}
+                              //value={ }
+                              onChange={(e) => {
+                                setpropertyno(e.target.value);
+                              }}
+                            />
+                          </FormControl>
+                        </GridItem>
+                        <GridItem colSpan={3} w="100%">
+                          <FormControl>
+                            <FormLabel>Serial</FormLabel>
+                            <Input
+                              onClick={() => {}}
+                              onChange={(e) => {
+                                setserial(e.target.value);
+                              }}
+                            />
+                          </FormControl>
+                        </GridItem>
+                        <GridItem colSpan={6} w="100%">
+                          <FormControl>
+                            <FormLabel>Remarks</FormLabel>
+                            <Textarea
+                              variant="flushed"
+                              onClick={() => {}}
+                              //value={ }
+                              onChange={(e) => {
+                                setRemarks(e.target.value);
+                              }}
+                            />
+                          </FormControl>
+                        </GridItem>
+                      </Grid>
+                    </Box>
+
+                    {!isItemInserted && (
+                      <>
+                        <Divider orientation="vertical"></Divider>
+                        <Box flex="6" overflowY={"auto"} paddingRight={2}>
+                          <Stack gap={0} style={{ padding: "15px 15px" }}>
+                            <Heading
+                              color={"blackAlpha.600"}
+                              style={{ fontFamily: "poppins" }}
+                              fontWeight={"regular"}
+                              fontSize={"30"}
+                            >
+                              Items Description
+                            </Heading>
+                            {/* <Box
                         fontSize={15}
                         color={"blackAlpha.600"}
                         w={"100%"}
@@ -249,109 +256,116 @@ export const VerticallyCenter = ({
                             alt="Dan Abramov"
                           ></Image>
                         </Flex>
-                      </Box>
+                      </Box> */}
 
-                      {itemdetails != null &&
-                        Object.keys(itemdetails[0]).map((e, i) => (
-                          <CardDet
-                            key={i}
-                            bg={i % 2 == 0 && "#f3f7fa"}
-                            property={e}
-                            detail={itemdetails[0][e]}
-                          />
-                        ))}
-                    </Stack>
-                  </Box>
-                </>
-              )}
-            </Flex>
-          </ModalBody>
-          <ModalFooter>
-            {isItemInserted ? (
-              <Button
-                colorScheme={"blue"}
-                isLoading={isClick}
-                onClick={() => {
-                  console.log("aa");
-                  post();
-                  // postInventory().then((e) => {
-                  //   if (e.status == 500) {
-                  //     console.log(e.status == 500);
-                  //     toast({
-                  //       title: `please check your inputs`,
-                  //       status: "error",
-                  //       isClosable: true,
-                  //     });
-                  //   } else {
-                  //     clearAll();
-                  //     onClose();
-                  //     toast({
-                  //       title: `New inventory added`,
-                  //       status: "success",
-                  //       isClosable: true,
-                  //     });
-                  //     if (!selectedLoc) {
-                  //       toast({
-                  //         title: `New location created`,
-                  //         status: "success",
-                  //         isClosable: true,
-                  //       });
-                  //     }
-                  //     if (!selectedCond) {
-                  //       toast({
-                  //         title: `New Condition created`,
-                  //         status: "success",
-                  //         isClosable: true,
-                  //       });
-                  //     }
-                  //   }
-                  // });
-                }}
-              >
-                Create Item & IN
-              </Button>
-            ) : (
-              <Button
-                colorScheme={"teal"}
-                onClick={() => {
-                  postInventory().then((e) => {
-                    if (e.status == 500) {
-                      console.log(e.status == 500);
-                      toast({
-                        title: `please check your inputs`,
-                        status: "error",
-                        isClosable: true,
-                      });
-                    } else {
-                      clearAll();
-                      onClose();
-                      toast({
-                        title: `New inventory added`,
-                        status: "success",
-                        isClosable: true,
-                      });
-                      if (!selectedLoc) {
-                        toast({
-                          title: `New location created`,
-                          status: "success",
-                          isClosable: true,
+                            {itemdetails != null &&
+                              Object.keys(itemdetails[0]).map((e, i) => (
+                                <CardDet
+                                  key={i}
+                                  bg={i % 2 == 0 && "#f3f7fa"}
+                                  property={e}
+                                  detail={itemdetails[0][e]}
+                                />
+                              ))}
+                          </Stack>
+                        </Box>
+                      </>
+                    )}
+                  </Flex>
+                </ModalBody>
+                <ModalFooter>
+                  {isItemInserted ? (
+                    <Button
+                      colorScheme={"blue"}
+                      isLoading={isClick}
+                      onClick={() => {
+                        console.log("aa");
+                        post();
+                        // postInventory().then((e) => {
+                        //   if (e.status == 500) {
+                        //     console.log(e.status == 500);
+                        //     toast({
+                        //       title: `please check your inputs`,
+                        //       status: "error",
+                        //       isClosable: true,
+                        //     });
+                        //   } else {
+                        //     clearAll();
+                        //     onClose();
+                        //     toast({
+                        //       title: `New inventory added`,
+                        //       status: "success",
+                        //       isClosable: true,
+                        //     });
+                        //     if (!selectedLoc) {
+                        //       toast({
+                        //         title: `New location created`,
+                        //         status: "success",
+                        //         isClosable: true,
+                        //       });
+                        //     }
+                        //     if (!selectedCond) {
+                        //       toast({
+                        //         title: `New Condition created`,
+                        //         status: "success",
+                        //         isClosable: true,
+                        //       });
+                        //     }
+                        //   }
+                        // });
+                      }}
+                    >
+                      Create Item & IN
+                    </Button>
+                  ) : (
+                    <Button
+                      colorScheme={"teal"}
+                      onClick={() => {
+                        postInventory().then((e) => {
+                          if (e.status == 500) {
+                            console.log(e.status == 500);
+                            toast({
+                              title: `please check your inputs`,
+                              status: "error",
+                              isClosable: true,
+                            });
+                          } else {
+                            clearAll();
+                            onClose();
+                            toast({
+                              title: `New inventory added`,
+                              status: "success",
+                              isClosable: true,
+                            });
+                            if (!selectedLoc) {
+                              toast({
+                                title: `New location created`,
+                                status: "success",
+                                isClosable: true,
+                              });
+                            }
+                            if (!selectedCond) {
+                              toast({
+                                title: `New Condition created`,
+                                status: "success",
+                                isClosable: true,
+                              });
+                            }
+                          }
                         });
-                      }
-                      if (!selectedCond) {
-                        toast({
-                          title: `New Condition created`,
-                          status: "success",
-                          isClosable: true,
-                        });
-                      }
-                    }
-                  });
-                }}
-              >
-                Submit
-              </Button>
-            )}
-          </ModalFooter>
+                      }}
+                    >
+                      Submit
+                    </Button>
+                  )}
+                </ModalFooter>
+              </TabPanel>
+              <TabPanel>
+                <ICSTab isOpen={isOpen} post={post} isItemInserted={isItemInserted}/>
+              </TabPanel>
+              <TabPanel>PAR</TabPanel>
+            </TabPanels>
+          </Tabs>
         </ModalContent>
       </Modal>
     </>

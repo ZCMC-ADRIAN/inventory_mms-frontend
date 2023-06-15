@@ -86,7 +86,32 @@ const Equipment = ({ setTab }) => {
     setGetCateg,
     newProp,
     itemId,
-    setPrev
+    setPrev,
+    inv,
+
+    //ICS
+    PO,
+    setPO,
+    PODate,
+    setPODate,
+    invoice,
+    setInvoice,
+    invoiceDate,
+    setInvoiceDate,
+    ors,
+    setOrs,
+    ICSRemarks,
+    setICSRemarks,
+
+    //PAR
+    DRF,
+    setDRF,
+    DRFDate,
+    setDRFDate,
+    IAR,
+    setIAR,
+    PARRemarks,
+    setPARRemarks,
   } = useContext(DataContext);
 
   //Utilities State
@@ -220,6 +245,17 @@ const Equipment = ({ setTab }) => {
         accessories: accessories || null,
         barcode: barcode || null,
         property_no: propertyno || null,
+        po: PO || null,
+        po_date: PODate || null,
+        invoice: invoice || null,
+        invoice_date: invoiceDate || null,
+        ors: ors || null,
+        ics_remarks: ICSRemarks || null,
+        drf: DRF || null,
+        drf_date: DRFDate || null,
+        iar: IAR || null,
+        par_remarks: PARRemarks || null,
+        inv: inv = true,
         userId: user.userId || null,
       })
       .then(function (response) {

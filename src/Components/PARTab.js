@@ -40,32 +40,18 @@ const PARTab = ({
   tab
 }) => {
   const {
-    itemdetails,
-    setdeliveryD,
-    setRemarks,
     postInventory,
-    locDatas,
-    locValue,
-    setLocValue,
     selectedLoc,
-    setSelectedLoc,
-    fetchLoc,
-    condDatas,
-    condItem,
-    setConItem,
     selectedCond,
-    setSelectedCond,
-    fetchcond,
     clearAll,
-    assocDatas,
-    assocValue,
-    setassocValue,
-    selectedAssoc,
-    setSelectedAssoc,
-    fetchAssoc,
-    setpropertyno,
-    setserial,
-    setInv,
+    DRF,
+    setDRF,
+    DRFDate,
+    setDRFDate,
+    IAR,
+    setIAR,
+    PARRemarks,
+    setPARRemarks,
   } = useContext(DataContext);
 
   const toast = useToast();
@@ -85,28 +71,28 @@ const PARTab = ({
               <GridItem colSpan={3}>
                 <FormControl>
                   <FormLabel color={"blackAlpha.600"}>DRF #</FormLabel>
-                  <Input />
+                  <Input value={DRF} onChange={(e) => setDRF(e.target.value)}/>
                 </FormControl>
               </GridItem>
 
               <GridItem colSpan={3}>
                 <FormControl color={"blackAlpha.600"}>
                   <FormLabel>DRF Date</FormLabel>
-                  <Input type="date" />
+                  <Input type="date" value={DRFDate} onChange={(e) => setDRFDate(e.target.value)}/>
                 </FormControl>
               </GridItem>
 
               <GridItem colSpan={3}>
                 <FormControl color={"blackAlpha.600"}>
                   <FormLabel>IAR #</FormLabel>
-                  <Input />
+                  <Input value={IAR} onChange={(e) => setIAR(e.target.value)}/>
                 </FormControl>
               </GridItem>
 
               <GridItem colSpan={6}>
                 <FormControl color={"blackAlpha.600"}>
                   <FormLabel>Remarks</FormLabel>
-                  <Textarea />
+                  <Textarea value={PARRemarks} onChange={(e) => setPARRemarks(e.target.value)}/>
                 </FormControl>
               </GridItem>
             </Grid>

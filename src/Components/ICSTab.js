@@ -40,32 +40,22 @@ const ICSTab = ({
   tab
 }) => {
   const {
-    itemdetails,
-    setdeliveryD,
-    setRemarks,
     postInventory,
-    locDatas,
-    locValue,
-    setLocValue,
     selectedLoc,
-    setSelectedLoc,
-    fetchLoc,
-    condDatas,
-    condItem,
-    setConItem,
     selectedCond,
-    setSelectedCond,
-    fetchcond,
     clearAll,
-    assocDatas,
-    assocValue,
-    setassocValue,
-    selectedAssoc,
-    setSelectedAssoc,
-    fetchAssoc,
-    setpropertyno,
-    setserial,
-    setInv,
+    PO,
+    setPO,
+    PODate,
+    setPODate,
+    invoice,
+    setInvoice,
+    invoiceDate,
+    setInvoiceDate,
+    ors,
+    setOrs,
+    ICSRemarks,
+    setICSRemarks,
   } = useContext(DataContext);
 
   const toast = useToast();
@@ -85,42 +75,42 @@ const ICSTab = ({
               <GridItem colSpan={3}>
                 <FormControl>
                   <FormLabel color={"blackAlpha.600"}>PO #</FormLabel>
-                  <Input />
+                  <Input value={PO} onChange={(e) => setPO(e.target.value)}/>
                 </FormControl>
               </GridItem>
 
               <GridItem colSpan={3}>
                 <FormControl color={"blackAlpha.600"}>
                   <FormLabel>PO Date</FormLabel>
-                  <Input type="date" />
+                  <Input type="date" value={PODate} onChange={(e) => setPODate(e.target.value)}/>
                 </FormControl>
               </GridItem>
 
               <GridItem colSpan={3}>
                 <FormControl color={"blackAlpha.600"}>
                   <FormLabel>Invoice #</FormLabel>
-                  <Input />
+                  <Input value={invoice} onChange={(e) => setInvoice(e.target.value)}/>
                 </FormControl>
               </GridItem>
 
               <GridItem colSpan={3}>
                 <FormControl color={"blackAlpha.600"}>
                   <FormLabel>Invoice Date</FormLabel>
-                  <Input type="date" />
+                  <Input type="date" value={invoiceDate} onChange={(e) => setInvoiceDate(e.target.value)}/>
                 </FormControl>
               </GridItem>
 
               <GridItem colSpan={3}>
                 <FormControl color={"blackAlpha.600"}>
                   <FormLabel>ORS/BURS #</FormLabel>
-                  <Input />
+                  <Input value={ors} onChange={(e) => setOrs(e.target.value)}/>
                 </FormControl>
               </GridItem>
 
               <GridItem colSpan={6}>
                 <FormControl color={"blackAlpha.600"}>
                   <FormLabel>Remarks</FormLabel>
-                  <Textarea />
+                  <Textarea value={ICSRemarks} onChange={(e) => setICSRemarks(e.target.value)}/>
                 </FormControl>
               </GridItem>
             </Grid>

@@ -42,6 +42,7 @@ export const VerticallyCenter = ({
   isItemInserted,
   post,
   isClick,
+  tabStatus
 }) => {
   const {
     itemdetails,
@@ -111,9 +112,9 @@ export const VerticallyCenter = ({
         <ModalContent w={"60%"} minW={"60%"} margin={"100px"}>
           <Tabs isFitted variant="enclosed">
             <TabList>
-              <Tab _selected={{ color: "white", bg: "blue.500" }} onClick={() => setTab("default")}>Default</Tab>
-              <Tab _selected={{ color: "white", bg: "blue.500" }} onClick={() => setTab("ics")}>ICS</Tab>
-              <Tab _selected={{ color: "white", bg: "blue.500" }} onClick={() => setTab("par")}>PAR</Tab>
+              <Tab _selected={{ color: "white", bg: "blue.500" }} onClick={() => setTab("default")} display={tabStatus}>Default</Tab>
+              <Tab _selected={{ color: "white", bg: "blue.500" }} onClick={() => setTab("ics")} display={tabStatus}>ICS</Tab>
+              <Tab _selected={{ color: "white", bg: "blue.500" }} onClick={() => setTab("par")} display={tabStatus}>PAR</Tab>
             </TabList>
             <TabPanels>
               <TabPanel>

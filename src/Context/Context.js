@@ -38,6 +38,20 @@ export const Context = ({ children }) => {
   const { user } = useAuth();
   const barCodeRef = useRef(null);
 
+  //States for ICS
+  const [PO, setPO] = useState("");
+  const [PODate, setPODate] = useState("");
+  const [invoice, setInvoice] = useState("");
+  const [invoiceDate, setInvoiceDate] = useState("");
+  const [ors, setOrs] = useState("");
+  const [ICSRemarks, setICSRemarks] = useState("");
+
+  //States for PAR
+  const [DRF, setDRF] = useState("");
+  const [DRFDate, setDRFDate] = useState("");
+  const [IAR, setIAR] = useState("");
+  const [PARRemarks, setPARRemarks] = useState("");
+
   const year = new Date();
   const yearForm = moment(year).format("YYYY");
 
@@ -121,41 +135,40 @@ export const Context = ({ children }) => {
   const prevCode = prev.map((obj) => obj.code);
   const itemCost = getCost.map((obj) => obj.cost);
 
+  useEffect(() => {
+    if (cost >= 50000 || itemCost >= 50000) {
+      if (inv === true) {
+        setNewProp(
+          yearForm + "-" + prevCode + "-" + prevSeries + "-" + areaCodes[0]
+        );
+      } else {
+        setNewProp(
+          yearForm + "-" + categCode[0] + "-" + series + "-" + areaCodes[0]
+        );
+      }
+    } else if (cost >= 5000) {
+      setNewProp("SPHV" + "-" + yearForm + "-" + monthForm + "-" + series);
+    } else if (cost < 5000) {
+      setNewProp("SPLV" + "-" + yearForm + "-" + monthForm + "-" + icsNumSeries);
+    }
+
+    setIcsNumber(
+      yearForm + "-" + monthForm + "-" + icsNumSeries
+    );
+  });
+
   // useEffect(() => {
-  //   if (cost >= 50000 || itemCost >= 50000) {
-  //     if (inv === true) {
-  //       setNewProp(
-  //         yearForm + "-" + prevCode + "-" + prevSeries + "-" + areaCodes[0]
-  //       );
-  //     } else {
-  //       setNewProp(
-  //         yearForm + "-" + categCode[0] + "-" + series + "-" + areaCodes[0]
-  //       );
-  //     }
+  //   if (cost >= 50000) {
+  //     setNewProp(
+  //       yearForm + "-" + categCode[0] + "-" + series + "-" + areaCodes[0]
+  //     );
   //   } else if (cost >= 5000) {
   //     setNewProp("SPHV" + "-" + yearForm + "-" + monthForm + "-" + series);
   //   } else if (cost < 5000) {
   //     setNewProp("SPLV" + "-" + yearForm + "-" + monthForm + "-" + series);
   //   }
-  //   setIcsNumber(
-  //     yearForm + "-" + monthForm + "-" + icsNumSeries
-  //   );
+  //   setIcsNumber(yearForm + "-" + monthForm + "-" + icsNumSeries);
   // });
-
-  useEffect(() => {
-    if (cost >= 50000) {
-        setNewProp(
-          yearForm + "-" + categCode[0] + "-" + series + "-" + areaCodes[0]
-        );
-    } else if (cost >= 5000) {
-      setNewProp("SPHV" + "-" + yearForm + "-" + monthForm + "-" + series);
-    } else if (cost < 5000) {
-      setNewProp("SPLV" + "-" + yearForm + "-" + monthForm + "-" + series);
-    }
-    setIcsNumber(
-      yearForm + "-" + monthForm + "-" + icsNumSeries
-    );
-  });
 
   //modaldetails
   const [itemdetails, setItemDetails] = useState(null);
@@ -245,14 +258,14 @@ export const Context = ({ children }) => {
   const fetchICSNumSeries = async () => {
     let responseICSNum = await api.get("/icsnum");
     setICSNumSeries(responseICSNum.data);
-  }
+  };
 
-  const fetchCost= async() => {
-    let responseCost = await api.get("/cost",{
-      params: {itemId: itemId}
+  const fetchCost = async () => {
+    let responseCost = await api.get("/cost", {
+      params: { itemId: itemId },
     });
     setGetCost(responseCost.data);
-  }
+  };
 
   useEffect(() => {
     setSelectedAssoc();
@@ -329,6 +342,8 @@ export const Context = ({ children }) => {
           barcode: barcode,
           quantity: 1,
           loose: loose,
+          inv: inv,
+          itemCost: itemCost,
           remarks: remarks,
           EditVariety: selectedVariety && selectedVariety.Pk_varietyId,
           EditCountry: selectedCountry && selectedCountry.Pk_countryId,
@@ -494,6 +509,32 @@ export const Context = ({ children }) => {
         newProp,
         setPrev,
         setInv,
+        inv,
+        getCost,
+
+        //ICS
+        PO,
+        setPO,
+        PODate,
+        setPODate,
+        invoice,
+        setInvoice,
+        invoiceDate,
+        setInvoiceDate,
+        ors,
+        setOrs,
+        ICSRemarks,
+        setICSRemarks,
+
+        //PAR
+        DRF,
+        setDRF,
+        DRFDate,
+        setDRFDate,
+        IAR,
+        setIAR,
+        PARRemarks,
+        setPARRemarks,
       }}
     >
       {children}

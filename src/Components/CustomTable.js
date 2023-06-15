@@ -67,6 +67,7 @@ const CustomTable = ({ title, columns, data, child, children }) => {
   const editModal = new useDisclosure();
   const [id, setid] = useState(null);
   const [itemId, setItemId] = useState([]);
+  const [tabStatus, setTabStatus] = useState("none");
 
   const CustomBtnTheme = {
     backgroundColor: "#2583CF",
@@ -78,6 +79,7 @@ const CustomTable = ({ title, columns, data, child, children }) => {
     <Box bg={"white"} padding={"20px"}>
       {children}
       <VerticallyCenter
+        tabStatus={tabStatus}
         isOpen={isOpen}
         onOpen={onOpen}
         onClose={onClose}
@@ -90,6 +92,7 @@ const CustomTable = ({ title, columns, data, child, children }) => {
         onClose={editModal.onClose}
         itemId={itemId}
       />
+      
       <Box w={"100%"}>
         <Flex flexDirection={["column", "column", "row", "row"]}>
           <Box w={"100%"}>

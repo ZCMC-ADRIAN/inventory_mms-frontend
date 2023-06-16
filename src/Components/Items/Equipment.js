@@ -255,7 +255,7 @@ const Equipment = ({ setTab }) => {
         drf_date: DRFDate || null,
         iar: IAR || null,
         par_remarks: PARRemarks || null,
-        inv: inv = true,
+        inv: inv,
         userId: user.userId || null,
       })
       .then(function (response) {

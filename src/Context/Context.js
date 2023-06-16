@@ -124,22 +124,25 @@ export const Context = ({ children }) => {
   const [getCateg, setGetCateg] = useState([]);
   const [newProp, setNewProp] = useState("");
   const [prev, setPrev] = useState([]);
+  const [prevCode, setPrevCode] = useState([]);
   const [areaCode, setAreaCode] = useState([]);
   const [icsNumSeries, setICSNumSeries] = useState([]);
   const [getCost, setGetCost] = useState([]);
   const [icsNumber, setIcsNumber] = useState("");
 
+  // console.log(icsNumSeries)
+
   const categCode = getCateg.map((obj) => obj.code);
   const areaCodes = areaCode.map((obj) => obj.area_code);
-  const prevSeries = prev.map((obj) => obj.series);
-  const prevCode = prev.map((obj) => obj.code);
+  // const prevSeries = prev.map((obj) => obj.series);
+  const prevCategCode = prevCode.map((obj) => obj.code);
   const itemCost = getCost.map((obj) => obj.cost);
 
   useEffect(() => {
     if (cost >= 50000 || itemCost >= 50000) {
       if (inv === true) {
         setNewProp(
-          yearForm + "-" + prevCode + "-" + prevSeries + "-" + areaCodes[0]
+          yearForm + "-" + prevCategCode + "-" + prev + "-" + areaCodes[0]
         );
       } else {
         setNewProp(
@@ -152,9 +155,9 @@ export const Context = ({ children }) => {
       setNewProp("SPLV" + "-" + yearForm + "-" + monthForm + "-" + icsNumSeries);
     }
 
-    setIcsNumber(
-      yearForm + "-" + monthForm + "-" + icsNumSeries
-    );
+    // setIcsNumber(
+    //   yearForm + "-" + monthForm + "-" + icsNumSeries
+    // );
   });
 
   // useEffect(() => {
@@ -267,6 +270,13 @@ export const Context = ({ children }) => {
     setGetCost(responseCost.data);
   };
 
+  const fetchPrevCode = async () => {
+    let responsePrevCode = await api.get("/prevCode", {
+      params: {itemId: itemId},
+    });
+    setPrevCode(responsePrevCode.data);
+  }
+
   useEffect(() => {
     setSelectedAssoc();
     setassocValue("");
@@ -274,6 +284,7 @@ export const Context = ({ children }) => {
     fetchAreaCode();
     fetchICSNumSeries();
     fetchCost();
+    fetchPrevCode();
   }, [selectedLoc, itemId, locValue]);
 
   const clearAll = () => {

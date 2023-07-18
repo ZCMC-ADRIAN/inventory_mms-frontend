@@ -170,7 +170,7 @@ const EditModal = ({ isOpen, onClose, itemId }) => {
             <ModalCloseButton />
             <ModalBody>
               <SimpleGrid columns={6} columnGap={4} rowGap={6} p={3} mt={7}>
-                <GridItem colSpan={2}>
+                <GridItem colSpan={3}>
                   <FormControl>
                     <FormLabel>Category</FormLabel>
                     <Select
@@ -237,7 +237,7 @@ const EditModal = ({ isOpen, onClose, itemId }) => {
                   </FormControl>
                 </GridItem>
 
-                <GridItem colSpan={[6, 6, 2, 2]}>
+                {/* <GridItem colSpan={[6, 6, 2, 2]}>
                   <FormControl>
                     <FormLabel>Type/Form</FormLabel>
                     <Select
@@ -266,7 +266,7 @@ const EditModal = ({ isOpen, onClose, itemId }) => {
                       />
                     )}
                   </FormControl>
-                </GridItem>
+                </GridItem> */}
 
                 <GridItem colSpan={[6, 6, 2, 2]}>
                   <FormControl>

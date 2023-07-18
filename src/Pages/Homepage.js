@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import CreateItem from "../Components/CreateItem";
+import { Box, Text } from "@chakra-ui/react";
 
 import In from "../Components/In";
 import Sidebar from "../Components/Sidebar";
@@ -27,15 +28,21 @@ const Homepage = () => {
   return (
     <>
       <div className="container">
-        <Sidebar setTab={setTab} tab={tab} visible={ navVisible } show={ showNavbar }/>
-        <div className="component-wrapper" style={{paddingLeft: navVisible && isDesktop ? "250px" : "0px" }}>
+        <Sidebar
+          setTab={setTab}
+          tab={tab}
+          visible={navVisible}
+          show={showNavbar}
+        />
+        <div
+          className="component-wrapper"
+          style={{ paddingLeft: navVisible && isDesktop ? "250px" : "0px" }}
+        >
           {tab === "create" && <CreateItem setTab={setTab} />}
           {tab === "inItem" && <In setTab={setTab} />}
-          {tab === "inventory" && (
-            <Inventory title={title} fetch={fetch}/>
-          )}
+          {tab === "inventory" && <Inventory title={title} fetch={fetch} />}
           {tab === "listIn" && <InTable />}
-          {tab === "scanner" && <QRScanner setTab={setTab}/>}
+          {tab === "scanner" && <QRScanner setTab={setTab} />}
         </div>
       </div>
     </>

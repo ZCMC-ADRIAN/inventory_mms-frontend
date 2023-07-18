@@ -71,6 +71,9 @@ export const VerticallyCenter = ({
     setpropertyno,
     setserial,
     setInv,
+    inv,
+    barcode,
+    setBarcode
   } = useContext(DataContext);
 
   const [tab, setTab] = useState("");
@@ -134,6 +137,14 @@ export const VerticallyCenter = ({
                         gap={6}
                         paddingEnd={5}
                       >
+
+                        <GridItem colSpan={6} mb={8} display={ inv === false ? 'none' : ''}>
+                          <FormControl>
+                            <FormLabel>Barcode</FormLabel>
+                          <Input value={barcode} onChange={(e)=>setBarcode(e.target.value)} />
+                          </FormControl>
+                        </GridItem>
+
                         <GridItem colSpan={3} w="100%">
                           <Box>
                             <SearchSel
@@ -364,10 +375,10 @@ export const VerticallyCenter = ({
                 </ModalFooter>
               </TabPanel>
               <TabPanel>
-                <ICSTab isOpen={isOpen} post={post} isItemInserted={isItemInserted} tab={tab} />
+                <ICSTab isOpen={isOpen} post={post} isItemInserted={isItemInserted} tab={tab} isClick={isClick}/>
               </TabPanel>
               <TabPanel>
-                <PARTab isOpen={isOpen} post={post} isItemInserted={isItemInserted} tab={tab} />
+                <PARTab isOpen={isOpen} post={post} isItemInserted={isItemInserted} tab={tab} isClick={isClick}/>
               </TabPanel>
             </TabPanels>
           </Tabs>

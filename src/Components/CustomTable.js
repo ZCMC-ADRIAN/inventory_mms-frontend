@@ -29,7 +29,7 @@ import {
 } from "@chakra-ui/icons";
 import { FaClipboardList } from "react-icons/fa";
 
-import { AiOutlineFolderView, AiFillEdit } from "react-icons/ai";
+import { AiOutlineFolderView, AiFillEdit, AiTrash } from "react-icons/ai";
 import { HiTrash } from "react-icons/hi";
 
 import { Children, useContext, useEffect, useState } from "react";
@@ -181,7 +181,7 @@ const CustomTable = ({ title, columns, data, child, children }) => {
                                 <FaClipboardList color="teal" />
                               </Button>
 
-                              {/* <Button
+                              <Button
                                 _hover={{
                                   bg: "lightgray",
                                   boxShadow: "lg",
@@ -194,7 +194,7 @@ const CustomTable = ({ title, columns, data, child, children }) => {
                                 }}
                               >
                                 <AiFillEdit color="grey" />
-                              </Button> */}
+                              </Button>
                             </Flex>
                           ) : cell.column.Header === "No" ? (
                             <Text fontWeight={"bold"} color={"green.600"}>

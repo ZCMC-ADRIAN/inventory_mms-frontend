@@ -35,8 +35,25 @@ export const Context = ({ children }) => {
   const [acquiMode, setAcquiMode] = useState("");
   const [barcode, setBarcode] = useState("");
   const [inv, setInv] = useState(false);
+  const [create, setCreate] = useState(false);
   const { user } = useAuth();
   const barCodeRef = useRef(null);
+
+  const [peripArticle, setPeripArticle] = useState("");
+  const [peripMode, setPeripMode] = useState("");
+  const [addArticle, setAddArticle] = useState("");
+  const [addType, setAddType] = useState("");
+  const [showForm, setShowForm] = useState(false);
+
+  const [getArticle, setGetArticle] = useState([]);
+  const [getTypes, setGetTypes] = useState([]);
+  const [addTypes, setAddTypes] = useState([]);
+  const [peripTypes, setPeripTypes] = useState([]);
+  const [getSupplier, setGetSupplier] = useState([]);
+  const [selectEquipment, setSelectEquipment] = useState('');
+
+  //Store Data of Added Peripherals
+  const [formDataArray, setFormDataArray] = useState([]);
 
   //States for ICS
   const [PO, setPO] = useState("");
@@ -77,6 +94,24 @@ export const Context = ({ children }) => {
       // console.log(response.data);
       setItemDetails(response.data);
       return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    const savedData = localStorage.getItem("peripherals");
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+      setFormDataArray(parsedData);
+    }
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await api.post('peripherals', formDataArray);
+      console.log(response.data);
     } catch (error) {
       console.error(error);
     }
@@ -126,52 +161,57 @@ export const Context = ({ children }) => {
   const [prev, setPrev] = useState([]);
   const [prevCode, setPrevCode] = useState([]);
   const [areaCode, setAreaCode] = useState([]);
-  const [icsNumSeries, setICSNumSeries] = useState([]);
+  const [numSeries, setNumSeries] = useState([]);
   const [getCost, setGetCost] = useState([]);
   const [icsNumber, setIcsNumber] = useState("");
-
-  // console.log(icsNumSeries)
+  const [parNumber, setParNumber] = useState("");
 
   const categCode = getCateg.map((obj) => obj.code);
   const areaCodes = areaCode.map((obj) => obj.area_code);
-  // const prevSeries = prev.map((obj) => obj.series);
   const prevCategCode = prevCode.map((obj) => obj.code);
   const itemCost = getCost.map((obj) => obj.cost);
 
+  //Execute if the  In Button is click or true
   useEffect(() => {
-    if (cost >= 50000 || itemCost >= 50000) {
-      if (inv === true) {
+    if (inv === true) {
+      if (itemCost >= 50000) {
         setNewProp(
           yearForm + "-" + prevCategCode + "-" + prev + "-" + areaCodes[0]
         );
-      } else {
-        setNewProp(
-          yearForm + "-" + categCode[0] + "-" + series + "-" + areaCodes[0]
-        );
+      } else if (itemCost >= 5000) {
+        setNewProp("SPHV" + "-" + yearForm + "-" + monthForm + "-" + prev);
+      } else if (itemCost < 5000) {
+        setNewProp("SPLV" + "-" + yearForm + "-" + monthForm + "-" + prev);
       }
-    } else if (cost >= 5000) {
-      setNewProp("SPHV" + "-" + yearForm + "-" + monthForm + "-" + series);
-    } else if (cost < 5000) {
-      setNewProp("SPLV" + "-" + yearForm + "-" + monthForm + "-" + icsNumSeries);
     }
-
-    // setIcsNumber(
-    //   yearForm + "-" + monthForm + "-" + icsNumSeries
-    // );
   });
 
-  // useEffect(() => {
-  //   if (cost >= 50000) {
-  //     setNewProp(
-  //       yearForm + "-" + categCode[0] + "-" + series + "-" + areaCodes[0]
-  //     );
-  //   } else if (cost >= 5000) {
-  //     setNewProp("SPHV" + "-" + yearForm + "-" + monthForm + "-" + series);
-  //   } else if (cost < 5000) {
-  //     setNewProp("SPLV" + "-" + yearForm + "-" + monthForm + "-" + series);
-  //   }
-  //   setIcsNumber(yearForm + "-" + monthForm + "-" + icsNumSeries);
-  // });
+  //Execute if the In Button is unclick or false
+  useEffect(() => {
+    if (inv === false) {
+      if (cost >= 50000 || itemCost >= 50000) {
+        setNewProp(
+          acquiMode === "Donation"
+            ? "D" +
+                yearForm +
+                "-" +
+                categCode[0] +
+                "-" +
+                series +
+                "-" +
+                areaCodes[0]
+            : yearForm + "-" + categCode[0] + "-" + series + "-" + areaCodes[0]
+        );
+        setParNumber(yearForm + "-" + monthForm + "-" + numSeries);
+      } else if (cost >= 5000) {
+        setNewProp("SPHV" + "-" + yearForm + "-" + monthForm + "-" + series);
+        setIcsNumber(yearForm + "-" + monthForm + "-" + numSeries);
+      } else if (cost < 5000) {
+        setNewProp("SPLV" + "-" + yearForm + "-" + monthForm + "-" + series);
+        setIcsNumber(yearForm + "-" + monthForm + "-" + numSeries);
+      }
+    }
+  });
 
   //modaldetails
   const [itemdetails, setItemDetails] = useState(null);
@@ -185,7 +225,7 @@ export const Context = ({ children }) => {
     setVarietyDatas(result.data);
   };
 
-  //Cond
+  //Condition
   const [condDatas, setCondDatas] = useState([]);
   const [condItem, setConItem] = useState([]);
   const [selectedCond, setSelectedCond] = useState();
@@ -258,9 +298,11 @@ export const Context = ({ children }) => {
     setAreaCode(responseAreaCode.data);
   };
 
-  const fetchICSNumSeries = async () => {
-    let responseICSNum = await api.get("/icsnum");
-    setICSNumSeries(responseICSNum.data);
+  const fetchNumSeries = async () => {
+    let responseNum = await api.get("/numseries", {
+      params: { cost: cost },
+    });
+    setNumSeries(responseNum.data);
   };
 
   const fetchCost = async () => {
@@ -272,17 +314,21 @@ export const Context = ({ children }) => {
 
   const fetchPrevCode = async () => {
     let responsePrevCode = await api.get("/prevCode", {
-      params: {itemId: itemId},
+      params: { itemId: itemId },
     });
     setPrevCode(responsePrevCode.data);
-  }
+  };
+
+  useEffect(() => {
+    fetchNumSeries();
+  }, [cost]);
 
   useEffect(() => {
     setSelectedAssoc();
     setassocValue("");
     fetchPrev();
     fetchAreaCode();
-    fetchICSNumSeries();
+    fetchNumSeries();
     fetchCost();
     fetchPrevCode();
   }, [selectedLoc, itemId, locValue]);
@@ -301,6 +347,7 @@ export const Context = ({ children }) => {
     setpropertyno("");
     setserial("");
     setRemarks("");
+    setBarcode("");
     setCountryValue([]);
     setSelectedCountry(null);
     setVarietyVal([]);
@@ -355,6 +402,7 @@ export const Context = ({ children }) => {
           loose: loose,
           inv: inv,
           itemCost: itemCost,
+          cost: cost,
           remarks: remarks,
           EditVariety: selectedVariety && selectedVariety.Pk_varietyId,
           EditCountry: selectedCountry && selectedCountry.Pk_countryId,
@@ -364,6 +412,8 @@ export const Context = ({ children }) => {
           Editexpiration: expiration,
           countryValue: countryValue,
           varietyVal: varietyVal,
+          icsNumber: icsNumber,
+          parNumber: parNumber,
         })
         .then((e) => {
           fetchTableData();
@@ -518,10 +568,27 @@ export const Context = ({ children }) => {
         setSeries,
         setGetCateg,
         newProp,
+        setNewProp,
         setPrev,
         setInv,
         inv,
         getCost,
+        create,
+        setCreate,
+        peripArticle,
+        setPeripArticle,
+        peripMode, setPeripMode,
+        formDataArray, setFormDataArray,
+        handleSubmit,
+        showForm, setShowForm,
+        getArticle, setGetArticle,
+        getTypes, setGetTypes,
+        getSupplier, setGetSupplier,
+        addArticle, setAddArticle,
+        addType, setAddType,
+        addTypes, setAddTypes,
+        peripTypes, setPeripTypes,
+        selectEquipment, setSelectEquipment,
 
         //ICS
         PO,

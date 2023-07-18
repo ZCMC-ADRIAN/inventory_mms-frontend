@@ -13,11 +13,9 @@ import Homepage from "./Pages/Homepage";
 import Inventory from "./Pages/Inventory";
 import PrivateRoutes from "./Authentication/Outlet";
 import ReportArea from "./Components/Printable/ReportArea";
-import PdfGenerator from "./Components/Printable/Sample";
 import PropertyTag from "./Components/Printable/PropertyTag";
 import ReportPerson from "./Components/Printable/ReportPerson";
 import Conditions from "./Components/Printable/Conditions";
-import BarCode from "./Components/Items/Sample";
 import NoProperty from "./Components/Printable/Sample";
 
 const App = () => {
@@ -33,8 +31,6 @@ const App = () => {
             <Route path="/mass-print" element={<MassPrinting />} />
             <Route path="/report/area" element={<ReportArea />} />
             <Route path="/report/person" element={<ReportPerson />} />
-            <Route path="/sample" element={<PdfGenerator />} />
-            <Route path="/barcode" element={<BarCode />} />
             <Route path="inventory" element={<Inventory />} />
             <Route path="tag" element={<PropertyTag />} />
             <Route path="no" element={<NoProperty />} />

@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import localApi from "../API/Api";
 import Details2Modal from "./Details2Modal";
 import Swal from "sweetalert2";
+import DataContext from "../Context/Context";
 import {
   Modal,
   ModalOverlay,
@@ -28,6 +29,7 @@ import {
 } from "@chakra-ui/react";
 
 const EditModal = ({ isOpen, onClose, itemId }) => {
+
   const [data, setData] = useState([]);
   const [article, setArticle] = useState("");
   const [articleOther, setArticleOther] = useState("");
@@ -60,21 +62,17 @@ const EditModal = ({ isOpen, onClose, itemId }) => {
 
   //Fields
   const [getArticle, setGetArticle] = useState([]);
-  const [getTypes, setGetTypes] = useState([]);
   const [getStatus, setGetStatus] = useState([]);
   const [getSupplier, setGetSupplier] = useState([]);
   const [itemStatus, setItemStatus] = useState("");
   const [itemStatusOther, setItemStatusOther] = useState("");
+  const [editArticle, setEditArticle] = useState("");
+  const [getEditTypes, setGetEditTypes] = useState([]);
 
   const fetchData = async () => {
     let responseArticle = await localApi.get("article");
     setGetArticle(responseArticle.data);
-
-    let responseTypes = await localApi.get("types", {
-      params: { article: article },
-    });
-    setGetTypes(responseTypes.data);
-
+    
     let responseStatus = await localApi.get("status");
     setGetStatus(responseStatus.data);
 
@@ -85,12 +83,35 @@ const EditModal = ({ isOpen, onClose, itemId }) => {
   };
 
   useEffect(() => {
+    const fetchTypes = async () => {
+      try {
+        const responseTypes = await localApi.get("types", {
+          params: {
+            editArticle: editArticle
+          },
+        });
+
+        // Assuming the response contains 'articleTypes', 'peripArticleTypes', and 'addArticleTypes'
+        const {editArticleTypes} = responseTypes.data;
+
+        if (editArticleTypes) {
+          setGetEditTypes(editArticleTypes);
+        }
+      } catch (error) {
+        // Handle error
+      }
+    };
+
+    fetchTypes();
+  }, [editArticle]);
+
+  useEffect(() => {
     fetchData();
     // fetchEdit();
   }, [type, article, acquiMode, itemId]);
 
   const clearForm = () => {
-    setArticle("");
+    setEditArticle("");
     setArticleOther("");
     setType("");
     setTypeOther("");
@@ -131,9 +152,10 @@ const EditModal = ({ isOpen, onClose, itemId }) => {
           .post("save-item", {
             itemId: itemId,
             brand: brand,
-            article: article === "Other" ? articleOther : article,
+            article: editArticle === "Other" ? articleOther : editArticle,
             type: type === "Other" ? typeOther : type,
             otherType: type,
+            otherArticle: editArticle,
             category: category,
             model: model,
             variant: variant,
@@ -213,8 +235,8 @@ const EditModal = ({ isOpen, onClose, itemId }) => {
                     <FormLabel>Article</FormLabel>
                     <Select
                       placeholder="- Select Article -"
-                      value={article}
-                      onChange={(e) => setArticle(e.target.value)}
+                      value={editArticle}
+                      onChange={(e) => setEditArticle(e.target.value)}
                     >
                       {getArticle.map((item, index) => {
                         return (
@@ -225,7 +247,7 @@ const EditModal = ({ isOpen, onClose, itemId }) => {
                       })}
                       <option value="Other">Other</option>
                     </Select>
-                    {article === "Other" && (
+                    {editArticle === "Other" && (
                       <Input
                         value={articleOther}
                         onChange={(e) => setArticleOther(e.target.value)}
@@ -237,7 +259,7 @@ const EditModal = ({ isOpen, onClose, itemId }) => {
                   </FormControl>
                 </GridItem>
 
-                {/* <GridItem colSpan={[6, 6, 2, 2]}>
+                <GridItem colSpan={[6, 6, 2, 2]}>
                   <FormControl>
                     <FormLabel>Type/Form</FormLabel>
                     <Select
@@ -246,7 +268,7 @@ const EditModal = ({ isOpen, onClose, itemId }) => {
                       onChange={(e) => setType(e.target.value)}
                       placeholder="- Select Type/Form -"
                     >
-                      {getTypes.map((item, index) => {
+                      {getEditTypes.map((item, index) => {
                         return (
                           <option value={item.type_name} key={index}>
                             {item.type_name}
@@ -266,7 +288,7 @@ const EditModal = ({ isOpen, onClose, itemId }) => {
                       />
                     )}
                   </FormControl>
-                </GridItem> */}
+                </GridItem>
 
                 <GridItem colSpan={[6, 6, 2, 2]}>
                   <FormControl>

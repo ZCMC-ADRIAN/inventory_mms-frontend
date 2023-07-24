@@ -25,6 +25,8 @@ const AttachPeripheral = ({id, setId}) => {
   const [addSerial, setAddSerial] = useState("");
   const [addCost, setAddCost] = useState("");
 
+  console.log(addTypes)
+
   const handleShow = () => {
     setShowForm(false);
   };

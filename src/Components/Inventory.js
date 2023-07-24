@@ -185,7 +185,7 @@ const Inventory = () => {
             _hover={{ bg: "blue.200" }}
             onClick={() => {
               setLocation([]);
-              fetchInventoryData([]);
+              fetchInventoryData("");
               setClose("none");
               setLocation("Search here....");
             }}

@@ -29,8 +29,7 @@ import {
 } from "@chakra-ui/icons";
 import { FaClipboardList } from "react-icons/fa";
 
-import { AiOutlineFolderView, AiFillEdit, AiTrash } from "react-icons/ai";
-import { HiTrash } from "react-icons/hi";
+import { AiFillEdit } from "react-icons/ai";
 
 import { Children, useContext, useEffect, useState } from "react";
 import { VerticallyCenter } from "./inputModal";

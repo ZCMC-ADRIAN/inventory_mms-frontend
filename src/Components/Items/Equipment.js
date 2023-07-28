@@ -24,7 +24,7 @@ import SearchSel from "../searchableSelect/searchSel";
 import DataContext from "../../Context/Context";
 import { VerticallyCenter } from "../inputModal";
 import AttachEquipment from "../AttachEquipment";
-import AttachExistingEquipment from "../AttachExistingEquipment";
+import AttachExistingEquipment from "../Searchable-Select";
 
 const Equipment = ({ setTab }) => {
   const {
@@ -87,14 +87,10 @@ const Equipment = ({ setTab }) => {
     setBarcode,
     setSeries,
     setGetCateg,
-    newProp,
-    itemId,
-    setPrev,
     inv,
     create,
     setCreate,
     peripArticle,
-    setPeripArticle,
     peripMode,
     getArticle, setGetArticle,
     getTypes, setGetTypes,
@@ -103,30 +99,37 @@ const Equipment = ({ setTab }) => {
     addArticle, setAddArticle,
     setPeripTypes,
     setAddTypes,
+    fundCluster, setFundCluster,
+    otherCluster, setOtherCluster,
+    getCluster, setGetCluster,
+    isNew, setIsNew,
 
     //ICS
     PO,
-    setPO,
     PODate,
-    setPODate,
     invoice,
-    setInvoice,
     invoiceDate,
-    setInvoiceDate,
     ors,
-    setOrs,
     ICSRemarks,
-    setICSRemarks,
+    clearICS,
+    ICSIAR,
+    ICSDRF,
+    ICSDRFDate,
+    ICSPTR,
 
     //PAR
     DRF,
-    setDRF,
     DRFDate,
-    setDRFDate,
     IAR,
-    setIAR,
     PARRemarks,
-    setPARRemarks,
+    parPO,
+    PTR,
+    parPODate,
+    PARInvoice,
+    PARors,
+    PARConformed,
+    PARInvoiceDate,
+    clearPAR
   } = useContext(DataContext);
 
   //Utilities State
@@ -167,6 +170,9 @@ const Equipment = ({ setTab }) => {
       params: { acquiMode: acquiMode === "" ? peripMode : acquiMode },
     });
     setGetSupplier(responseSupplier.data);
+
+    let responseCluster = await localApi.get("cluster");
+    setGetCluster(responseCluster.data);
   };
 
   const fetchSeries = async () => {
@@ -294,17 +300,33 @@ const Equipment = ({ setTab }) => {
         accessories: accessories || null,
         barcode: barcode || null,
         property_no: propertyno || null,
-        po: PO || null,
-        po_date: PODate || null,
-        invoice: invoice || null,
-        invoice_date: invoiceDate || null,
-        ors: ors || null,
-        ics_remarks: ICSRemarks || null,
-        drf: DRF || null,
-        drf_date: DRFDate || null,
-        iar: IAR || null,
-        par_remarks: PARRemarks || null,
-        inv: inv,
+        fundCluster: fundCluster === 'Other' ? otherCluster : fundCluster || null,
+        //PAR
+        invoiceNum: PARInvoice || null,
+        PARpo: parPO || null,
+        poDate: parPODate || null,
+        PARors: PARors || null,
+        poConformed: PARConformed || null,
+        invoiceRec: PARInvoiceDate || null,
+        IAR: IAR || null,
+        DRF: DRF || null,
+        DRFDate: DRFDate || null,
+        PTR: PTR || null,
+        PARRemarks: PARRemarks || null,
+        //
+        //ICS
+        po: PO,
+        po_date: PODate,
+        invoice: invoice,
+        invoice_date: invoiceDate,
+        ors: ors,
+        ics_remarks: ICSRemarks,
+        ICSIAR: ICSIAR,
+        ICSDRF: ICSDRF,
+        ICSDRFDate: ICSDRFDate,
+        ICSPTR: ICSPTR,
+        //
+        inv: inv || null,
         create: create,
         userId: user.userId || null,
         articleId: selectedArticle || null,
@@ -316,6 +338,7 @@ const Equipment = ({ setTab }) => {
           handleSubmit(response.data);
           console.log(response.data.isIN)
           if (response.data.isIN === false) {
+            setIsNew(true);
             setIsClick(false);
             setAppState("Item Created");
             setTimeout(() => setAppState(""), 500);
@@ -342,6 +365,8 @@ const Equipment = ({ setTab }) => {
                 });
               } else {
                 clearAll();
+                clearPAR();
+                clearICS();
                 clearForm();
                 toast({
                   title: `New inventory added`,
@@ -443,10 +468,10 @@ const Equipment = ({ setTab }) => {
             </FormControl>
           </GridItem>
 
-          <GridItem colSpan={[6, 6, 2, 2]}>
+          {/* <GridItem colSpan={[6, 6, 2, 2]}>
             <FormLabel>Attach to Existing Equipment</FormLabel>
             <AttachExistingEquipment />
-          </GridItem>
+          </GridItem> */}
 
           <GridItem colSpan={[6, 6, 2, 2]}>
             <FormControl>
@@ -571,38 +596,6 @@ const Equipment = ({ setTab }) => {
             </FormControl>
           </GridItem>
 
-          {/* <GridItem colSpan={[6, 6, 2, 2]}>
-            <FormControl>
-              <FormLabel>Status</FormLabel>
-
-              <Select
-                value={itemStatus}
-                onChange={(e) => {
-                  setItemStatus(e.target.value);
-                }}
-                placeholder="- Select Status -"
-              >
-                {getStatus.map((item, index) => {
-                  return (
-                    <option value={item.status_name} key={index}>
-                      {item.status_name}
-                    </option>
-                  );
-                })}
-                <option value="Other">Other</option>
-              </Select>
-              {itemStatus === "Other" && (
-                <Input
-                  value={itemStatusOther}
-                  onChange={(e) => setItemStatusOther(e.target.value)}
-                  marginTop={4}
-                  variant="filled"
-                  placeholder="If other, please specify"
-                />
-              )}
-            </FormControl>
-          </GridItem> */} 
-
           <GridItem colSpan={[6, 6, 2, 2]}>
             <FormControl>
               <FormLabel>Other</FormLabel>
@@ -660,12 +653,12 @@ const Equipment = ({ setTab }) => {
             </FormControl>
           </GridItem>
 
-          <GridItem colSpan={[6, 6, 2, 2]}>
+          {/* <GridItem colSpan={[6, 6, 2, 2]}>
             <FormControl>
               <FormLabel>Preventive Maintenance</FormLabel>
               <Input />
             </FormControl>
-          </GridItem>
+          </GridItem> */}
 
           <GridItem colSpan={[6, 6, 2, 2]}>
             <FormControl>
@@ -732,6 +725,35 @@ const Equipment = ({ setTab }) => {
 
           <GridItem colSpan={[6, 6, 2, 2]}>
             <FormControl>
+              <FormLabel>Fund Cluster</FormLabel>
+              <Select
+                value={fundCluster}
+                onChange={(e) => setFundCluster(e.target.value)}
+                placeholder="- Select Fund Cluster -"
+              >
+                {getCluster.map((item, index) => {
+                    return (
+                      <option value={item.fundCluster} key={index}>
+                        {item.fundCluster}
+                      </option>
+                    );
+                })}
+                <option value="Other">Other</option>
+              </Select>
+              {fundCluster === "Other" && (
+                <Input
+                  value={otherCluster}
+                  onChange={(e) => setOtherCluster(e.target.value)}
+                  marginTop={4}
+                  variant="filled"
+                  placeholder="If other, please specify"
+                />
+              )}
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={[6, 6, 2, 2]}>
+            <FormControl>
               <FormLabel>Cost</FormLabel>
               <InputGroup>
                 <InputLeftAddon children="₱" />
@@ -767,14 +789,14 @@ const Equipment = ({ setTab }) => {
             isClick={isClick}
           ></VerticallyCenter>
 
-          <AttachEquipment
+          {/* <AttachEquipment
             isOpen={click.isOpen}
             onClose={click.onClose}
             onOpen={click.onOpen}
             articles={getArticle}
             types={getTypes}
             supplier={getSupplier}
-          />
+          /> */}
 
           <GridItem colSpan={6} mt={20}>
             <HStack
@@ -794,13 +816,13 @@ const Equipment = ({ setTab }) => {
                 {"Make IN"}
               </Button>
 
-              <Button
+              {/* <Button
                 padding={"0px 75px 0px 75px"}
                 isDisabled={category === '' ? true : false}
                 onClick={() => click.onOpen()}
               >
                 {"Attach New Equipment"}
-              </Button>
+              </Button> */}
 
               <Divider border={4} />
             </HStack>

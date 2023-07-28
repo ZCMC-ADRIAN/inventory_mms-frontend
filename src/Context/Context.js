@@ -34,8 +34,11 @@ export const Context = ({ children }) => {
   const [accessories, setAccessories] = useState("");
   const [acquiMode, setAcquiMode] = useState("");
   const [barcode, setBarcode] = useState("");
+  const [fundCluster, setFundCluster] = useState("");
+  const [otherCluster, setOtherCluster] = useState("");
   const [inv, setInv] = useState(false);
   const [create, setCreate] = useState(false);
+  const [isNew, setIsNew] = useState(false);
   const { user } = useAuth();
   const barCodeRef = useRef(null);
 
@@ -50,6 +53,7 @@ export const Context = ({ children }) => {
   const [addTypes, setAddTypes] = useState([]);
   const [peripTypes, setPeripTypes] = useState([]);
   const [getSupplier, setGetSupplier] = useState([]);
+  const [getCluster, setGetCluster] = useState([]);
   const [selectEquipment, setSelectEquipment] = useState('');
 
   //Store Data of Added Peripherals
@@ -62,12 +66,25 @@ export const Context = ({ children }) => {
   const [invoiceDate, setInvoiceDate] = useState("");
   const [ors, setOrs] = useState("");
   const [ICSRemarks, setICSRemarks] = useState("");
+  const [ics, setIcs] = useState("");
+  const [ICSIAR, setICSIAR] = useState("");
+  const [ICSDRF, setICSDRF] = useState("");
+  const [ICSDRFDate, setICSDRFDate] = useState("");
+  const [ICSPTR, setICSPTR] = useState("");
 
   //States for PAR
   const [DRF, setDRF] = useState("");
   const [DRFDate, setDRFDate] = useState("");
   const [IAR, setIAR] = useState("");
   const [PARRemarks, setPARRemarks] = useState("");
+  const [PARInvoice, setPARInvoice] = useState("");
+  const [PARors, setPARors] = useState("");
+  const [PARConformed, setPARConformed] = useState("");
+  const [PARInvoiceDate, setPARInvoiceDate] = useState("");
+  const [PTR, setPTR] = useState("");
+  const [parPODate, setParPODate] = useState("");
+  const [parPO, setParPO] = useState("");
+  const [par, setPar] = useState("");
 
   const year = new Date();
   const yearForm = moment(year).format("YYYY");
@@ -358,6 +375,35 @@ export const Context = ({ children }) => {
     setexpiration(null);
   };
 
+  const clearPAR = () => {
+    setDRF("");
+    setDRFDate("");
+    setIAR("");
+    setPARRemarks("");
+    setParPO("");
+    setPTR("");
+    setParPODate("");
+    setPar("");
+    setPARInvoice("");
+    setPARors("");
+    setPARConformed("");
+    setPARInvoiceDate("");
+  }
+
+  const clearICS = () => {
+    setPO("");
+    setPODate("");
+    setInvoice("");
+    setInvoiceDate("");
+    setOrs("");
+    setICSRemarks("");
+    setIcs("");
+    setICSIAR("");
+    setICSDRF("");
+    setICSDRFDate("");
+    setICSPTR("");
+  }
+
   const postInventory = async (itemtobe) => {
     if (locValue.length < 1) {
       toast({
@@ -414,6 +460,9 @@ export const Context = ({ children }) => {
           varietyVal: varietyVal,
           icsNumber: icsNumber,
           parNumber: parNumber,
+          isNew: isNew,
+          oldPAR: par,
+          oldICS: ics
         })
         .then((e) => {
           fetchTableData();
@@ -589,6 +638,12 @@ export const Context = ({ children }) => {
         addTypes, setAddTypes,
         peripTypes, setPeripTypes,
         selectEquipment, setSelectEquipment,
+        par, setPar,
+        ics, setIcs,
+        fundCluster, setFundCluster,
+        otherCluster, setOtherCluster,
+        getCluster, setGetCluster,
+        isNew, setIsNew,
 
         //ICS
         PO,
@@ -603,6 +658,12 @@ export const Context = ({ children }) => {
         setOrs,
         ICSRemarks,
         setICSRemarks,
+        ics, setIcs,
+        ICSIAR, setICSIAR,
+        ICSDRF, setICSDRF,
+        ICSDRFDate, setICSDRFDate,
+        ICSPTR, setICSPTR,
+        clearICS,
 
         //PAR
         DRF,
@@ -613,6 +674,15 @@ export const Context = ({ children }) => {
         setIAR,
         PARRemarks,
         setPARRemarks,
+        PARInvoice, setPARInvoice,
+        PARors, setPARors,
+        PARConformed, setPARConformed,
+        PARInvoiceDate, setPARInvoiceDate,
+        PTR, setPTR,
+        parPODate, setParPODate,
+        parPO, setParPO,
+        par, setPar,
+        clearPAR
       }}
     >
       {children}
@@ -621,3 +691,4 @@ export const Context = ({ children }) => {
 };
 
 export default DataContext;
+

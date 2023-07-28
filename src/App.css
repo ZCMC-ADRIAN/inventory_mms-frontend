@@ -581,3 +581,49 @@ button.gray:hover {
 .vector-box {
   background-color: #b0d8f856;
 }
+
+/* App.css */
+
+/* Container for the dropdown */
+.dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Input box style */
+.dropdown-container input[type="text"] {
+  width: 200px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Dropdown list style */
+.dropdown-list {
+  position: absolute;
+  z-index: 1;
+  width: 200px;
+  margin: 4px 0;
+  padding: 0;
+  list-style: none;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Individual option style */
+.dropdown-list li {
+  padding: 8px;
+  cursor: pointer;
+}
+
+/* Highlight selected option */
+.dropdown-list li:hover {
+  background-color: #f0f0f0;
+}
+
+/* Scrollbar for the dropdown list */
+.dropdown-list {
+  max-height: 200px;
+  overflow-y: auto;
+}

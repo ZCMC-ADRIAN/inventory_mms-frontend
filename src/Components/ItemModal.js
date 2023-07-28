@@ -380,7 +380,7 @@ const ItemModal = ({ isOpen, onClose, details, header, child, item }) => {
                                           <FaClipboardList color="teal" />
                                         </Button>
 
-                                        {/* <Button
+                                        <Button
                                           _hover={{
                                             bg: "lightgray",
                                             boxShadow: "lg",
@@ -393,7 +393,7 @@ const ItemModal = ({ isOpen, onClose, details, header, child, item }) => {
                                           }}
                                         >
                                           <AiFillEdit color="grey" />
-                                        </Button> */}
+                                        </Button>
 
                                         {/* <Button
                                           _hover={{

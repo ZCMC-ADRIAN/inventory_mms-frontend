@@ -180,14 +180,14 @@ const In = ({ setTab, users }) => {
                           <>
                             <p
                               onClick={() => {
-                                setDesc(item.article_name);
+                                setDesc(item.property_no);
                                 setDropdown(false);
-                                setItemDesc(item.article_name);
-                                fetchTableData(item.article_name);
+                                setItemDesc(item.property_no);
+                                fetchTableData(item.property_no);
                               }}
                               key={index}
                             >
-                              {item.article_name}
+                              {item.property_no}
                             </p>
                           </>
                         );

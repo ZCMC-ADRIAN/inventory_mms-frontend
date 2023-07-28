@@ -28,6 +28,7 @@ import {
   Tab,
   TabPanel,
 } from "@chakra-ui/react";
+import { SearchPO } from "./Searchable-Select";
 
 const ICSTab = ({
   title,
@@ -37,7 +38,7 @@ const ICSTab = ({
   isItemInserted,
   post,
   isClick,
-  tab
+  tab,
 }) => {
   const {
     postInventory,
@@ -56,6 +57,12 @@ const ICSTab = ({
     setOrs,
     ICSRemarks,
     setICSRemarks,
+    ics, setIcs,
+    ICSIAR, setICSIAR,
+    ICSDRF, setICSDRF,
+    ICSDRFDate, setICSDRFDate,
+    ICSPTR, setICSPTR,
+
   } = useContext(DataContext);
 
   const toast = useToast();
@@ -63,7 +70,7 @@ const ICSTab = ({
   return (
     <div>
       <ModalCloseButton />
-      <ModalBody mt={10}>
+      <ModalBody mt={5}>
         <Flex>
           <Box flex={8} alignSelf={"center"}>
             <Grid
@@ -72,52 +79,112 @@ const ICSTab = ({
               gap={6}
               paddingEnd={5}
             >
-              <GridItem colSpan={3}>
+              <GridItem colSpan={2}>
                 <FormControl>
                   <FormLabel color={"blackAlpha.600"}>PO #</FormLabel>
-                  <Input value={PO} onChange={(e) => setPO(e.target.value)}/>
+                  {/* <Input value={PO} onChange={(e) => setPO(e.target.value)} /> */}
+                  <SearchPO />
                 </FormControl>
               </GridItem>
 
-              <GridItem colSpan={3}>
+              <GridItem colSpan={2}>
                 <FormControl color={"blackAlpha.600"}>
                   <FormLabel>PO Date</FormLabel>
-                  <Input type="date" value={PODate} onChange={(e) => setPODate(e.target.value)}/>
+                  <Input
+                    type="date"
+                    value={PODate}
+                    onChange={(e) => setPODate(e.target.value)}
+                  />
                 </FormControl>
               </GridItem>
 
-              <GridItem colSpan={3}>
+              <GridItem colSpan={2}>
                 <FormControl color={"blackAlpha.600"}>
                   <FormLabel>Invoice #</FormLabel>
-                  <Input value={invoice} onChange={(e) => setInvoice(e.target.value)}/>
+                  <Input
+                    value={invoice}
+                    onChange={(e) => setInvoice(e.target.value)}
+                  />
                 </FormControl>
               </GridItem>
 
-              <GridItem colSpan={3}>
+              <GridItem colSpan={2}>
                 <FormControl color={"blackAlpha.600"}>
                   <FormLabel>Invoice Date</FormLabel>
-                  <Input type="date" value={invoiceDate} onChange={(e) => setInvoiceDate(e.target.value)}/>
+                  <Input
+                    type="date"
+                    value={invoiceDate}
+                    onChange={(e) => setInvoiceDate(e.target.value)}
+                  />
                 </FormControl>
               </GridItem>
 
-              <GridItem colSpan={3}>
+              <GridItem colSpan={2}>
                 <FormControl color={"blackAlpha.600"}>
                   <FormLabel>ORS/BURS #</FormLabel>
-                  <Input value={ors} onChange={(e) => setOrs(e.target.value)}/>
+                  <Input value={ors} onChange={(e) => setOrs(e.target.value)} />
+                </FormControl>
+              </GridItem>
+
+              <GridItem colSpan={2}>
+                <FormControl color={"blackAlpha.600"}>
+                  <FormLabel>IAR #</FormLabel>
+                  <Input value={ICSIAR} onChange={(e) => setICSIAR(e.target.value)} />
+                </FormControl>
+              </GridItem>
+
+              <GridItem colSpan={2}>
+                <FormControl>
+                  <FormLabel color={"blackAlpha.600"}>DRF #</FormLabel>
+                  <Input value={ICSDRF} onChange={(e) => setICSDRF(e.target.value)} />
+                </FormControl>
+              </GridItem>
+
+              <GridItem colSpan={2}>
+                <FormControl color={"blackAlpha.600"}>
+                  <FormLabel>DRF Date</FormLabel>
+                  <Input
+                    type="date"
+                    value={ICSDRFDate}
+                    onChange={(e) => setICSDRFDate(e.target.value)}
+                  />
+                </FormControl>
+              </GridItem>
+
+              <GridItem colSpan={2}>
+                <FormControl>
+                  <FormLabel color={"blackAlpha.600"}>PTR #</FormLabel>
+                  <Input value={ICSPTR} onChange={(e) => setICSPTR(e.target.value)} />
+                </FormControl>
+              </GridItem>
+
+              <GridItem colSpan={2}>
+                <FormControl color={"blackAlpha.600"}>
+                  <FormLabel>ICS Number (For Old Items)</FormLabel>
+                  <Input
+                    value={ics}
+                    onClick={() => {}}
+                    onChange={(e) => {
+                      setIcs(e.target.value);
+                    }}
+                  />
                 </FormControl>
               </GridItem>
 
               <GridItem colSpan={6}>
                 <FormControl color={"blackAlpha.600"}>
                   <FormLabel>Remarks</FormLabel>
-                  <Textarea value={ICSRemarks} onChange={(e) => setICSRemarks(e.target.value)}/>
+                  <Textarea
+                    value={ICSRemarks}
+                    onChange={(e) => setICSRemarks(e.target.value)}
+                  />
                 </FormControl>
               </GridItem>
             </Grid>
           </Box>
         </Flex>
       </ModalBody>
-      <ModalFooter mt={20}>
+      <ModalFooter mt={5}>
         {isItemInserted ? (
           <Button
             colorScheme={"blue"}

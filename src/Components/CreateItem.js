@@ -27,7 +27,7 @@ const CreateItem = ({ setTab }) => {
         >
           {selected === "equipment" && <Equipment setTab={setTab} />}
         </Container>
-        <Drawers />
+        {/* <Drawers /> */}
       </Flex>
     </>
   );

@@ -52,6 +52,10 @@ const Details2Modal = ({ isOpen, onClose, inventoryId }) => {
     serial,
     setRemarks,
     remarks,
+    par,
+    setPar,
+    ics,
+    setIcs,
     clearAll
   } = useContext(DataContext);
 

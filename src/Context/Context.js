@@ -59,32 +59,20 @@ export const Context = ({ children }) => {
   //Store Data of Added Peripherals
   const [formDataArray, setFormDataArray] = useState([]);
 
-  //States for ICS
-  const [PO, setPO] = useState("");
-  const [PODate, setPODate] = useState("");
-  const [invoice, setInvoice] = useState("");
-  const [invoiceDate, setInvoiceDate] = useState("");
-  const [ors, setOrs] = useState("");
-  const [ICSRemarks, setICSRemarks] = useState("");
-  const [ics, setIcs] = useState("");
-  const [ICSIAR, setICSIAR] = useState("");
-  const [ICSDRF, setICSDRF] = useState("");
-  const [ICSDRFDate, setICSDRFDate] = useState("");
-  const [ICSPTR, setICSPTR] = useState("");
-
-  //States for PAR
+  //States for PAR and ICS
   const [DRF, setDRF] = useState("");
   const [DRFDate, setDRFDate] = useState("");
   const [IAR, setIAR] = useState("");
-  const [PARRemarks, setPARRemarks] = useState("");
-  const [PARInvoice, setPARInvoice] = useState("");
-  const [PARors, setPARors] = useState("");
-  const [PARConformed, setPARConformed] = useState("");
-  const [PARInvoiceDate, setPARInvoiceDate] = useState("");
+  const [Invoice, setInvoice] = useState("");
+  const [ors, setors] = useState("");
+  const [Conformed, setConformed] = useState("");
+  const [InvoiceDate, setInvoiceDate] = useState("");
   const [PTR, setPTR] = useState("");
-  const [parPODate, setParPODate] = useState("");
-  const [parPO, setParPO] = useState("");
+  const [PODate, setPODate] = useState("");
+  const [PO, setPO] = useState("");
   const [par, setPar] = useState("");
+  const [poNum, setPONum] = useState("");
+  const [poSelected, setPoSelected] = useState(false);
 
   const year = new Date();
   const yearForm = moment(year).format("YYYY");
@@ -379,29 +367,15 @@ export const Context = ({ children }) => {
     setDRF("");
     setDRFDate("");
     setIAR("");
-    setPARRemarks("");
-    setParPO("");
-    setPTR("");
-    setParPODate("");
-    setPar("");
-    setPARInvoice("");
-    setPARors("");
-    setPARConformed("");
-    setPARInvoiceDate("");
-  }
-
-  const clearICS = () => {
+    setRemarks("");
     setPO("");
+    setPTR("");
     setPODate("");
+    setPar("");
     setInvoice("");
+    setors("");
+    setConformed("");
     setInvoiceDate("");
-    setOrs("");
-    setICSRemarks("");
-    setIcs("");
-    setICSIAR("");
-    setICSDRF("");
-    setICSDRFDate("");
-    setICSPTR("");
   }
 
   const postInventory = async (itemtobe) => {
@@ -460,9 +434,22 @@ export const Context = ({ children }) => {
           varietyVal: varietyVal,
           icsNumber: icsNumber,
           parNumber: parNumber,
+          poNum: poNum,
           isNew: isNew,
           oldPAR: par,
-          oldICS: ics
+
+          //PAR & ICS
+          invoiceNum: Invoice || null,
+          po: poNum || null,
+          poDate: PODate || null,
+          ors: ors || null,
+          poConformed: Conformed || null,
+          invoiceRec: InvoiceDate || null,
+          IAR: IAR || null,
+          DRF: DRF || null,
+          DRFDate: DRFDate || null,
+          PTR: PTR || null,
+          // oldICS: ics
         })
         .then((e) => {
           fetchTableData();
@@ -639,31 +626,11 @@ export const Context = ({ children }) => {
         peripTypes, setPeripTypes,
         selectEquipment, setSelectEquipment,
         par, setPar,
-        ics, setIcs,
+        // ics, setIcs,
         fundCluster, setFundCluster,
         otherCluster, setOtherCluster,
         getCluster, setGetCluster,
         isNew, setIsNew,
-
-        //ICS
-        PO,
-        setPO,
-        PODate,
-        setPODate,
-        invoice,
-        setInvoice,
-        invoiceDate,
-        setInvoiceDate,
-        ors,
-        setOrs,
-        ICSRemarks,
-        setICSRemarks,
-        ics, setIcs,
-        ICSIAR, setICSIAR,
-        ICSDRF, setICSDRF,
-        ICSDRFDate, setICSDRFDate,
-        ICSPTR, setICSPTR,
-        clearICS,
 
         //PAR
         DRF,
@@ -672,16 +639,16 @@ export const Context = ({ children }) => {
         setDRFDate,
         IAR,
         setIAR,
-        PARRemarks,
-        setPARRemarks,
-        PARInvoice, setPARInvoice,
-        PARors, setPARors,
-        PARConformed, setPARConformed,
-        PARInvoiceDate, setPARInvoiceDate,
+        Invoice, setInvoice,
+        ors, setors,
+        Conformed, setConformed,
+        InvoiceDate, setInvoiceDate,
         PTR, setPTR,
-        parPODate, setParPODate,
-        parPO, setParPO,
+        PODate, setPODate,
+        PO, setPO,
         par, setPar,
+        poNum, setPONum,
+        poSelected, setPoSelected,
         clearPAR
       }}
     >

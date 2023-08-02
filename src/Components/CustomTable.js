@@ -188,8 +188,8 @@ const CustomTable = ({ title, columns, data, child, children }) => {
                                   transition: "0.3s",
                                 }}
                                 onClick={() => {
-                                  editModal.onOpen(row.original.Pk_itemId);
                                   setItemId(row.original.Pk_itemId)
+                                  editModal.onOpen(row.original.Pk_itemId);
                                 }}
                               >
                                 <AiFillEdit color="grey" />

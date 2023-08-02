@@ -20,13 +20,13 @@ import {
   Textarea,
   useToast,
   SimpleGrid,
-  ModalOverlay
+  ModalOverlay,
 } from "@chakra-ui/react";
 import SearchSel from "./searchableSelect/searchSel";
 import { EditIcon, CloseIcon } from "@chakra-ui/icons";
 import EditableDet from "./EditableDet";
-import ICSTab from "./ICSTab";
 import PARTab from "./PARTab";
+import { SearchPO } from "./Searchable-Select";
 
 export const VerticallyCenter = ({
   title,
@@ -105,131 +105,126 @@ export const VerticallyCenter = ({
         size={"full"}
         isOpen={isOpen}
         isCentered
-        scrollBehavior={'inside'}
+        scrollBehavior={"inside"}
       >
         <ModalOverlay />
         <ModalContent w={"60%"} minW={"60%"}>
           <ModalCloseButton />
           <ModalBody p={10}>
-              <SimpleGrid
-                mt={6}
-                rowGap={6}
-                columns={6}
-                columnGap={5}
+            <SimpleGrid mt={6} rowGap={6} columns={6} columnGap={5}>
+              <GridItem
+                colSpan={6}
+                mb={8}
+                display={inv === false ? "none" : ""}
               >
-                <GridItem
-                  colSpan={6}
-                  mb={8}
-                  display={inv === false ? "none" : ""}
-                >
-                  <FormControl>
-                    <FormLabel>Barcode</FormLabel>
-                    <Input
-                      value={barcode}
-                      onChange={(e) => setBarcode(e.target.value)}
-                    />
-                  </FormControl>
-                </GridItem>
+                <FormControl>
+                  <FormLabel color={"blackAlpha.600"}>Barcode</FormLabel>
+                  <Input
+                    value={barcode}
+                    onChange={(e) => setBarcode(e.target.value)}
+                  />
+                </FormControl>
+              </GridItem>
 
-                <GridItem colSpan={2} w="100%">
-                  <Box>
-                    <SearchSel
-                      name={"Locations"}
-                      data={locDatas}
-                      propertyName={"location_name"}
-                      fetchdat={fetchLoc}
-                      setSelect={setSelectedLoc}
-                      isSelect={selectedLoc}
-                      setValue={setLocValue}
-                      valueD={locValue}
-                    />
-                  </Box>
-                </GridItem>
+              <GridItem colSpan={2} w="100%">
+                <Box>
+                  <SearchSel
+                    name={"Locations"}
+                    data={locDatas}
+                    propertyName={"location_name"}
+                    fetchdat={fetchLoc}
+                    setSelect={setSelectedLoc}
+                    isSelect={selectedLoc}
+                    setValue={setLocValue}
+                    valueD={locValue}
+                  />
+                </Box>
+              </GridItem>
 
-                <GridItem colSpan={2} w="100%">
-                  <Box>
-                    <SearchSel
-                      name={"Accountability Officer"}
-                      data={assocDatas}
-                      propertyName={"person_name"}
-                      fetchdat={fetchAssoc}
-                      setSelect={setSelectedAssoc}
-                      isSelect={selectedAssoc}
-                      setValue={setassocValue}
-                      valueD={assocValue}
-                    />
-                  </Box>
-                </GridItem>
-                <GridItem colSpan={2} w="100%">
-                  <Box>
-                    <SearchSel
-                      name={"Condition"}
-                      data={condDatas}
-                      propertyName={"conditions_name"}
-                      fetchdat={fetchcond}
-                      setSelect={setSelectedCond}
-                      isSelect={selectedCond}
-                      setValue={setConItem}
-                      valueD={condItem}
-                    />
-                  </Box>
-                </GridItem>
-                <GridItem colSpan={2}>
-                  <FormControl>
-                    <FormLabel>Delivery Date</FormLabel>
-                    <Input
-                      // value={acquisition}
-                      onChange={(e) => {
-                        setdeliveryD(e.target.value);
-                        //console.log(e.target.value);
-                      }}
-                      type="date"
-                    />
-                  </FormControl>
-                </GridItem>
-                <GridItem colSpan={2} w="100%">
-                  <FormControl>
-                    <FormLabel>Property No.</FormLabel>
-                    <Input
-                      onClick={() => {}}
-                      //value={ }
-                      onChange={(e) => {
-                        setpropertyno(e.target.value);
-                      }}
-                    />
-                  </FormControl>
-                </GridItem>
-                <GridItem colSpan={2} w="100%">
-                  <FormControl>
-                    <FormLabel>Serial</FormLabel>
-                    <Input
-                      onClick={() => {}}
-                      onChange={(e) => {
-                        setserial(e.target.value);
-                      }}
-                    />
-                  </FormControl>
-                </GridItem>
+              <GridItem colSpan={2} w="100%">
+                <Box>
+                  <SearchSel
+                    name={"Accountability Officer"}
+                    data={assocDatas}
+                    propertyName={"person_name"}
+                    fetchdat={fetchAssoc}
+                    setSelect={setSelectedAssoc}
+                    isSelect={selectedAssoc}
+                    setValue={setassocValue}
+                    valueD={assocValue}
+                  />
+                </Box>
+              </GridItem>
+              <GridItem colSpan={2} w="100%">
+                <Box>
+                  <SearchSel
+                    name={"Condition"}
+                    data={condDatas}
+                    propertyName={"conditions_name"}
+                    fetchdat={fetchcond}
+                    setSelect={setSelectedCond}
+                    isSelect={selectedCond}
+                    setValue={setConItem}
+                    valueD={condItem}
+                  />
+                </Box>
+              </GridItem>
+              <GridItem colSpan={2}>
+                <FormControl>
+                  <FormLabel color={"blackAlpha.600"}>Delivery Date</FormLabel>
+                  <Input
+                    // value={acquisition}
+                    onChange={(e) => {
+                      setdeliveryD(e.target.value);
+                      //console.log(e.target.value);
+                    }}
+                    type="date"
+                  />
+                </FormControl>
+              </GridItem>
+              <GridItem colSpan={2} w="100%">
+                <FormControl>
+                  <FormLabel color={"blackAlpha.600"}>Property No.</FormLabel>
+                  <Input
+                    onClick={() => {}}
+                    //value={ }
+                    onChange={(e) => {
+                      setpropertyno(e.target.value);
+                    }}
+                  />
+                </FormControl>
+              </GridItem>
+              <GridItem colSpan={2} w="100%">
+                <FormControl>
+                  <FormLabel color={"blackAlpha.600"}>Serial</FormLabel>
+                  <Input
+                    onClick={() => {}}
+                    onChange={(e) => {
+                      setserial(e.target.value);
+                    }}
+                  />
+                </FormControl>
+              </GridItem>
 
-                <GridItem colSpan={6} w="100%">
-                  <FormControl>
-                    <FormLabel>Remarks</FormLabel>
-                    <Textarea
-                      onClick={() => {}}
-                      //value={ }
-                      onChange={(e) => {
-                        setRemarks(e.target.value);
-                      }}
-                    />
-                  </FormControl>
-                </GridItem>
+              <GridItem colSpan={6}>
+                <PARTab />
+              </GridItem>
 
-                <GridItem colSpan={6}>
-                  <PARTab />
-                </GridItem>
-              </SimpleGrid>
+              <GridItem colSpan={6} w="100%">
+                <FormControl>
+                  <FormLabel color={"blackAlpha.600"}>Remarks</FormLabel>
+                  <Textarea
+                    onClick={() => {}}
+                    //value={ }
+                    onChange={(e) => {
+                      setRemarks(e.target.value);
+                    }}
+                  />
+                </FormControl>
+              </GridItem>
+            </SimpleGrid>
 
-              {!isItemInserted && (
+            {/* {!isItemInserted && (
                 <>
                   <Divider orientation="vertical"></Divider>
                   <Box flex="6" overflowY={"auto"} paddingRight={2}>
@@ -255,7 +250,7 @@ export const VerticallyCenter = ({
                     </Stack>
                   </Box>
                 </>
-              )}
+              )} */}
           </ModalBody>
           <ModalFooter>
             {isItemInserted ? (

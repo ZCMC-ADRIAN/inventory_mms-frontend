@@ -72,6 +72,11 @@ const EditModal = ({ isOpen, onClose, itemId }) => {
   const fetchData = async () => {
     let responseArticle = await localApi.get("article");
     setGetArticle(responseArticle.data);
+
+    // let responseType = await localApi.get("types", {
+    //   params: {editArticle: editArticle}
+    // })
+    // setGetEditTypes(responseType.data);
     
     let responseStatus = await localApi.get("status");
     setGetStatus(responseStatus.data);
@@ -104,6 +109,7 @@ const EditModal = ({ isOpen, onClose, itemId }) => {
 
     fetchTypes();
   }, [editArticle]);
+
 
   useEffect(() => {
     fetchData();
@@ -265,7 +271,7 @@ const EditModal = ({ isOpen, onClose, itemId }) => {
                     <Select
                       name="type"
                       value={type}
-                      onChange={(e) => setType(e.target.value)}
+                      onChange={(e) => {setType(e.target.value)}}
                       placeholder="- Select Type/Form -"
                     >
                       {getEditTypes.map((item, index) => {

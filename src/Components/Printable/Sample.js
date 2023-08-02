@@ -1,100 +1,66 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
-import jsPDF from "jspdf";
-import "jspdf-autotable";
-import localApi from "../../API/Api";
-import { Button, SimpleGrid, GridItem, theme, color } from "@chakra-ui/react";
-import "./Report.css";
-import Select from "react-select";
+import React from 'react';
+import Docxtemplater from 'docxtemplater';
+import PizZip from 'pizzip';
+import { saveAs } from 'file-saver';
 
-function NoProperty() {
-  const navigate = useNavigate()
-  const [selectLoc, setSelectLoc] = useState("");
-  const [location, setLocation] = useState([]);
-  const [data, setData] = useState([]);
+const DocxGenerator = () => {
+  const generateDocx = () => {
+    fetch('/PAR.docx')
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Failed to fetch template file');
+        }
+        return res.arrayBuffer();
+      })
+      .then((buffer) => {
+        // Load the template with PizZip
+        const zip = new PizZip(buffer);
 
-  const fetchData = async () => {
-    let responseLocation = await localApi.get("locations");
-    setLocation(responseLocation.data);
+        // Data array containing objects to fill the placeholders in the template
+        const dataArray = [
+          {
+            quantity: '1',
+            unit: 'Unit',
+            desc: 'Computer Desktop',
+            property: '2022-01-10-0001',
+            date: '08-02-2023',
+            amount: '55000'
+          }
+          // Add more data objects as needed
+        ];
 
-    let responseId = await localApi.get("no-property", {
-      params: { location: selectLoc },
-    });
-    setData(responseId.data);
+        // Create a new instance of the Docxtemplater for each data object
+        const outputArray = dataArray.map((data) => {
+          const doc = new Docxtemplater();
+          doc.loadZip(zip);
+          doc.setData(data);
+          doc.render();
+          return doc.getZip().generate({ type: 'uint8array' });
+        });
+
+        // Combine the generated sections into a single DOCX file
+        const combinedOutputBuffer = new PizZip();
+        outputArray.forEach((outputBuffer) => {
+          combinedOutputBuffer.load(outputBuffer);
+        });
+
+        const combinedBlob = new Blob([combinedOutputBuffer.generate({ type: 'uint8array' })], {
+          type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        });
+
+        // Save the combined file using FileSaver.js
+        saveAs(combinedBlob, 'combined_output.docx');
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
-
-  useEffect(() => {
-    fetchData();
-  }, [selectLoc]);
 
   return (
     <div>
-      <SimpleGrid columns={6} columnGap={3} p={10}>
-        <GridItem colSpan={1}>
-          <Select
-            class="select"
-            options={location.map((det) => {
-              return { value: det.location_name, label: det.location_name };
-            })}
-            onChange={(e) => setSelectLoc(e.label, e.value)}
-            placeholder="Select Area"
-          />
-        </GridItem>
-        <GridItem colSpan={1}>
-          <Button
-            bg="#91C788"
-            color='#fff'
-            _hover={{ bg: "#74b369" }}
-            onClick={()=>navigate('/home')}
-          >
-            Home
-          </Button>
-        </GridItem>
-      </SimpleGrid>
-
-      <div className="location">
-        <p className="loc-text">{selectLoc}</p>
-      </div>
-      <table className="report-table">
-        <tr className="report-header">
-          <th>No</th>
-          <th>Article</th>
-          <th>Description</th>
-          <th>Property No</th>
-          <th>Qty</th>
-          <th>Unit</th>
-          <th>Unit Value</th>
-          <th>Total Value</th>
-          <th>Date Acquired</th>
-          <th>Person Responsible</th>
-          <th>Date Repaired</th>
-          <th>Date Returned</th>
-          <th>REMARKS</th>
-        </tr>
-
-        {data.map((item, index) => {
-          const num = index + 1;
-          return (
-            <tr className="report-data">
-              <td>{num}</td>
-              <td>{item.article}</td>
-              <td style={{ width: "220px" }}>{item.desc}</td>
-              <td>{item.property_no}</td>
-              <td>{item.qty}</td>
-              <td>{item.unit}</td>
-              <td>{item.cost}</td>
-              <td>{item.total}</td>
-              <td>{item.Delivery_date}</td>
-              <td>{item.person}</td>
-              <td></td>
-              <td></td>
-              <td>{item.remarks}</td>
-            </tr>
-          );
-        })}
-      </table>
+      <button onClick={generateDocx}>Generate DOCX</button>
     </div>
   );
-}
+};
 
-export default NoProperty;
+export default DocxGenerator;

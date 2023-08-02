@@ -53,7 +53,8 @@ function Sidebar({ visible, show, tab, setTab }) {
           <div className="avatar">
             <img src={Nouser} alt="Avatar Profile" />
           </div>
-          <h1 className="name">{user?.firstname + " " + user?.lastname}</h1>
+          {/* <h1 className="name">{user?.firstname + " " + user?.lastname}</h1> */}
+          <h1 className="name">Adrian Agcaoili</h1>
           <h2 className="office-label">
             MMS |{" "}
             <span className="logout" onClick={logout}>
@@ -89,7 +90,7 @@ function Sidebar({ visible, show, tab, setTab }) {
             </li>
           </ul>
 
-          <ul style={{ marginBottom: "40px" }}>
+          {/* <ul style={{ marginBottom: "40px" }}>
             <li
             onClick={() => {setTab("scanner")}}
             className={tab === "scanner" ? "active" : ""}
@@ -99,9 +100,9 @@ function Sidebar({ visible, show, tab, setTab }) {
               </p>
               <text>QR Scanner</text>
             </li>
-          </ul>
+          </ul> */}
 
-          <label>Generate</label>
+          {/* <label>Generate</label>
           <ul>
             <li
               onClick={() => {setTab("report"); navigate('/no')}}
@@ -113,7 +114,7 @@ function Sidebar({ visible, show, tab, setTab }) {
               <text>No Property #</text>
               
             </li>
-          </ul>
+          </ul> */}
         </div>
       </nav>
     </div>

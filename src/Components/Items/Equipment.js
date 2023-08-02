@@ -104,31 +104,17 @@ const Equipment = ({ setTab }) => {
     getCluster, setGetCluster,
     isNew, setIsNew,
 
-    //ICS
-    PO,
-    PODate,
-    invoice,
-    invoiceDate,
-    ors,
-    ICSRemarks,
-    clearICS,
-    ICSIAR,
-    ICSDRF,
-    ICSDRFDate,
-    ICSPTR,
-
-    //PAR
+    //PAR & ICS
     DRF,
     DRFDate,
     IAR,
-    PARRemarks,
-    parPO,
+    poNum,
     PTR,
-    parPODate,
-    PARInvoice,
-    PARors,
-    PARConformed,
-    PARInvoiceDate,
+    PODate,
+    Invoice,
+    ors,
+    Conformed,
+    InvoiceDate,
     clearPAR
   } = useContext(DataContext);
 
@@ -301,30 +287,7 @@ const Equipment = ({ setTab }) => {
         barcode: barcode || null,
         property_no: propertyno || null,
         fundCluster: fundCluster === 'Other' ? otherCluster : fundCluster || null,
-        //PAR
-        invoiceNum: PARInvoice || null,
-        PARpo: parPO || null,
-        poDate: parPODate || null,
-        PARors: PARors || null,
-        poConformed: PARConformed || null,
-        invoiceRec: PARInvoiceDate || null,
-        IAR: IAR || null,
-        DRF: DRF || null,
-        DRFDate: DRFDate || null,
-        PTR: PTR || null,
-        PARRemarks: PARRemarks || null,
-        //
-        //ICS
-        po: PO,
-        po_date: PODate,
-        invoice: invoice,
-        invoice_date: invoiceDate,
-        ors: ors,
-        ics_remarks: ICSRemarks,
-        ICSIAR: ICSIAR,
-        ICSDRF: ICSDRF,
-        ICSDRFDate: ICSDRFDate,
-        ICSPTR: ICSPTR,
+        // PARRemarks: PARRemarks || null,
         //
         inv: inv || null,
         create: create,
@@ -366,7 +329,7 @@ const Equipment = ({ setTab }) => {
               } else {
                 clearAll();
                 clearPAR();
-                clearICS();
+                // clearICS();
                 clearForm();
                 toast({
                   title: `New inventory added`,

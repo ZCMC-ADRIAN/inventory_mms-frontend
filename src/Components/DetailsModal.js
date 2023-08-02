@@ -92,14 +92,12 @@ const DetailsModal = ({ isOpen, onClose, inventoryId }) => {
                           <Tr>
                             <Th>Property # (Old)</Th>
                             <Th>Property # (New)</Th>
-                            <Th isNumeric>multiply by</Th>
                           </Tr>
                         </Thead>
                         <Tbody>
                           <Tr>
-                            <Td>inches</Td>
-                            <Td>millimetres (mm)</Td>
-                            <Td isNumeric>25.4</Td>
+                            <Td>D22-12A</Td>
+                            <Td>SPLV-2023-08-0003</Td>
                           </Tr>
                         </Tbody>
                       </Table>

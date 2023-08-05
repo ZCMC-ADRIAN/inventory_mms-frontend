@@ -1,10 +1,80 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, useRef } from "react";
 import api from "../API/Api";
 import { useToast } from "@chakra-ui/react";
-const moment = require("moment");
+import useAuth from "../Hooks/useAuth";
+import moment from "moment/moment";
 const DataContext = createContext({});
 
 export const Context = ({ children }) => {
+  // Create New Item
+  const [article, setArticle] = useState("");
+  const [articleOther, setArticleOther] = useState("");
+  const [type, setType] = useState("");
+  const [typeOther, setTypeOther] = useState("");
+  const [descOrig, setDescOrig] = useState("");
+  const [desc, setDesc] = useState("");
+  const [model, setModel] = useState("");
+  const [variant, setVariant] = useState("");
+  const [detailss, setDetails] = useState("");
+  const [other, setOther] = useState("");
+  const [brand, setBrand] = useState("");
+  const [manufacturer, setManufacturer] = useState("");
+  const [origin, setOrigin] = useState("");
+  const [serialNum, setSerialNum] = useState("");
+  const [warrantyy, setWarranty] = useState("");
+  const [acquisitions, setAcquisition] = useState("");
+  const [propertyNum, setPropertyNum] = useState("");
+  const [unit, setUnit] = useState("");
+  const [location, setLocation] = useState("");
+  const [donor, setDonor] = useState("");
+  const [donorOther, setDonorOther] = useState("");
+  const [remarkss, setRemarkss] = useState("");
+  const [category, setCategory] = useState("");
+  const [cost, setCost] = useState("");
+  const [accessories, setAccessories] = useState("");
+  const [acquiMode, setAcquiMode] = useState("");
+  const [barcode, setBarcode] = useState("");
+  const [inv, setInv] = useState(false);
+  const [create, setCreate] = useState(false);
+  const { user } = useAuth();
+  const barCodeRef = useRef(null);
+
+  const [peripArticle, setPeripArticle] = useState("");
+  const [peripMode, setPeripMode] = useState("");
+  const [addArticle, setAddArticle] = useState("");
+  const [addType, setAddType] = useState("");
+  const [showForm, setShowForm] = useState(false);
+
+  const [getArticle, setGetArticle] = useState([]);
+  const [getTypes, setGetTypes] = useState([]);
+  const [addTypes, setAddTypes] = useState([]);
+  const [peripTypes, setPeripTypes] = useState([]);
+  const [getSupplier, setGetSupplier] = useState([]);
+  const [selectEquipment, setSelectEquipment] = useState('');
+
+  //Store Data of Added Peripherals
+  const [formDataArray, setFormDataArray] = useState([]);
+
+  //States for ICS
+  const [PO, setPO] = useState("");
+  const [PODate, setPODate] = useState("");
+  const [invoice, setInvoice] = useState("");
+  const [invoiceDate, setInvoiceDate] = useState("");
+  const [ors, setOrs] = useState("");
+  const [ICSRemarks, setICSRemarks] = useState("");
+
+  //States for PAR
+  const [DRF, setDRF] = useState("");
+  const [DRFDate, setDRFDate] = useState("");
+  const [IAR, setIAR] = useState("");
+  const [PARRemarks, setPARRemarks] = useState("");
+
+  const year = new Date();
+  const yearForm = moment(year).format("YYYY");
+
+  const month = new Date();
+  const monthForm = moment(month).format("MM");
+
   const toast = useToast();
 
   const fetchItem = async (value) => {
@@ -29,6 +99,24 @@ export const Context = ({ children }) => {
     }
   };
 
+  useEffect(() => {
+    const savedData = localStorage.getItem("peripherals");
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+      setFormDataArray(parsedData);
+    }
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await api.post('peripherals', formDataArray);
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const [countryDatas, setCountryDatas] = useState([]);
   const [countryValue, setCountryValue] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState();
@@ -44,6 +132,7 @@ export const Context = ({ children }) => {
   const [locDatas, setLocDatas] = useState([]);
   const [locValue, setLocValue] = useState([]);
   const [selectedLoc, setSelectedLoc] = useState();
+
   const fetchLoc = async (value) => {
     //http://127.0.0.1:8000/api/location
     const result = await api.get("/location", {
@@ -66,6 +155,64 @@ export const Context = ({ children }) => {
     setassocDatas(result.data);
   };
 
+  const [series, setSeries] = useState([]);
+  const [getCateg, setGetCateg] = useState([]);
+  const [newProp, setNewProp] = useState("");
+  const [prev, setPrev] = useState([]);
+  const [prevCode, setPrevCode] = useState([]);
+  const [areaCode, setAreaCode] = useState([]);
+  const [numSeries, setNumSeries] = useState([]);
+  const [getCost, setGetCost] = useState([]);
+  const [icsNumber, setIcsNumber] = useState("");
+  const [parNumber, setParNumber] = useState("");
+
+  const categCode = getCateg.map((obj) => obj.code);
+  const areaCodes = areaCode.map((obj) => obj.area_code);
+  const prevCategCode = prevCode.map((obj) => obj.code);
+  const itemCost = getCost.map((obj) => obj.cost);
+
+  //Execute if the  In Button is click or true
+  // useEffect(() => {
+  //   if (inv === true) {
+  //     if (itemCost >= 50000) {
+  //       setNewProp(
+  //         yearForm + "-" + prevCategCode + "-" + prev + "-" + areaCodes[0]
+  //       );
+  //     } else if (itemCost >= 5000) {
+  //       setNewProp("SPHV" + "-" + yearForm + "-" + monthForm + "-" + prev);
+  //     } else if (itemCost < 5000) {
+  //       setNewProp("SPLV" + "-" + yearForm + "-" + monthForm + "-" + prev);
+  //     }
+  //   }
+  // });
+
+  //Execute if the In Button is unclick or false
+  // useEffect(() => {
+  //   if (inv === false) {
+  //     if (cost >= 50000 || itemCost >= 50000) {
+  //       setNewProp(
+  //         acquiMode === "Donation"
+  //           ? "D" +
+  //               yearForm +
+  //               "-" +
+  //               categCode[0] +
+  //               "-" +
+  //               series +
+  //               "-" +
+  //               areaCodes[0]
+  //           : yearForm + "-" + categCode[0] + "-" + series + "-" + areaCodes[0]
+  //       );
+  //       setParNumber(yearForm + "-" + monthForm + "-" + numSeries);
+  //     } else if (cost >= 5000) {
+  //       setNewProp("SPHV" + "-" + yearForm + "-" + monthForm + "-" + series);
+  //       setIcsNumber(yearForm + "-" + monthForm + "-" + numSeries);
+  //     } else if (cost < 5000) {
+  //       setNewProp("SPLV" + "-" + yearForm + "-" + monthForm + "-" + series);
+  //       setIcsNumber(yearForm + "-" + monthForm + "-" + numSeries);
+  //     }
+  //   }
+  // });
+
   //modaldetails
   const [itemdetails, setItemDetails] = useState(null);
 
@@ -78,7 +225,7 @@ export const Context = ({ children }) => {
     setVarietyDatas(result.data);
   };
 
-  //Cond
+  //Condition
   const [condDatas, setCondDatas] = useState([]);
   const [condItem, setConItem] = useState([]);
   const [selectedCond, setSelectedCond] = useState();
@@ -135,26 +282,56 @@ export const Context = ({ children }) => {
       },
     });
     setInventoryData(result.data);
-  };  
+  };
 
-  {
-    /*
-  response.data[0].Warranty = moment(response.data[0].Warranty).format(
-        "MMMM DD YYYY"
-      );
-      response.data[0]["Acquisition Date"] = moment(
-        response.data[0]["Acquisition Date"]
-      ).format("MMMM DD YYYY");
-      response.data[0]["Expiration Date"] = moment(
-        response.data[0]["Expiration Date"]
-      ).format("MMMM DD YYYY");
-*/
-  }
+  // const fetchPrev = async (value) => {
+  //   let responsePrev = await api.get("/prev", {
+  //     params: { itemId: itemId },
+  //   });
+  //   setPrev(responsePrev.data);
+  // };
+
+  // const fetchAreaCode = async () => {
+  //   let responseAreaCode = await api.get("/locName", {
+  //     params: { locValue: locValue },
+  //   });
+  //   setAreaCode(responseAreaCode.data);
+  // };
+
+  // const fetchNumSeries = async () => {
+  //   let responseNum = await api.get("/numseries", {
+  //     params: { cost: cost },
+  //   });
+  //   setNumSeries(responseNum.data);
+  // };
+
+  // const fetchCost = async () => {
+  //   let responseCost = await api.get("/cost", {
+  //     params: { itemId: itemId },
+  //   });
+  //   setGetCost(responseCost.data);
+  // };
+
+  // const fetchPrevCode = async () => {
+  //   let responsePrevCode = await api.get("/prevCode", {
+  //     params: { itemId: itemId },
+  //   });
+  //   setPrevCode(responsePrevCode.data);
+  // };
+
+  // useEffect(() => {
+  //   fetchNumSeries();
+  // }, [cost]);
 
   useEffect(() => {
     setSelectedAssoc();
     setassocValue("");
-  }, [selectedLoc]);
+    // fetchPrev();
+    // fetchAreaCode();
+    // fetchNumSeries();
+    // fetchCost();
+    // fetchPrevCode();
+  }, [selectedLoc, itemId, locValue]);
 
   const clearAll = () => {
     setItemId(null);
@@ -170,6 +347,7 @@ export const Context = ({ children }) => {
     setpropertyno("");
     setserial("");
     setRemarks("");
+    setBarcode("");
     setCountryValue([]);
     setSelectedCountry(null);
     setVarietyVal([]);
@@ -217,9 +395,14 @@ export const Context = ({ children }) => {
           newAssoc_name: assocValue,
           delivery_date: deliveryD,
           property_no: propertyno,
+          newProperty: newProp,
           serial: serial,
+          barcode: barcode,
           quantity: 1,
           loose: loose,
+          inv: inv,
+          // itemCost: itemCost,
+          cost: cost,
           remarks: remarks,
           EditVariety: selectedVariety && selectedVariety.Pk_varietyId,
           EditCountry: selectedCountry && selectedCountry.Pk_countryId,
@@ -229,6 +412,8 @@ export const Context = ({ children }) => {
           Editexpiration: expiration,
           countryValue: countryValue,
           varietyVal: varietyVal,
+          // icsNumber: icsNumber,
+          // parNumber: parNumber,
         })
         .then((e) => {
           fetchTableData();
@@ -319,7 +504,114 @@ export const Context = ({ children }) => {
 
         //Inventory Table
         inventoryData,
-        fetchInventoryData
+        fetchInventoryData,
+
+        //Create New Item
+        article,
+        articleOther,
+        type,
+        typeOther,
+        descOrig,
+        desc,
+        model,
+        variant,
+        detailss,
+        other,
+        brand,
+        manufacturer,
+        origin,
+        serialNum,
+        warrantyy,
+        acquisitions,
+        propertyNum,
+        unit,
+        location,
+        donor,
+        donorOther,
+        remarkss,
+        category,
+        cost,
+        accessories,
+        acquiMode,
+        barcode,
+        prev,
+        user,
+        barCodeRef,
+        setArticle,
+        setArticleOther,
+        setType,
+        setTypeOther,
+        setDescOrig,
+        setDesc,
+        setModel,
+        setVariant,
+        setDetails,
+        setOther,
+        setBrand,
+        setManufacturer,
+        setOrigin,
+        setSerialNum,
+        setWarranty,
+        setAcquisition,
+        setPropertyNum,
+        setUnit,
+        setLocation,
+        setDonor,
+        setDonorOther,
+        setRemarkss,
+        setCategory,
+        setCost,
+        setAccessories,
+        setAcquiMode,
+        setBarcode,
+        setSeries,
+        setGetCateg,
+        newProp,
+        setNewProp,
+        setPrev,
+        setInv,
+        inv,
+        getCost,
+        create,
+        setCreate,
+        peripArticle,
+        setPeripArticle,
+        peripMode, setPeripMode,
+        formDataArray, setFormDataArray,
+        handleSubmit,
+        showForm, setShowForm,
+        getArticle, setGetArticle,
+        getTypes, setGetTypes,
+        getSupplier, setGetSupplier,
+        addArticle, setAddArticle,
+        addType, setAddType,
+        addTypes, setAddTypes,
+        peripTypes, setPeripTypes,
+        selectEquipment, setSelectEquipment,
+
+        //ICS
+        PO,
+        setPO,
+        PODate,
+        setPODate,
+        invoice,
+        setInvoice,
+        invoiceDate,
+        setInvoiceDate,
+        ors,
+        setOrs,
+        ICSRemarks,
+        setICSRemarks,
+
+        //PAR
+        DRF,
+        setDRF,
+        DRFDate,
+        setDRFDate,
+        IAR,
+        setIAR,
+        PARRemarks,
+        setPARRemarks,
       }}
     >
       {children}

@@ -26,44 +26,108 @@ import { VerticallyCenter } from "../inputModal";
 
 const Equipment = ({ setTab }) => {
   const {
-    setRemarks,
-    remarks,
     postInventory,
+    handleSubmit,
     selectedLoc,
     selectedCond,
     clearAll,
-    propertyno
+    propertyno,
+    article,
+    articleOther,
+    type,
+    typeOther,
+    descOrig,
+    desc,
+    model,
+    variant,
+    detailss,
+    other,
+    brand,
+    manufacturer,
+    origin,
+    serialNum,
+    warrantyy,
+    acquisitions,
+    propertyNum,
+    unit,
+    location,
+    donor,
+    donorOther,
+    remarkss,
+    category,
+    cost,
+    accessories,
+    acquiMode,
+    barcode,
+    user,
+    barCodeRef,
+    setArticle,
+    setArticleOther,
+    setType,
+    setTypeOther,
+    setDesc,
+    setModel,
+    setVariant,
+    setDetails,
+    setOther,
+    setBrand,
+    setManufacturer,
+    setOrigin,
+    setWarranty,
+    setAcquisition,
+    setUnit,
+    setDonor,
+    setDonorOther,
+    setCategory,
+    setCost,
+    setAccessories,
+    setAcquiMode,
+    setBarcode,
+    setSeries,
+    setGetCateg,
+    newProp,
+    itemId,
+    setPrev,
+    inv,
+    create,
+    setCreate,
+    peripArticle,
+    setPeripArticle,
+    peripMode,
+    getArticle, setGetArticle,
+    getTypes, setGetTypes,
+    getSupplier, setGetSupplier,
+    addType, setAddType,
+    addArticle, setAddArticle,
+    setPeripTypes,
+    setAddTypes,
+
+    //ICS
+    PO,
+    setPO,
+    PODate,
+    setPODate,
+    invoice,
+    setInvoice,
+    invoiceDate,
+    setInvoiceDate,
+    ors,
+    setOrs,
+    ICSRemarks,
+    setICSRemarks,
+
+    //PAR
+    DRF,
+    setDRF,
+    DRFDate,
+    setDRFDate,
+    IAR,
+    setIAR,
+    PARRemarks,
+    setPARRemarks,
   } = useContext(DataContext);
 
-  const [article, setArticle] = useState("");
-  const [articleOther, setArticleOther] = useState("");
-  const [type, setType] = useState("");
-  const [typeOther, setTypeOther] = useState("");
-  const [descOrig, setDescOrig] = useState("");
-  const [desc, setDesc] = useState("");
-  const [model, setModel] = useState("");
-  const [variant, setVariant] = useState("");
-  const [details, setDetails] = useState("");
-  const [other, setOther] = useState("");
-  const [brand, setBrand] = useState("");
-  const [manufacturer, setManufacturer] = useState("");
-  const [origin, setOrigin] = useState("");
-  const [serialNum, setSerialNum] = useState("");
-  const [warranty, setWarranty] = useState("");
-  const [acquisition, setAcquisition] = useState("");
-  const [propertyNum, setPropertyNum] = useState("");
-  const [unit, setUnit] = useState("");
-  const [location, setLocation] = useState("");
-  const [donor, setDonor] = useState("");
-  const [donorOther, setDonorOther] = useState("");
-  const [remarkss, setRemarkss] = useState("");
-  const [category, setCategory] = useState("");
-  const [cost, setCost] = useState("");
-  const [accessories, setAccessories] = useState("");
-  const [acquiMode, setAcquiMode] = useState("");
-  const [barcode, setBarcode] = useState("");
-  const { user } = useAuth();
-  const barCodeRef = useRef(null);
+  console.log(getTypes)
 
   //Utilities State
   const todate = new Date();
@@ -76,41 +140,66 @@ const Equipment = ({ setTab }) => {
   const [itemStatusOther, setItemStatusOther] = useState("");
 
   //Fields
-  const [getArticle, setGetArticle] = useState([]);
-  const [getTypes, setGetTypes] = useState([]);
   const [getStatus, setGetStatus] = useState([]);
-  const [getSupplier, setGetSupplier] = useState([]);
 
   //
   const [isIN, setIN] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const click = new useDisclosure();
+
+  const [selectedArticle, setSelectedArticle] = useState();
+  const [selectedType, setSelectedType] = useState();
 
   //
   const fetchData = async () => {
     let responseArticle = await localApi.get("article");
     setGetArticle(responseArticle.data);
 
-    let responseTypes = await localApi.get("types", {
-      params: { article: article },
+    let responseCateg = await localApi.get("code", {
+      params: { categ: category },
     });
-    setGetTypes(responseTypes.data);
+    setGetCateg(responseCateg.data);
 
     let responseStatus = await localApi.get("status");
     setGetStatus(responseStatus.data);
 
     let responseSupplier = await localApi.get("supplier", {
-      params: { acquiMode: acquiMode },
+      params: { acquiMode: acquiMode === "" ? peripMode : acquiMode },
     });
     setGetSupplier(responseSupplier.data);
   };
 
   useEffect(() => {
-    fetchData();
-  }, [type, article, acquiMode]);
+    const fetchTypes = async () => {
+      try {
+        const responseTypes = await localApi.get("types", {
+          params: {
+            article: article
+          },
+        });
 
-  useEffect(()=>{
+        // Assuming the response contains 'articleTypes', 'peripArticleTypes', and 'addArticleTypes'
+        const { articleTypes } = responseTypes.data;
+
+        if (articleTypes) {
+          setGetTypes(articleTypes);
+        }
+      } catch (error) {
+        // Handle error
+      }
+    };
+
+    fetchTypes();
+  }, [article]);
+
+
+  useEffect(() => {
+    fetchData();
+  }, [type, article, acquiMode, cost, category, peripArticle, peripMode, addArticle, addType]);
+
+  useEffect(() => {
     barCodeRef.current.focus();
-  }, [isOpen])
+  }, [isOpen]);
 
   //Clear Form
   const clearForm = () => {
@@ -129,9 +218,9 @@ const Equipment = ({ setTab }) => {
         " " +
         variant +
         " " +
-        details
+        detailss
     );
-  }, [article, articleOther, type, typeOther, model, variant, details, other]);
+  }, [article, articleOther, type, typeOther, model, variant, detailss, other]);
 
   const handleCreate = (e) => {
     e && e.preventDefault();
@@ -165,14 +254,14 @@ const Equipment = ({ setTab }) => {
         status: itemStatus === "Other" ? itemStatusOther : itemStatus || null,
         model: model || null,
         variant: variant || null,
-        details: details || null,
+        details: detailss || null,
         other: other || null,
         brand: brand || null,
         manufacturer: manufacturer || null,
         countries: origin || null,
         serialNum: serialNum || null,
-        warranty: warranty || null,
-        acquisition: acquisition || null,
+        warranty: warrantyy || null,
+        acquisition: acquisitions || null,
         propertyNum: propertyNum || null,
         unit: unit || null,
         location: location || null,
@@ -185,10 +274,26 @@ const Equipment = ({ setTab }) => {
         accessories: accessories || null,
         barcode: barcode || null,
         property_no: propertyno || null,
+        po: PO || null,
+        po_date: PODate || null,
+        invoice: invoice || null,
+        invoice_date: invoiceDate || null,
+        ors: ors || null,
+        ics_remarks: ICSRemarks || null,
+        drf: DRF || null,
+        drf_date: DRFDate || null,
+        iar: IAR || null,
+        par_remarks: PARRemarks || null,
+        inv: inv,
+        create: create,
         userId: user.userId || null,
+        articleId: selectedArticle || null,
+        typeId: selectedType || null,
       })
-      .then(function (response) {
+      .then(async function (response) {
         if (response.data.status === 1) {
+          handleSubmit(response.data);
+          console.log(response.data.isIN)
           if (response.data.isIN === false) {
             setIsClick(false);
             setAppState("Item Created");
@@ -274,7 +379,7 @@ const Equipment = ({ setTab }) => {
           p={[10, 3, 3, 3]}
         >
           <GridItem colSpan={[6, 3, 3, 3]}>
-            <FormControl isRequired w={{ lg: 400, md: 300, sm: 250 }}>
+            <FormControl isRequired w={{ lg: 330, md: 300, sm: 250 }}>
               <FormLabel>Category</FormLabel>
               <Select
                 placeholder=" -- Select Category -- "
@@ -284,7 +389,9 @@ const Equipment = ({ setTab }) => {
                 <option>Machinery</option>
                 <option>Office Equipment</option>
                 <option>Janitorial Equipment</option>
-                <option>Information and Communication Technology Equipment</option>
+                <option>
+                  Information and Communication Technology Equipment
+                </option>
                 <option>Agricultural and Forestry</option>
                 <option>Disaster Response and Rescue Equipment</option>
                 <option>Military Police and Security</option>
@@ -297,11 +404,15 @@ const Equipment = ({ setTab }) => {
                 <option>Books</option>
               </Select>
             </FormControl>
-          </GridItem>
+          </GridItem> 
 
-          <GridItem colSpan={[6, 3, 3, 3]}> 
-          <FormLabel>Bar Code Number</FormLabel>
-            <Input ref={barCodeRef} value={barcode} onChange={(e)=>setBarcode(e.target.value)}/>
+          <GridItem colSpan={[6, 3, 3, 3]}>
+            <FormLabel>Bar Code Number</FormLabel>
+            <Input
+              ref={barCodeRef}
+              value={barcode}
+              onChange={(e) => setBarcode(e.target.value)}
+            />
           </GridItem>
 
           <GridItem colSpan={6}>
@@ -318,6 +429,11 @@ const Equipment = ({ setTab }) => {
                 value={article}
                 onChange={(e) => {
                   setArticle(e.target.value);
+                  setSelectedArticle(
+                    e.target.options[e.target.selectedIndex].getAttribute(
+                      "data-id"
+                    )
+                  );
                   setTypeOther("");
                   setType("");
                 }}
@@ -325,7 +441,11 @@ const Equipment = ({ setTab }) => {
               >
                 {getArticle.map((item, index) => {
                   return (
-                    <option value={item.article_name} key={index}>
+                    <option
+                      value={item.article_name}
+                      key={index}
+                      data-id={item.Pk_articleId}
+                    >
                       {item.article_name}
                     </option>
                   );
@@ -349,15 +469,28 @@ const Equipment = ({ setTab }) => {
               <FormLabel>Type/Form</FormLabel>
               <Select
                 value={type}
-                onChange={(e) => setType(e.target.value)}
+                onChange={(e) => {
+                  setType(e.target.value);
+                  setSelectedType(
+                    e.target.options[e.target.selectedIndex].getAttribute(
+                      "data-id"
+                    )
+                  );
+                }}
                 placeholder="- Select Type/Form -"
               >
                 {getTypes.map((item, index) => {
-                  return (
-                    <option value={item.type_name} key={index}>
-                      {item.type_name}
-                    </option>
-                  );
+                  if (article != "") {
+                    return (
+                      <option
+                        value={item.type_name}
+                        key={index}
+                        data-id={item.Pk_typeId}
+                      >
+                        {item.type_name}
+                      </option>
+                    );
+                  }
                 })}
                 <option value="Other">Other</option>
               </Select>
@@ -396,7 +529,7 @@ const Equipment = ({ setTab }) => {
             <FormControl>
               <FormLabel>Details2</FormLabel>
               <Textarea
-                value={details}
+                value={detailss}
                 onChange={(e) => setDetails(e.target.value)}
               />
             </FormControl>
@@ -442,12 +575,15 @@ const Equipment = ({ setTab }) => {
                 />
               )}
             </FormControl>
-          </GridItem> */}
+          </GridItem> */} 
 
           <GridItem colSpan={[6, 6, 2, 2]}>
             <FormControl>
               <FormLabel>Other</FormLabel>
-              <Textarea value={other} onChange={(e) => setOther(e.target.value)} />
+              <Textarea
+                value={other}
+                onChange={(e) => setOther(e.target.value)}
+              />
             </FormControl>
           </GridItem>
 
@@ -481,11 +617,27 @@ const Equipment = ({ setTab }) => {
           <GridItem colSpan={[6, 6, 2, 2]}>
             <FormControl>
               <FormLabel>Warranty</FormLabel>
-              <Input
-                value={warranty}
+              <Select
+                value={warrantyy}
                 onChange={(e) => setWarranty(e.target.value)}
-                type="date"
-              />
+                placeholder="- Select Warranty -"
+              >
+                <option>5 months</option>
+                <option>6 months</option>
+                <option>7 months</option>
+                <option>1 year</option>
+                <option>2 years</option>
+                <option>3 years</option>
+                <option>4 years</option>
+                <option>5 years</option>
+              </Select>
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={[6, 6, 2, 2]}>
+            <FormControl>
+              <FormLabel>Preventive Maintenance</FormLabel>
+              <Input />
             </FormControl>
           </GridItem>
 
@@ -493,7 +645,7 @@ const Equipment = ({ setTab }) => {
             <FormControl>
               <FormLabel>Acquisition Date</FormLabel>
               <Input
-                value={acquisition}
+                value={acquisitions}
                 onChange={(e) => setAcquisition(e.target.value)}
                 type="date"
               />
@@ -515,7 +667,7 @@ const Equipment = ({ setTab }) => {
                 onChange={(e) => setAcquiMode(e.target.value)}
                 placeholder="- Select Acquisition Mode -"
               >
-                <option>Purchase</option>
+                <option>Regular</option>
                 <option>Donation</option>
               </Select>
             </FormControl>
@@ -530,11 +682,13 @@ const Equipment = ({ setTab }) => {
                 placeholder="- Select Supplier/Donor -"
               >
                 {getSupplier.map((item, index) => {
-                  return (
-                    <option value={item.supplier} key={index}>
-                      {item.supplier}
-                    </option>
-                  );
+                  if(acquiMode != ''){
+                    return (
+                      <option value={item.supplier} key={index}>
+                        {item.supplier}
+                      </option>
+                    );
+                  }
                 })}
                 <option value="Other">Other</option>
               </Select>
@@ -597,13 +751,22 @@ const Equipment = ({ setTab }) => {
                 padding={"0px 40px 0px 40px"}
                 colorScheme="blue"
                 onClick={() => {
-                  // setIN(!isIN);
+                  setIN(!isIN);
                   // clearAll();
                   onOpen();
                 }}
               >
                 {"Make IN"}
               </Button>
+
+              {/* <Button
+                padding={"0px 75px 0px 75px"}
+                isDisabled={category === '' ? true : false}
+                onClick={() => click.onOpen()}
+              >
+                {"Attach New Equipment"}
+              </Button> */}
+
               <Divider border={4} />
             </HStack>
           </GridItem>
@@ -626,6 +789,7 @@ const Equipment = ({ setTab }) => {
               colorScheme="teal"
               loadingText="Creating Item"
               type="submit"
+              onClick={() => setCreate(true)}
             >
               Create Item
             </Button>

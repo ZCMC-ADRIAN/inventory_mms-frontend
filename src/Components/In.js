@@ -87,6 +87,10 @@ const In = ({ setTab, users }) => {
       { Header: "Variety", accessor: "variety" },
       { Header: "Detail", accessor: "details2" },
       {
+        Header: "Category",
+        accessor: "itemCateg_name",
+      },
+      {
         Header: "ACTION",
         accessor: "action",
       },

@@ -202,7 +202,7 @@ const PARTab = ({
             <GridItem colSpan={2}>
               <FormControl>
                 <FormLabel color={"blackAlpha.600"}>
-                  PAR # (For Old Items)
+                  PAR/ICS # (For Old Items)
                 </FormLabel>
                 <Input
                   value={par}

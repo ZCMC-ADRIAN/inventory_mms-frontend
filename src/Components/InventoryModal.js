@@ -314,17 +314,6 @@ const InventoryModal = ({ isOpen, onClose, child, item }) => {
                                   <Td {...cell.getCellProps()} whiteSpace='pre-line'>
                                     {cell.column.id === "action" ? (
                                       <Flex columnGap={1}>
-                                        {/* <Button
-                                        _hover={{
-                                          bg: "#FCD299",
-                                          boxShadow: "lg",
-                                          transform: "scale(1.2,1.2)",
-                                          transition: "0.3s",
-                                        }}
-                                        onClick={() => { onOpen(cell.row.values.Pk_inventoryId); setItemId(cell.row.values.Pk_inventoryId) }}
-                                      >
-                                        <AiOutlineFolderView color="orange" />
-                                      </Button> */}
                                       </Flex>
                                     ) : cell.column.id === "dept" ? (
                                       <Text

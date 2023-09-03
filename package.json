@@ -24,7 +24,7 @@
     "i": "^0.3.7",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.5.28",
-    "jszip": "^3.10.1",
+    "jszip": "^2.7.0",
     "lodash.debounce": "^4.0.8",
     "moment": "^2.29.4",
     "npm": "^9.6.4",
@@ -78,5 +78,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "eslint": "^8.46.0",
+    "eslint-plugin-react": "^7.33.1"
   }
 }

@@ -286,7 +286,6 @@ const Equipment = ({ setTab }) => {
         accessories: accessories || null,
         barcode: barcode || null,
         property_no: propertyno || null,
-        fundCluster: fundCluster === 'Other' ? otherCluster : fundCluster || null,
         // PARRemarks: PARRemarks || null,
         //
         inv: inv || null,
@@ -776,7 +775,7 @@ const Equipment = ({ setTab }) => {
                   onOpen();
                 }}
               >
-                {"Make IN"}
+                {"IN"}
               </Button>
 
               {/* <Button

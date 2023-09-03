@@ -4,6 +4,7 @@ import { HiSearch } from "react-icons/hi";
 import { useTable, usePagination } from "react-table";
 import DetailsModal from "./DetailsModal";
 import Details2Modal from "./Details2Modal";
+import EditModal from "./EditModal";
 import { useClickOutside } from "./useClickOutside";
 import {
   Modal,
@@ -52,6 +53,8 @@ import { HiTrash } from "react-icons/hi";
 const ItemModal = ({ isOpen, onClose, details, header, child, item }) => {
   const modal = new useDisclosure();
   const edit = new useDisclosure();
+  const invEdit = new useDisclosure();
+
   const [location, setLocation] = useState("");
   const [searchTerm, setSearchterm] = useState([]);
   const [term, setTerm] = useState("");
@@ -60,6 +63,8 @@ const ItemModal = ({ isOpen, onClose, details, header, child, item }) => {
   const [timeoutId, setTimeoutId] = useState(null);
   const [inventoryId, setInventoryId] = useState([]);
   const [data, setTableData] = useState([]);
+
+  console.log(data)
 
 
   const fetchlocation = async (value) => {
@@ -352,10 +357,6 @@ const ItemModal = ({ isOpen, onClose, details, header, child, item }) => {
                           prepareRow(row);
                           return (
                             <Tr
-                              // onClick={() => {
-                              //   modal.onOpen();
-                              //   setInventoryId(row.original.Pk_inventoryId);
-                              // }}
                               className="td"
                               {...row.getRowProps()}
                               whiteSpace="pre-line"
@@ -395,16 +396,21 @@ const ItemModal = ({ isOpen, onClose, details, header, child, item }) => {
                                           <AiFillEdit color="grey" />
                                         </Button>
 
-                                        {/* <Button
+                                        <Button
                                           _hover={{
-                                            bg: "#FCD299",
+                                            bg: "red.100",
                                             boxShadow: "lg",
                                             transform: "scale(1.2,1.2)",
                                             transition: "0.3s",
                                           }}
+                                          onClick={()=>{
+                                            invEdit.onOpen();
+                                            setInventoryId(row.original.Pk_inventoryId)
+                                          }}
                                         >
-                                          <HiTrash color="darkorange" />
-                                        </Button> */}
+                                          <HiTrash color="red" />
+                                        </Button>
+                                        
                                       </Flex>
                                     ) : cell.column.id === "dept" ? (
                                       <Text
@@ -450,6 +456,8 @@ const ItemModal = ({ isOpen, onClose, details, header, child, item }) => {
                 />
 
                 <Details2Modal isOpen={edit.isOpen} onClose={edit.onClose} inventoryId={inventoryId}/>
+
+                <EditModal invOpen = {invEdit.isOpen} invClose={invEdit.onClose} inventoryId={inventoryId}/>
 
                 {page.length >= 1 ? (
                   <Flex justifyContent={"end"} mt={5}>

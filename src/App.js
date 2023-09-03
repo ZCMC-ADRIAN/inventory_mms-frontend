@@ -16,7 +16,8 @@ import ReportArea from "./Components/Printable/ReportArea";
 import PropertyTag from "./Components/Printable/PropertyTag";
 import ReportPerson from "./Components/Printable/ReportPerson";
 import Conditions from "./Components/Printable/Conditions";
-import NoProperty from "./Components/Printable/Sample";
+import GeneratePAR from "./Components/Printable/GeneratePAR";
+import GenerateICS from "./Components/Printable/GenerateICS";
 
 const App = () => {
   return (
@@ -33,7 +34,8 @@ const App = () => {
             <Route path="/report/person" element={<ReportPerson />} />
             <Route path="inventory" element={<Inventory />} />
             <Route path="tag" element={<PropertyTag />} />
-            <Route path="no" element={<NoProperty />} />
+            <Route path="generate/par" element={<GeneratePAR />} />
+            <Route path="generate/ics" element={<GenerateICS />} />
             <Route path="report/not-found" element={<Conditions />} />
           </Route>
         </Routes>

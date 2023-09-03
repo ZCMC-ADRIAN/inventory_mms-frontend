@@ -95,3 +95,23 @@
     margin-left: 35%;
     margin-top: 10px;
   }
+
+  .par-table{
+    margin: 20px;
+  }
+
+  .par-table table{
+    width: 100%;
+    text-align: center;
+  }
+
+  .par-table th,
+  .par-table td {
+    border: 1px solid black; 
+    padding: 5px;
+    font-size: 11px;
+}
+
+.par-table .table_header{
+  text-align: center;
+}

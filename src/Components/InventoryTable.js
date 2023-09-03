@@ -43,6 +43,8 @@ const InventoryTable = ({ data, columns, child, children }) => {
   const [details, setDetails] = useState([]);
   const [header, setHeader] = useState([]);
 
+  console.log(details)
+
   const fetchHeader = async () => {
     const result = await localApi.get("header", {
       params: { header: details },

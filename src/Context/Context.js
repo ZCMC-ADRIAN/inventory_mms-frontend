@@ -152,8 +152,9 @@ export const Context = ({ children }) => {
   const [assocValue, setassocValue] = useState([]);
   const [selectedAssoc, setSelectedAssoc] = useState();
 
+  const Pk_assocId = selectedAssoc && selectedAssoc.Pk_assocId;
+
   const fetchAssoc = async () => {
-    console.log(`/assoc/${selectedLoc && selectedLoc.Pk_locationId}`);
     const result = await api.get(
       `/assoc/${selectedLoc && selectedLoc.Pk_locationId}`
     );
@@ -165,6 +166,7 @@ export const Context = ({ children }) => {
   const [newProp, setNewProp] = useState("");
   const [prev, setPrev] = useState([]);
   const [prevCode, setPrevCode] = useState([]);
+  const [prevs, setPrevs] = useState("");
   const [areaCode, setAreaCode] = useState([]);
   const [numSeries, setNumSeries] = useState([]);
   const [getCost, setGetCost] = useState([]);
@@ -188,6 +190,7 @@ export const Context = ({ children }) => {
       } else if (itemCost < 5000) {
         setNewProp("SPLV" + "-" + yearForm + "-" + monthForm + "-" + prev);
       }
+      setParNumber(yearForm + "-" + monthForm + "-" + prevs)
     }
   });
 
@@ -237,9 +240,6 @@ export const Context = ({ children }) => {
   const fetchcond = async (value) => {
     //http://127.0.0.1:8000/api/location
     const result = await api.get("/condition", {
-      params: {
-        q: value,
-      },
     });
     setCondDatas(result.data);
   };
@@ -310,6 +310,13 @@ export const Context = ({ children }) => {
     setNumSeries(responseNum.data);
   };
 
+  const fetchSeries = async () => {
+    let responseSeries = await api.get("/prevSeries", {
+      params: {itemId: itemId, assoc_id: Pk_assocId}
+    })
+    setPrevs(responseSeries.data)
+  }
+
   const fetchCost = async () => {
     let responseCost = await api.get("/cost", {
       params: { itemId: itemId },
@@ -329,14 +336,13 @@ export const Context = ({ children }) => {
   }, [cost]);
 
   useEffect(() => {
-    setSelectedAssoc();
-    setassocValue("");
     fetchPrev();
+    fetchSeries();
     fetchAreaCode();
     fetchNumSeries();
     fetchCost();
     fetchPrevCode();
-  }, [selectedLoc, itemId, locValue]);
+  }, [selectedLoc, itemId, locValue, selectedAssoc]);
 
   const clearAll = () => {
     setItemId(null);
@@ -422,6 +428,7 @@ export const Context = ({ children }) => {
           loose: loose,
           inv: inv,
           itemCost: itemCost,
+          acquiMode: acquiMode,
           cost: cost,
           remarks: remarks,
           EditVariety: selectedVariety && selectedVariety.Pk_varietyId,
@@ -437,6 +444,7 @@ export const Context = ({ children }) => {
           poNum: poNum,
           isNew: isNew,
           oldPAR: par,
+          fundCluster: fundCluster === 'Other' ? otherCluster : fundCluster || null,
 
           //PAR & ICS
           invoiceNum: Invoice || null,
@@ -446,6 +454,8 @@ export const Context = ({ children }) => {
           poConformed: Conformed || null,
           invoiceRec: InvoiceDate || null,
           IAR: IAR || null,
+
+          //Donation
           DRF: DRF || null,
           DRFDate: DRFDate || null,
           PTR: PTR || null,
@@ -482,7 +492,6 @@ export const Context = ({ children }) => {
         setserial,
         tableData,
         fetchTableData,
-        clearAll,
 
         condDatas,
         condItem,
@@ -646,7 +655,6 @@ export const Context = ({ children }) => {
         PTR, setPTR,
         PODate, setPODate,
         PO, setPO,
-        par, setPar,
         poNum, setPONum,
         poSelected, setPoSelected,
         clearPAR

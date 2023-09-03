@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import localApi from "../../API/Api";
-import { Button, SimpleGrid, GridItem, theme, color } from "@chakra-ui/react";
+import { Button, SimpleGrid, GridItem } from "@chakra-ui/react";
 import "./Report.css";
 import Select from "react-select";
 
@@ -35,14 +35,10 @@ function ReportArea() {
       "Article",
       "Descrtiption",
       "Property No",
-      "Qty",
-      "Unit",
+      "Unit Measure",
+      "Quantity Per Property Card",
+      "Quantity Per Physical Count",
       "Unit Value",
-      "Total Value",
-      "Date Acquired",
-      "Person Responsible",
-      "Date Repaired",
-      "Date Returned",
       "Remarks",
     ];
 
@@ -72,12 +68,11 @@ function ReportArea() {
         item.article,
         item.desc,
         temp,
-        item.qty,
         item.unit,
+        item.qty,
+        item.qty,
         item.cost,
-        item.total,
         item.Delivery_date,
-        item.person,
       ];
     });
 
@@ -131,18 +126,13 @@ function ReportArea() {
       </div>
       <table className="report-table">
         <tr className="report-header">
-          <th>No</th>
           <th>Article</th>
           <th>Description</th>
           <th>Property No</th>
-          <th>Qty</th>
-          <th>Unit</th>
+          <th>Unit Measure</th>
           <th>Unit Value</th>
-          <th>Total Value</th>
-          <th>Date Acquired</th>
-          <th>Person Responsible</th>
-          <th>Date Repaired</th>
-          <th>Date Returned</th>
+          <th>Quantity Per Property Card</th>
+          <th>Quantity Per Physical Count</th>
           <th>REMARKS</th>
         </tr>
 
@@ -150,20 +140,15 @@ function ReportArea() {
           const num = index + 1;
           return (
             <tr className="report-data">
-              <td>{num}</td>
               <td>{item.article}</td>
               <td style={{ width: "220px" }}>{item.desc}</td>
               {item.property.map((det) => {
                 return <td style={{ width: "200px" }}>{det.property_no}</td>;
               })}
-              <td>{item.qty}</td>
               <td>{item.unit}</td>
               <td>{item.cost}</td>
-              <td>{item.total}</td>
-              <td>{item.Delivery_date}</td>
-              <td>{item.person}</td>
-              <td></td>
-              <td></td>
+              <td>{item.qty}</td>
+              <td>{item.qty}</td>
               <td>{item.remarks}</td>
             </tr>
           );

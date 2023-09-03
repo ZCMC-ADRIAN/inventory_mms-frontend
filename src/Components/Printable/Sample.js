@@ -1,66 +1,65 @@
-import React from 'react';
-import Docxtemplater from 'docxtemplater';
-import PizZip from 'pizzip';
-import { saveAs } from 'file-saver';
+import React, { useState } from "react";
+import localApi from "../../API/Api";
+import { Button, SimpleGrid, GridItem, theme, color } from "@chakra-ui/react";
+import Select from "react-select";
 
-const DocxGenerator = () => {
-  const generateDocx = () => {
-    fetch('/PAR.docx')
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error('Failed to fetch template file');
-        }
-        return res.arrayBuffer();
-      })
-      .then((buffer) => {
-        // Load the template with PizZip
-        const zip = new PizZip(buffer);
+function App() {
+  const [isDownloading, setIsDownloading] = useState(false);
 
-        // Data array containing objects to fill the placeholders in the template
-        const dataArray = [
-          {
-            quantity: '1',
-            unit: 'Unit',
-            desc: 'Computer Desktop',
-            property: '2022-01-10-0001',
-            date: '08-02-2023',
-            amount: '55000'
-          }
-          // Add more data objects as needed
-        ];
+  const handleDownload = async () => {
+    try {
+      setIsDownloading(true);
 
-        // Create a new instance of the Docxtemplater for each data object
-        const outputArray = dataArray.map((data) => {
-          const doc = new Docxtemplater();
-          doc.loadZip(zip);
-          doc.setData(data);
-          doc.render();
-          return doc.getZip().generate({ type: 'uint8array' });
-        });
-
-        // Combine the generated sections into a single DOCX file
-        const combinedOutputBuffer = new PizZip();
-        outputArray.forEach((outputBuffer) => {
-          combinedOutputBuffer.load(outputBuffer);
-        });
-
-        const combinedBlob = new Blob([combinedOutputBuffer.generate({ type: 'uint8array' })], {
-          type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        });
-
-        // Save the combined file using FileSaver.js
-        saveAs(combinedBlob, 'combined_output.docx');
-      })
-      .catch((error) => {
-        console.error(error);
+      const response = await localApi.get("test", {
+        responseType: "blob", // Set the response type to blob
       });
+
+      // Create a URL for the blob and trigger download
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "Report.docx"; // Set the desired filename
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      setIsDownloading(false);
+    } catch (error) {
+      console.error("Error downloading DOCX:", error);
+      setIsDownloading(false);
+    }
   };
 
   return (
     <div>
-      <button onClick={generateDocx}>Generate DOCX</button>
+      {/* <Button onClick={handleDownload} disabled={isDownloading}>
+        {isDownloading ? 'Downloading...' : 'Download DOCX'}
+      </Button> */}
+      <SimpleGrid columns={6} columnGap={3} p={10}>
+        <GridItem colSpan={1}>
+          <Select
+            class="select"
+            // options={location.map((det) => {
+            //   return { value: det.location_name, label: det.location_name };
+            // })}
+            // onChange={(e) => setSelectLoc(e.label, e.value)}
+            placeholder="Select PAR"
+          />
+        </GridItem>
+        <GridItem colSpan={1}>
+          <Button
+            bg="#91C788"
+            color="#fff"
+            _hover={{ bg: "#74b369" }}
+            disabled={isDownloading}
+            onClick={handleDownload} isdisabled={isDownloading}
+          >
+            {isDownloading ? 'Generating...' : 'Generate'}
+          </Button>
+        </GridItem>
+      </SimpleGrid>
     </div>
   );
-};
+}
 
-export default DocxGenerator;
+export default App;

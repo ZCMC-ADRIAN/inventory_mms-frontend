@@ -102,19 +102,58 @@ function Sidebar({ visible, show, tab, setTab }) {
             </li>
           </ul> */}
 
-          {/* <label>Generate</label>
+          <label>Generate</label>
           <ul>
             <li
-              onClick={() => {setTab("report"); navigate('/no')}}
-              className={tab === "report" ? "active" : ""}
+              onClick={() => {setTab("qr"); navigate('/mass-print')}}
+              className={tab === "qr" ? "active" : ""}
             >
               <p className="sidebar-icon">
                 <MdArticle />
               </p>
-              <text>No Property #</text>
-              
+              <text>QR Code</text>
             </li>
-          </ul> */}
+
+            <li
+              onClick={() => {setTab("area"); navigate('/report/area')}}
+              className={tab === "area" ? "active" : ""}
+            >
+              <p className="sidebar-icon">
+                <MdArticle />
+              </p>
+              <text>Report By Area</text>
+            </li>
+            
+            <li
+              onClick={() => {setTab("person"); navigate('/report/person')}}
+              className={tab === "person" ? "active" : ""}
+            >
+              <p className="sidebar-icon">
+                <MdArticle />
+              </p>
+              <text>Report By Officer</text>
+            </li>
+
+            <li
+              onClick={() => {setTab("par"); navigate('/generate/par')}}
+              className={tab === "par" ? "active" : ""}
+            >
+              <p className="sidebar-icon">
+                <MdArticle />
+              </p>
+              <text>PAR</text>
+            </li>
+
+            <li
+              onClick={() => {setTab("par"); navigate('/generate/ics')}}
+              className={tab === "ics" ? "active" : ""}
+            >
+              <p className="sidebar-icon">
+                <MdArticle />
+              </p>
+              <text>ICS</text>
+            </li>
+          </ul>
         </div>
       </nav>
     </div>

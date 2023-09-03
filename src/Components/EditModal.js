@@ -28,7 +28,7 @@ import {
   TabPanel,
 } from "@chakra-ui/react";
 
-const EditModal = ({ isOpen, onClose, itemId }) => {
+const EditModal = ({ isOpen, onClose, itemId, invOpen, invClose, inventoryId}) => {
 
   const [data, setData] = useState([]);
   const [article, setArticle] = useState("");
@@ -110,6 +110,20 @@ const EditModal = ({ isOpen, onClose, itemId }) => {
     fetchTypes();
   }, [editArticle]);
 
+  useEffect(() => {
+    setDesc(
+      (editArticle === "Other" ? articleOther : editArticle) +
+        " " +
+        (type === "Other" ? typeOther : type) +
+        " " +
+        model +
+        " " +
+        variant +
+        " " +
+        details
+    );
+  }, [article, articleOther, type, typeOther, model, variant, details, other, editArticle]);
+
 
   useEffect(() => {
     fetchData();
@@ -157,6 +171,7 @@ const EditModal = ({ isOpen, onClose, itemId }) => {
         localApi
           .post("save-item", {
             itemId: itemId,
+            inventoryId: inventoryId,
             brand: brand,
             article: editArticle === "Other" ? articleOther : editArticle,
             type: type === "Other" ? typeOther : type,
@@ -191,7 +206,7 @@ const EditModal = ({ isOpen, onClose, itemId }) => {
 
   return (
     <div>
-      <Modal isOpen={isOpen} onClose={onClose} size="4xl">
+      <Modal isOpen={isOpen || invOpen} onClose={onClose || invClose} size="4xl">
         <ModalOverlay />
         <form onSubmit={handleSubmit}>
           <ModalContent>
@@ -231,7 +246,7 @@ const EditModal = ({ isOpen, onClose, itemId }) => {
                       isReadOnly
                       background="#eee"
                       disabled
-                    // value={desc}
+                      value={desc}
                     />
                   </FormControl>
                 </GridItem>

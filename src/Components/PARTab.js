@@ -165,13 +165,23 @@ const PARTab = ({
               </FormControl>
             </GridItem>
 
-            <GridItem
+            {/* <GridItem
               colSpan={2}
               display={acquiMode != "Donation" ? "none" : ""}
             >
               <FormControl>
                 <FormLabel color={"blackAlpha.600"}>DRF #</FormLabel>
                 <Input value={DRF} onChange={(e) => setDRF(e.target.value)} />
+              </FormControl>
+            </GridItem> */}
+
+            <GridItem
+              colSpan={2}
+              display={acquiMode != "Donation" ? "none" : ""}
+            >
+              <FormControl>
+                <FormLabel color={"blackAlpha.600"}>PTR #</FormLabel>
+                <Input value={PTR} onChange={(e) => setPTR(e.target.value)} />
               </FormControl>
             </GridItem>
 
@@ -186,16 +196,6 @@ const PARTab = ({
                   value={DRFDate}
                   onChange={(e) => setDRFDate(e.target.value)}
                 />
-              </FormControl>
-            </GridItem>
-
-            <GridItem
-              colSpan={2}
-              display={acquiMode != "Donation" ? "none" : ""}
-            >
-              <FormControl>
-                <FormLabel color={"blackAlpha.600"}>PTR #</FormLabel>
-                <Input value={PTR} onChange={(e) => setPTR(e.target.value)} />
               </FormControl>
             </GridItem>
 

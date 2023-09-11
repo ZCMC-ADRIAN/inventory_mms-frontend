@@ -9,7 +9,7 @@ import {
   theme,
   color,
   Text,
-  Flex
+  Flex,
 } from "@chakra-ui/react";
 import Select from "react-select";
 
@@ -19,7 +19,7 @@ function GenerateICS() {
   const [ics, setIcs] = useState([]);
   const [data, setData] = useState([]);
 
-  // console.log(data)
+  console.log(data);
 
   const fetchData = async () => {
     let responseICS = await localApi.get("ics");
@@ -161,26 +161,52 @@ function GenerateICS() {
             <th className="th-desc">Unit Cost</th>
             <th className="th-desc">Total Cost</th>
           </tr>
-          <tr>
-            <td>1</td>
-            <td>Unit</td>
-            <td>1000</td>
-            <td>1000</td>
-            <td>Desktop Computer D15 Black</td>
-            <td>55000</td>
-            <td></td>
-          </tr>
+          {data.map((data) => {
+            return (
+              <tr>
+                <td>{data.qty}</td>
+                <td>{data.unit}</td>
+                <td>{data.costs}</td>
+                <td>{data.total}</td>
+                <td>{data.desc}</td>
+                <td>{data.newProperty}</td>
+                <td></td>
+              </tr>
+            );
+          })}
+
           <tr>
             <td></td>
             <td></td>
             <td></td>
             <td style={{ textAlign: "right" }}>Note:</td>
-            <td style={{ textAlign: "left", fontSize: "10px" }}>
-              <Text className="note">RC Lim Marketing</Text>
-              <Text className="note">PO# 23060244 DTD: 06//29/2023</Text>
-              <Text className="note">INVOICE# 18659 DTD: 07/10/2023</Text>
-              <Text className="note">ORS/BURS: 02-206443-2023-07-000699</Text>
-            </td>
+            {data.map((data, index) => {
+              if (index === 0) {
+                if (data.fundSource === "Regular") {
+                  return (
+                    <td style={{ textAlign: "left", fontSize: "10px" }}>
+                      <Text className="note">{data.supplier}</Text>
+                      <Text className="note">
+                        PO# {data.po_number} DTD: {data.po_date}
+                      </Text>
+                      <Text className="note">
+                        INVOICE# {data.invoice} DTD: {data.invoice_rec}
+                      </Text>
+                      <Text className="note">ORS/BURS: {data.ors_num}</Text>
+                    </td>
+                  );
+                } else {
+                  return (
+                    <td style={{ textAlign: "left", fontSize: "10px" }}>
+                      <Text>DRF #: 141234123</Text>
+                      <Text>DRF Date: 09/10/2023</Text>
+                      <Text></Text>
+                    </td>
+                  );
+                }
+              }
+            })}
+
             <td></td>
             <td></td>
           </tr>

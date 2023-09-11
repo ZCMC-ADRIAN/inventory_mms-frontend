@@ -179,18 +179,28 @@ function GeneratePAR() {
                 </Text>
               </td>
               {data.map((data) => {
-                return (
-                  <td style={{ textAlign: "left", lineHeight: "1" }}>
-                    <Text className="note">{data.fundSource}</Text>
-                    <Text className="note">Invoice #: {data.invoice}</Text>
-                    <Text className="note">PO #: {data.po_number}</Text>
-                    <Text className="note">ORS #: {data.ors_num}</Text>
-                    <Text className="note">
-                      PO Conformed: {data.po_conformed}
-                    </Text>
-                    <Text className="note">IAR No.: {data.iar}</Text>
-                  </td>
-                );
+                if(data.fundSource === 'Regular'){
+                  return (
+                    <td style={{ textAlign: "left", lineHeight: "1" }}>
+                      <Text className="note">{data.fundSource}</Text>
+                      <Text className="note">Invoice #: {data.invoice}</Text>
+                      <Text className="note">PO #: {data.po_number}</Text>
+                      <Text className="note">ORS #: {data.ors_num}</Text>
+                      <Text className="note">
+                        PO Conformed: {data.po_conformed}
+                      </Text>
+                      <Text className="note">IAR No.: {data.iar}</Text>
+                    </td>
+                  );
+                }else {
+                  return (
+                    <td style={{ textAlign: "left", lineHeight: "1" }}>
+                      <Text>DRF #: {data.drf_num}</Text>
+                      <Text>DRF Date: {data.drf_date}</Text>
+                      <Text></Text>
+                    </td>
+                  )
+                }
               })}
               <td></td>
               <td></td>

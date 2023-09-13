@@ -21,6 +21,7 @@ import {
   useToast,
   SimpleGrid,
   ModalOverlay,
+  Grid,
 } from "@chakra-ui/react";
 import SearchSel from "./searchableSelect/searchSel";
 import { EditIcon, CloseIcon } from "@chakra-ui/icons";
@@ -111,7 +112,7 @@ export const VerticallyCenter = ({
         <ModalContent w={"60%"} minW={"60%"}>
           <ModalCloseButton />
           <ModalBody p={10}>
-            <SimpleGrid mt={6} rowGap={6} columns={6} columnGap={5}>
+            <SimpleGrid mt={6} rowGap={6} columns={12} columnGap={5}>
               <GridItem
                 colSpan={6}
                 mb={8}
@@ -144,7 +145,7 @@ export const VerticallyCenter = ({
               <GridItem colSpan={2} w="100%">
                 <Box>
                   <SearchSel
-                    name={"Accountability Officer"}
+                    name={"Accountable Off."}
                     data={assocDatas}
                     propertyName={"person_name"}
                     fetchdat={fetchAssoc}
@@ -205,8 +206,9 @@ export const VerticallyCenter = ({
                   />
                 </FormControl>
               </GridItem>
+            </SimpleGrid>
 
-              <GridItem colSpan={6}>
+            <GridItem colSpan={6}>
                 <PARTab />
               </GridItem>
 
@@ -222,7 +224,6 @@ export const VerticallyCenter = ({
                   />
                 </FormControl>
               </GridItem>
-            </SimpleGrid>
 
             {/* {!isItemInserted && (
                 <>

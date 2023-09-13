@@ -15,10 +15,13 @@ export const Context = ({ children }) => {
   const [desc, setDesc] = useState("");
   const [model, setModel] = useState("");
   const [variant, setVariant] = useState("");
+  const [variantOther, setVariantOther] = useState("");
   const [detailss, setDetails] = useState("");
   const [other, setOther] = useState("");
   const [brand, setBrand] = useState("");
+  const [brandOther, setBrandOther] = useState("");
   const [manufacturer, setManufacturer] = useState("");
+  const [manufacturerOther, setManufacturerOther] = useState("");
   const [origin, setOrigin] = useState("");
   const [serialNum, setSerialNum] = useState("");
   const [warrantyy, setWarranty] = useState("");
@@ -46,10 +49,16 @@ export const Context = ({ children }) => {
   const [peripMode, setPeripMode] = useState("");
   const [addArticle, setAddArticle] = useState("");
   const [addType, setAddType] = useState("");
+  const [addVariant, setAddVariant] = useState("");
+  const [addBrand, setAddBrand] = useState("");
+  const [addManufacturer, setAddManufacturer] = useState("");
   const [showForm, setShowForm] = useState(false);
 
   const [getArticle, setGetArticle] = useState([]);
   const [getTypes, setGetTypes] = useState([]);
+  const [getVariant, setGetVariant] = useState([]);
+  const [getBrand, setGetBrand] = useState([]);
+  const [getManufacturer, setGetManufacturer] = useState([]);
   const [addTypes, setAddTypes] = useState([]);
   const [peripTypes, setPeripTypes] = useState([]);
   const [getSupplier, setGetSupplier] = useState([]);
@@ -560,10 +569,13 @@ export const Context = ({ children }) => {
         desc,
         model,
         variant,
+        variantOther,
         detailss,
         other,
         brand,
+        brandOther,
         manufacturer,
+        manufacturerOther,
         origin,
         serialNum,
         warrantyy,
@@ -591,10 +603,13 @@ export const Context = ({ children }) => {
         setDesc,
         setModel,
         setVariant,
+        setVariantOther,
         setDetails,
         setOther,
         setBrand,
+        setBrandOther,
         setManufacturer,
+        setManufacturerOther,
         setOrigin,
         setSerialNum,
         setWarranty,
@@ -628,9 +643,15 @@ export const Context = ({ children }) => {
         showForm, setShowForm,
         getArticle, setGetArticle,
         getTypes, setGetTypes,
+        getVariant, setGetVariant,
+        getBrand, setGetBrand,
+        getManufacturer, setGetManufacturer,
         getSupplier, setGetSupplier,
         addArticle, setAddArticle,
         addType, setAddType,
+        addVariant, setAddVariant,
+        addBrand, setAddBrand,
+        addManufacturer, setAddManufacturer,
         addTypes, setAddTypes,
         peripTypes, setPeripTypes,
         selectEquipment, setSelectEquipment,

@@ -17,6 +17,16 @@ import {
   SimpleGrid,
   HStack,
   useDisclosure,
+  Menu,
+  MenuButton,
+  MenuItem,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ChakraProvider,
 } from "@chakra-ui/react";
 import useAuth from "../../Hooks/useAuth";
 import localApi from "../../API/Api";
@@ -42,10 +52,13 @@ const Equipment = ({ setTab }) => {
     desc,
     model,
     variant,
+    variantOther,
     detailss,
     other,
     brand,
+    brandOther,
     manufacturer,
+    manufacturerOther,
     origin,
     serialNum,
     warrantyy,
@@ -70,10 +83,13 @@ const Equipment = ({ setTab }) => {
     setDesc,
     setModel,
     setVariant,
+    setVariantOther,
     setDetails,
     setOther,
     setBrand,
+    setBrandOther,
     setManufacturer,
+    setManufacturerOther,
     setOrigin,
     setWarranty,
     setAcquisition,
@@ -94,9 +110,15 @@ const Equipment = ({ setTab }) => {
     peripMode,
     getArticle, setGetArticle,
     getTypes, setGetTypes,
+    getVariant, setGetVariant,
+    getBrand, setGetBrand,
+    getManufacturer, setGetManufacturer,
     getSupplier, setGetSupplier,
     addType, setAddType,
     addArticle, setAddArticle,
+    addVariant, setaddVariant,
+    addBrand, setAddBrand,
+    addManufacturer, setAddManufacturer,
     setPeripTypes,
     setAddTypes,
     fundCluster, setFundCluster,
@@ -138,11 +160,24 @@ const Equipment = ({ setTab }) => {
 
   const [selectedArticle, setSelectedArticle] = useState();
   const [selectedType, setSelectedType] = useState();
+  const [selectedVariant, setSelectedVariant] = useState();
+  const [selectedBrand, setSelectedBrand] = useState();
+  const [selectedManufacturer, setSelectedManufacturer] = useState();
+
 
   //
   const fetchData = async () => {
     let responseArticle = await localApi.get("article");
     setGetArticle(responseArticle.data);
+
+    let responseVariant = await localApi.get("variety");
+    setGetVariant(responseVariant.data);
+    
+    let responseBrand = await localApi.get("brand");
+    setGetBrand(responseBrand.data);
+
+    let responseManufacturer = await localApi.get("manufacturer");
+    setGetManufacturer(responseManufacturer .data);
 
     let responseCateg = await localApi.get("code", {
       params: { categ: category },
@@ -207,7 +242,7 @@ const Equipment = ({ setTab }) => {
 
   useEffect(() => {
     fetchData();
-  }, [type, article, acquiMode, cost, category, peripArticle, peripMode, addArticle, addType]);
+  }, [type, article, variant, brand, manufacturer, acquiMode, cost, category, peripArticle, peripMode, addArticle, addType, addVariant, addBrand, addManufacturer]);
 
   useEffect(() => {
     barCodeRef.current.focus();
@@ -223,16 +258,18 @@ const Equipment = ({ setTab }) => {
   useEffect(() => {
     setDesc(
       (article === "Other" ? articleOther : article) +
-        " " +
-        (type === "Other" ? typeOther : type) +
-        " " +
-        model +
-        " " +
-        variant +
-        " " +
-        detailss
+      " " +
+      (type === "Other" ? typeOther : type) +
+      " " +
+      model +
+      " " +
+      (variant === "Other" ? variantOther : variant) +
+      " " +
+      (brand === "Other" ? brandOther : brand) +
+      " " +
+      detailss
     );
-  }, [article, articleOther, type, typeOther, model, variant, detailss, other]);
+  }, [article, articleOther, type, typeOther, model, variant, variantOther, brand, brandOther, detailss, other]);
 
   const handleCreate = (e) => {
     e && e.preventDefault();
@@ -263,13 +300,16 @@ const Equipment = ({ setTab }) => {
         descOrig: descOrig || null,
         article: article === "Other" ? articleOther : article || null,
         type: type === "Other" ? typeOther : type || null,
+        variant: variant === "Other" ? variantOther : variant || null,
+        brand: brand === "Other" ? brandOther : brand || null,
+        manufacturer: manufacturer === "Other" ? manufacturerOther : manufacturer || null,
         status: itemStatus === "Other" ? itemStatusOther : itemStatus || null,
         model: model || null,
-        variant: variant || null,
+        // variant: variant || null,
         details: detailss || null,
         other: other || null,
-        brand: brand || null,
-        manufacturer: manufacturer || null,
+        // brand: brand || null,
+        // manufacturer: manufacturer || null,
         countries: origin || null,
         serialNum: serialNum || null,
         warranty: warrantyy || null,
@@ -293,6 +333,9 @@ const Equipment = ({ setTab }) => {
         userId: user.userId || null,
         articleId: selectedArticle || null,
         typeId: selectedType || null,
+        variantId: selectedVariant || null,
+        brandId: selectedBrand || null,
+        manufacturerId: selectedManufacturer || null,
       })
       .then(async function (response) {
         if (response.data.status === 1) {
@@ -464,7 +507,9 @@ const Equipment = ({ setTab }) => {
                   );
                 })}
                 <option value="Other">Other</option>
+
               </Select>
+
               {article === "Other" && (
                 <Input
                   value={articleOther}
@@ -473,7 +518,8 @@ const Equipment = ({ setTab }) => {
                   variant="filled"
                   placeholder="If other, please specify"
                 />
-              )}
+              )} 
+              
             </FormControl>
           </GridItem>
 
@@ -492,6 +538,7 @@ const Equipment = ({ setTab }) => {
                 }}
                 placeholder="- Select Type/Form -"
               >
+                <option value="Other">Other</option>
                 {getTypes.map((item, index) => {
                   if (article != "") {
                     return (
@@ -505,7 +552,6 @@ const Equipment = ({ setTab }) => {
                     );
                   }
                 })}
-                <option value="Other">Other</option>
               </Select>
 
               {type === "Other" && (
@@ -527,7 +573,128 @@ const Equipment = ({ setTab }) => {
             </FormControl>
           </GridItem>
 
+          
           <GridItem colSpan={[6, 6, 2, 2]}>
+            <FormControl>
+              <FormLabel>Variety/Color</FormLabel>
+              <Select
+                value={variant}
+                onChange={(e) => {
+                  setVariant(e.target.value);
+                  setSelectedVariant(
+                    e.target.options[e.target.selectedIndex].getAttribute(
+                      "data-id"
+                    )
+                  );
+                }}
+                placeholder="- Select Variant/Color -"
+              >
+                <option value="Other">Other</option>
+                {getVariant.map((item, index) => {
+                  return (
+                    <option
+                      value={item.variety}
+                      key={index}
+                      data-id={item.Pk_varietyId }
+                    >
+                      {item.variety}
+                    </option>
+                  );
+                })}
+              </Select>
+                {variant === "Other" && (
+                  <Input
+                    value={variantOther}
+                    onChange={(e) => setVariantOther(e.target.value)}
+                    marginTop={4}
+                    variant="filled"
+                    placeholder="If other, please specify"
+                  />
+                )} 
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={[6, 6, 2, 2]}>
+            <FormControl>
+              <FormLabel>Brand</FormLabel>
+              <Select
+                value={brand}
+                onChange={(e) => {
+                  setBrand(e.target.value);
+                  setSelectedBrand(
+                    e.target.options[e.target.selectedIndex].getAttribute(
+                      "data-id"
+                    )
+                  );
+                }}
+                placeholder="- Select Brand -"
+              >
+                <option value="Other">Other</option>
+                {getBrand.map((item, index) => {
+                  return (
+                    <option
+                      value={item.brand_name}
+                      key={index}
+                      data-id={item.Pk_brandId}
+                    >
+                      {item.brand_name}
+                    </option>
+                  );
+                })}
+              </Select>
+              {brand === "Other" && (
+                <Input
+                  value={brandOther}
+                  onChange={(e) => setBrandOther(e.target.value)}
+                  marginTop={4}
+                  variant="filled"
+                  placeholder="If other, please specify"
+                />
+              )} 
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={[6, 6, 2, 2]}>
+            <FormControl>
+              <FormLabel>Manufacturer</FormLabel>
+              <Select
+                value={manufacturer}
+                onChange={(e) => {
+                  setManufacturer(e.target.value);
+                  setSelectedManufacturer(
+                    e.target.options[e.target.selectedIndex].getAttribute(
+                      "data-id"
+                    )
+                  );
+                }}
+                placeholder="- Select Manufacturer -"
+              >
+                <option value="Other">Other</option>
+                {getManufacturer.map((item, index) => {
+                  return (
+                    <option
+                    value={item.manu_name}
+                    key={index}
+                    data-id={item.Pk_manuId }
+                    >
+                      {item.manu_name}
+                    </option>
+                  )
+                })}
+              </Select>
+                {manufacturer === "Other" && (
+                  <Input
+                    value={manufacturerOther}
+                    onChange={(e) => setManufacturerOther(e.target.value)}
+                    marginTop={4}
+                    variant="filled"
+                    placeholder="If other, please specify"
+                  />
+                )} 
+            </FormControl>
+          </GridItem>
+
+          {/* <GridItem colSpan={[6, 6, 2, 2]}>
             <FormControl>
               <FormLabel>Variety/Color</FormLabel>
               <Textarea
@@ -536,7 +703,7 @@ const Equipment = ({ setTab }) => {
                 onChange={(e) => setVariant(e.target.value)}
               />
             </FormControl>
-          </GridItem>
+          </GridItem> */}
 
           <GridItem colSpan={[6, 6, 2, 2]}>
             <FormControl>
@@ -568,14 +735,14 @@ const Equipment = ({ setTab }) => {
             </FormControl>
           </GridItem>
 
-          <GridItem colSpan={[6, 6, 2, 2]}>
+          {/* <GridItem colSpan={[6, 6, 2, 2]}>
             <FormControl>
               <FormLabel>Brand</FormLabel>
               <Input value={brand} onChange={(e) => setBrand(e.target.value)} />
             </FormControl>
-          </GridItem>
+          </GridItem> */}
 
-          <GridItem colSpan={[6, 6, 2, 2]}>
+          {/* <GridItem colSpan={[6, 6, 2, 2]}>
             <FormControl>
               <FormLabel>Manufacturer</FormLabel>
               <Input
@@ -583,7 +750,7 @@ const Equipment = ({ setTab }) => {
                 onChange={(e) => setManufacturer(e.target.value)}
               />
             </FormControl>
-          </GridItem>
+          </GridItem> */}
 
           <GridItem colSpan={[6, 6, 2, 2]}>
             <FormControl>
@@ -818,5 +985,46 @@ const Equipment = ({ setTab }) => {
     </Box>
   );
 };
+
+
+function CustomSelect() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedOption, setSelectedOption] = useState(null);
+
+  const handleSelectOption = (option) => {
+    setSelectedOption(option);
+    onOpen();
+  };
+
+  const handleModalClose = () => {  
+    setSelectedOption(null);
+    onClose();
+  };
+
+  return (
+    <Box width="200px">
+      <Select onChange={(e) => handleSelectOption(e.target.value)}>
+        <option value="option1">Option 1</option>
+        <option value="option2">Option 2</option>
+      </Select>
+
+      <Modal isOpen={isOpen} onClose={handleModalClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Selected Option</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {selectedOption && (
+              <div>
+                <p>Selected Option: {selectedOption}</p>
+                <Button onClick={handleModalClose}>Close</Button>
+              </div>
+            )}
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </Box>
+  );
+}
 
 export default Equipment;

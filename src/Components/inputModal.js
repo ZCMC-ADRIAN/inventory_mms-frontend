@@ -22,12 +22,14 @@ import {
   SimpleGrid,
   ModalOverlay,
   Grid,
+  IconButton,
 } from "@chakra-ui/react";
 import SearchSel from "./searchableSelect/searchSel";
-import { EditIcon, CloseIcon } from "@chakra-ui/icons";
+import { EditIcon, CloseIcon, DeleteIcon } from "@chakra-ui/icons";
 import EditableDet from "./EditableDet";
 import PARTab from "./PARTab";
 import { SearchPO } from "./Searchable-Select";
+import CustomAppendInput from "./CustomAppendInput";
 
 export const VerticallyCenter = ({
   title,
@@ -93,7 +95,24 @@ export const VerticallyCenter = ({
     );
   };
 
-  //
+  const [serviceList, setServiceList] = useState([{service: ''}])
+
+  const handleAddService = () => {
+    setServiceList([...serviceList, {service: ""}])
+  }
+
+  const handleRemoveService = (index) => {
+    const list = [...serviceList]
+    list.splice(index, 1)
+    setServiceList(list)
+  }
+
+  const handleChangeService = (e, index) => {
+    const {name, value} = e.target;
+    const list = [...serviceList];
+    list[index][name] = value;
+    setServiceList(list)
+  }
 
   return (
     <>
@@ -103,7 +122,7 @@ export const VerticallyCenter = ({
           clearAll();
           setInv(false);
         }}
-        size={"full"}
+        size={'xl'}
         isOpen={isOpen}
         isCentered
         scrollBehavior={"inside"}
@@ -112,103 +131,113 @@ export const VerticallyCenter = ({
         <ModalContent w={"60%"} minW={"60%"}>
           <ModalCloseButton />
           <ModalBody p={10}>
-            <SimpleGrid mt={6} rowGap={6} columns={12} columnGap={5}>
-              <GridItem
-                colSpan={6}
-                mb={8}
-                display={inv === false ? "none" : ""}
-              >
-                <FormControl>
-                  <FormLabel color={"blackAlpha.600"}>Barcode</FormLabel>
-                  <Input
-                    value={barcode}
-                    onChange={(e) => setBarcode(e.target.value)}
-                  />
-                </FormControl>
-              </GridItem>
+              {serviceList.map((singleService, index) => (
+              <div>
+              <SimpleGrid mt={15} rowGap={10} columns={12} columnGap={15} >
+                  <GridItem
+                    colSpan={6}
+                    mb={8}
+                    display={inv === false ? "none" : ""}
+                  >
+                    <FormControl>
+                      <FormLabel color={"blackAlpha.600"}>Barcode</FormLabel>
+                      <Input
+                        value={barcode}
+                        onChange={(e) => setBarcode(e.target.value)}
+                      />
+                    </FormControl>
+                  </GridItem>
 
-              <GridItem colSpan={2} w="100%">
-                <Box>
-                  <SearchSel
-                    name={"Locations"}
-                    data={locDatas}
-                    propertyName={"location_name"}
-                    fetchdat={fetchLoc}
-                    setSelect={setSelectedLoc}
-                    isSelect={selectedLoc}
-                    setValue={setLocValue}
-                    valueD={locValue}
-                  />
-                </Box>
-              </GridItem>
+                  <GridItem colSpan={2} w="100%">
+                    <Box>
+                      <SearchSel
+                        name={"Locations"}
+                        data={locDatas}
+                        propertyName={"location_name"}
+                        fetchdat={fetchLoc}
+                        setSelect={setSelectedLoc}
+                        isSelect={selectedLoc}
+                        setValue={setLocValue}
+                        valueD={locValue}
+                      />
+                    </Box>
+                  </GridItem>
 
-              <GridItem colSpan={2} w="100%">
-                <Box>
-                  <SearchSel
-                    name={"Accountable Off."}
-                    data={assocDatas}
-                    propertyName={"person_name"}
-                    fetchdat={fetchAssoc}
-                    setSelect={setSelectedAssoc}
-                    isSelect={selectedAssoc}
-                    setValue={setassocValue}
-                    valueD={assocValue}
-                  />
-                </Box>
-              </GridItem>
-              <GridItem colSpan={2} w="100%">
-                <Box>
-                  <SearchSel
-                    name={"Condition"}
-                    data={condDatas}
-                    propertyName={"conditions_name"}
-                    fetchdat={fetchcond}
-                    setSelect={setSelectedCond}
-                    isSelect={selectedCond}
-                    setValue={setConItem}
-                    valueD={condItem}
-                  />
-                </Box>
-              </GridItem>
-              <GridItem colSpan={2}>
-                <FormControl>
-                  <FormLabel color={"blackAlpha.600"}>Delivery Date</FormLabel>
-                  <Input
-                    // value={acquisition}
-                    onChange={(e) => {
-                      setdeliveryD(e.target.value);
-                      //console.log(e.target.value);
-                    }}
-                    type="date"
-                  />
-                </FormControl>
-              </GridItem>
-              <GridItem colSpan={2} w="100%">
-                <FormControl>
-                  <FormLabel color={"blackAlpha.600"}>Property No.</FormLabel>
-                  <Input
-                    onClick={() => {}}
-                    //value={ }
-                    onChange={(e) => {
-                      setpropertyno(e.target.value);
-                    }}
-                  />
-                </FormControl>
-              </GridItem>
-              <GridItem colSpan={2} w="100%">
-                <FormControl>
-                  <FormLabel color={"blackAlpha.600"}>Serial</FormLabel>
-                  <Input
-                    onClick={() => {}}
-                    onChange={(e) => {
-                      setserial(e.target.value);
-                    }}
-                  />
-                </FormControl>
-              </GridItem>
-            </SimpleGrid>
+                  <GridItem colSpan={2} w="100%">
+                    <Box>
+                      <SearchSel
+                        name={"Accountable Off."}
+                        data={assocDatas}
+                        propertyName={"person_name"}
+                        fetchdat={fetchAssoc}
+                        setSelect={setSelectedAssoc}
+                        isSelect={selectedAssoc}
+                        setValue={setassocValue}
+                        valueD={assocValue}
+                      />
+                    </Box>
+                  </GridItem>
 
-            <GridItem colSpan={6}>
+                  <GridItem colSpan={2}>
+                    <FormControl>
+                      <FormLabel color={"blac kAlpha.600"}>Delivery Date</FormLabel>
+                      <Input
+                        // value={acquisition}
+                        onChange={(e) => {
+                          setdeliveryD(e.target.value);
+                          //console.log(e.target.value);
+                        }}
+                        type="date"
+                      />
+                    </FormControl>
+                  </GridItem>
+
+                  <GridItem colSpan={2} w="100%">
+                    <FormControl>
+                      <FormLabel color={"blackAlpha.600"}>Property No.</FormLabel>
+                      <Input
+                        onClick={() => {}}
+                        //value={ }
+                        onChange={(e) => {
+                          setpropertyno(e.target.value);
+                        }}
+                      />
+                    </FormControl>
+                  </GridItem>
+
+                  <GridItem colSpan={2} w="100%">
+                    <FormControl>
+                      <FormLabel color={"blackAlpha.600"}>Serial</FormLabel>
+                      <Input
+                        onClick={() => {}}
+                        onChange={(e) => {
+                          setserial(e.target.value);
+                        }}
+                      />
+                    </FormControl>
+                  </GridItem>
+                
+                  {serviceList.length > 1 && (
+                  <GridItem colSpan={2} w="100%" marginTop={5}>
+                    <FormControl>
+                      <IconButton size='xs' icon={<DeleteIcon />} colorScheme='red' onClick={() => handleRemoveService(index)} />
+                    </FormControl>
+                  </GridItem>
+                  )}
+                </SimpleGrid>
+              
+                {serviceList.length - 1 === index && serviceList.length < 10 && (
+                  <GridItem colSpan={2} w="100%" marginTop={5}>
+                    <FormControl>
+                      <Button onClick={handleAddService}> Add Row </Button>
+                    </FormControl>
+                  </GridItem>
+                )}
+              </div>
+              ))}
+
+
+              <GridItem colSpan={6}>
                 <PARTab />
               </GridItem>
 
@@ -252,6 +281,7 @@ export const VerticallyCenter = ({
                   </Box>
                 </>
               )} */}
+
           </ModalBody>
           <ModalFooter>
             {isItemInserted ? (
